@@ -8,7 +8,7 @@ describe("hello world", () => {
 });
 
 describe("create room", () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     const connectToMongo = async () => {
       let connect = await mongoose.connect("mongodb://0.0.0.0:27017/tddChat", {
         useNewUrlParser: true,
@@ -19,13 +19,13 @@ describe("create room", () => {
     await connectToMongo();
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await Rooms.deleteMany();
     await mongoose.connection.close();
   });
   test("add room", async () => {
     const room = new Rooms({
-      title: "Space"
+      title: "Space",
       //message: [{ text: "test", name: "Szymon" }],
     });
     await room.save();
@@ -33,20 +33,33 @@ describe("create room", () => {
     const findRoom = await Rooms.find();
     expect(findRoom.length).toEqual(1);
   });
-  test('add message to room', async () => {
+  test("add message to room", async () => {
     const room = new Rooms({
-      title: "Space"
+      title: "Space",
     });
     await room.save();
 
-    const filter = { title: "Space"};
-    const update = { text: "First Msg"};
+    const filter = { title: "Space" };
+    const update = { text: "First Msg" };
 
-    let roomUpdate = await Rooms.findOneAndUpdate(filter, {message: update});
+    let roomUpdate = await Rooms.findOneAndUpdate(filter, { message: update });
 
     roomUpdate = await Rooms.findOne(filter);
     expect(roomUpdate.message[0].text).toEqual("First Msg");
+  });
 
+  test("join user to room", async () => {
+    const room = new Rooms({
+      title: "Space",
+      users: { name: "Ralph" },
+    });
+
+    await room.save();
+
+    const filter = { name: "Ralph" };
+
+    let findRoom = await Rooms.find({ users: { $elemMatch: filter } });
+    expect(findRoom.length).toEqual(1);
   });
 });
 
