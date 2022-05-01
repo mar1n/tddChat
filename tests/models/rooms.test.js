@@ -26,7 +26,9 @@ describe("create room", () => {
   test("add room", async () => {
     const room = new Rooms({ title: 'space', name: "Szymon", msg: "my message" });
     const ret = await room.save();
-
+    
+    const findRoom = await Rooms.find();
+    expect(findRoom.length).toEqual(1);
     // let saveRoom = Rooms.find() // use.All find all rooms inside collectiuon of the mongodb
     // expect(saveRoom.length).toEqual(1);
   });
