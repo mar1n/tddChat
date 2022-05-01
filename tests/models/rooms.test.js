@@ -18,19 +18,35 @@ describe("create room", () => {
     };
     await connectToMongo();
   });
-  
+
   afterAll(async () => {
     await Rooms.deleteMany();
     await mongoose.connection.close();
   });
   test("add room", async () => {
-    const room = new Rooms({ title: 'space', name: "Szymon", msg: "my message" });
-    const ret = await room.save();
-    
+    const room = new Rooms({
+      title: "Space"
+      //message: [{ text: "test", name: "Szymon" }],
+    });
+    await room.save();
+
     const findRoom = await Rooms.find();
     expect(findRoom.length).toEqual(1);
-    // let saveRoom = Rooms.find() // use.All find all rooms inside collectiuon of the mongodb
-    // expect(saveRoom.length).toEqual(1);
+  });
+  test('add message to room', async () => {
+    const room = new Rooms({
+      title: "Space"
+    });
+    await room.save();
+
+    const filter = { title: "Space"};
+    const update = { text: "First Msg"};
+
+    let roomUpdate = await Rooms.findOneAndUpdate(filter, {message: update});
+
+    roomUpdate = await Rooms.findOne(filter);
+    expect(roomUpdate.message[0].text).toEqual("First Msg");
+
   });
 });
 
