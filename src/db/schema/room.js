@@ -7,7 +7,7 @@ const roomsSchema = mongoose.Schema({
     }],
     message: [{
         text: String,
-        user: String
+        {user: String, required: true}
     }]
 });
 
