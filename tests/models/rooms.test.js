@@ -74,9 +74,28 @@ describe("create room", () => {
     console.log("joinUser", joinUser);
 
     expect(joinUser.users[0].name).toEqual("Szymon");
+    console.log('_id', joinUser.users[0]._id)
+    await Rooms.findOneAndUpdate(
+      { _id: createRoom._id },
+      {
+        $pull: {
+          users: {
+            _id: joinUser.users[0]._id,
+          },
+        },
+      },
+      { new: true }
+    ).exec();
+
+    const leave = await Rooms.findOne();
+    expect(leave.users.length).toEqual(0);
+   
+    // console.log('userLeaveRoom', await Rooms.findOne());
+    // console.log("joinUser", joinUser);
+    //expect(joinUser.users.length).toEqual(0);
   });
 
-  
+
 
   // test("join user to room", async () => {
   //   const room = new Rooms({
