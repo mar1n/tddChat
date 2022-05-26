@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Rooms = require("../../src/db/model/room");
-const Message = require("../../src/db/schema/message");
 
 describe("hello world", () => {
   test("should first", () => {
@@ -39,28 +38,45 @@ describe("create room", () => {
       title: "Space",
     });
     await room.save();
-    
-    console.log('room', room);
+
+    console.log("room", room);
     const filter = { _id: room._id };
-    const msg = { text: "First Msg", user: "Szymon", ara: 'cool' };
+    const msg = { text: "First Msg", user: "Szymon", ara: "cool" };
     const msg2 = { text: "second Msg", user: "Robert" };
     const msg3 = { text: "Third Msg", user: "Max" };
 
-    await Rooms.findOneAndUpdate(filter, { $push: { messages :  msg } });
-    await Rooms.findOneAndUpdate(filter, { $push: { messages :  msg2 } });
-    await Rooms.findOneAndUpdate(filter, { $push: { messages :  msg3  } });
+    await Rooms.findOneAndUpdate(filter, { $push: { messages: msg } });
+    await Rooms.findOneAndUpdate(filter, { $push: { messages: msg2 } });
+    await Rooms.findOneAndUpdate(filter, { $push: { messages: msg3 } });
 
     const roomMsg = await Rooms.findById(filter).exec();
-    console.log('roomMsg', roomMsg)
+    console.log("roomMsg", roomMsg);
 
     expect(roomMsg.messages[0].text).toEqual("First Msg");
     expect(roomMsg.messages[1].text).toEqual("second Msg");
     expect(roomMsg.messages[2].text).toEqual("Third Msg");
   });
 
-  test('join room', async () => {
-    
+  test("join room", async () => {
+    const createRoom = new Rooms({
+      title: "new room",
+    });
+
+    await createRoom.save();
+
+    const joinThisRoom = { _id: createRoom._id };
+
+    const newUser = { name: "Szymon" };
+
+    await Rooms.findOneAndUpdate(joinThisRoom, { $push: { users: newUser } });
+
+    const joinUser = await Rooms.findById(joinThisRoom).exec();
+    console.log("joinUser", joinUser);
+
+    expect(joinUser.users[0].name).toEqual("Szymon");
   });
+
+  
 
   // test("join user to room", async () => {
   //   const room = new Rooms({
@@ -94,7 +110,7 @@ describe("create room", () => {
 
   //   const filter = { name: "Boris"};
   //   const leaveRoom = await Rooms.findByIdAndRemove({});
-    
+
   // });
 });
 
@@ -104,5 +120,3 @@ describe("create room", () => {
 // add test for a user to join a room and test for user to leave a room
 // add test that proves that user that is not part of the room can't post msg there
 // add test oposiit to higher one
-
-
