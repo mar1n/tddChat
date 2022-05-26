@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Rooms = require("../../src/db/model/room");
+const Message = require("../../src/db/schema/message");
 
 describe("hello world", () => {
   test("should first", () => {
@@ -38,35 +39,42 @@ describe("create room", () => {
       title: "Space",
     });
     await room.save();
-
+    
+    console.log('room', room);
     const filter = { _id: room._id };
-    const msg = { text: "First Msg" };
-    const msg2 = { text: "second Msg" };
-    const msg3 = { text: "Third Msg" };
+    const msg = { text: "First Msg", user: "Szymon", ara: 'cool' };
+    const msg2 = { text: "second Msg", user: "Robert" };
+    const msg3 = { text: "Third Msg", user: "Max" };
 
-    await Rooms.findOneAndUpdate(filter, { $push: { message : [ msg, msg2] } });
-    await Rooms.findOneAndUpdate(filter, { $push: { message : [ msg3 ] } });
+    await Rooms.findOneAndUpdate(filter, { $push: { messages :  msg } });
+    await Rooms.findOneAndUpdate(filter, { $push: { messages :  msg2 } });
+    await Rooms.findOneAndUpdate(filter, { $push: { messages :  msg3  } });
 
     const roomMsg = await Rooms.findById(filter).exec();
+    console.log('roomMsg', roomMsg)
 
-    expect(roomMsg.message[0].text).toEqual("First Msg");
-    expect(roomMsg.message[1].text).toEqual("second Msg");
-    expect(roomMsg.message[2].text).toEqual("Third Msg");
+    expect(roomMsg.messages[0].text).toEqual("First Msg");
+    expect(roomMsg.messages[1].text).toEqual("second Msg");
+    expect(roomMsg.messages[2].text).toEqual("Third Msg");
   });
 
-  test("join user to room", async () => {
-    const room = new Rooms({
-      title: "Space",
-      users: { name: "Ralph" },
-    });
-
-    await room.save();
-
-    const filter = { name: "Ralph" };
-
-    const findRoom = await Rooms.find({ users: { $elemMatch: filter } });
-    expect(findRoom.length).toEqual(1);
+  test('join room', async () => {
+    
   });
+
+  // test("join user to room", async () => {
+  //   const room = new Rooms({
+  //     title: "Space",
+  //     users: { name: "Ralph" },
+  //   });
+
+  //   await room.save();
+
+  //   const filter = { name: "Ralph" };
+
+  //   const findRoom = await Rooms.find({ users: { $elemMatch: filter } });
+  //   expect(findRoom.length).toEqual(1);
+  // });
   // test('user add message to room', () => {
   //   const room = new Rooms({
   //     title: "Space",

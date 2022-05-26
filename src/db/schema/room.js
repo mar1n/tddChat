@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
+const messageSchema = require("./message");
 
 const roomsSchema = mongoose.Schema({
-    title: String,
-    users: [{
-        name: String,
-    }],
-    message: [{
-        text: String,
-        {user: String, required: true}
-    }]
+  title: { type: String, required: true },
+  users: [
+    {
+      name: { type: String, required: true },
+    },
+  ],
+  messages: [messageSchema]
 });
 
 module.exports = roomsSchema;
