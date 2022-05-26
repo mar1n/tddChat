@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const Rooms = require("../../src/db/model/room");
+const addMsg = require("../../src/db/model/addMsg");
+const removeUser = require("../../src/db/model/removeUser");
 
 describe("hello world", () => {
   test("should first", () => {
@@ -40,16 +42,16 @@ describe("create room", () => {
     await room.save();
 
     console.log("room", room);
-    const filter = { _id: room._id };
+    
+
     const msg = { text: "First Msg", user: "Szymon", ara: "cool" };
     const msg2 = { text: "second Msg", user: "Robert" };
     const msg3 = { text: "Third Msg", user: "Max" };
+    await addMsg(room, msg);
+    await addMsg(room, msg2);
+    await addMsg(room, msg3);
 
-    await Rooms.findOneAndUpdate(filter, { $push: { messages: msg } });
-    await Rooms.findOneAndUpdate(filter, { $push: { messages: msg2 } });
-    await Rooms.findOneAndUpdate(filter, { $push: { messages: msg3 } });
-
-    const roomMsg = await Rooms.findById(filter).exec();
+    const roomMsg = await Rooms.findById({_id: room._id}).exec();
     console.log("roomMsg", roomMsg);
 
     expect(roomMsg.messages[0].text).toEqual("First Msg");
@@ -58,13 +60,13 @@ describe("create room", () => {
   });
 
   test("join room", async () => {
-    const createRoom = new Rooms({
+    const room = new Rooms({
       title: "new room",
     });
 
-    await createRoom.save();
+    await room.save();
 
-    const joinThisRoom = { _id: createRoom._id };
+    const joinThisRoom = { _id: room._id };
 
     const newUser = { name: "Szymon" };
 
@@ -75,17 +77,7 @@ describe("create room", () => {
 
     expect(joinUser.users[0].name).toEqual("Szymon");
     console.log('_id', joinUser.users[0]._id)
-    await Rooms.findOneAndUpdate(
-      { _id: createRoom._id },
-      {
-        $pull: {
-          users: {
-            _id: joinUser.users[0]._id,
-          },
-        },
-      },
-      { new: true }
-    ).exec();
+    await removeUser(room, joinUser);
 
     const leave = await Rooms.findOne();
     expect(leave.users.length).toEqual(0);
