@@ -5,6 +5,4 @@ const messageSchema = mongoose.Schema({
       user: {type: String, required: true} 
 });
 
-//const message = mongoose.model('Message', messageSchema);
-
 module.exports = messageSchema;

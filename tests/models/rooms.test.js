@@ -47,9 +47,9 @@ describe("create room", () => {
     const msg = { text: "First Msg", user: "Szymon", ara: "cool" };
     const msg2 = { text: "second Msg", user: "Robert" };
     const msg3 = { text: "Third Msg", user: "Max" };
-    await addMsg(room, msg);
-    await addMsg(room, msg2);
-    await addMsg(room, msg3);
+    await room.addMsg(room, msg);
+    await room.addMsg(room, msg2);
+    await room.addMsg(room, msg3);
 
     const roomMsg = await Rooms.findById({_id: room._id}).exec();
     console.log("roomMsg", roomMsg);
