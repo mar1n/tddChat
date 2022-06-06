@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 const Rooms = require("../../src/db/model/room");
-const addMsg = require("../../src/db/model/addMsg");
-const removeUser = require("../../src/db/model/removeUser");
 
 describe("hello world", () => {
   test("should first", () => {
@@ -41,9 +39,6 @@ describe("create room", () => {
     });
     await room.save();
 
-    console.log("room", room);
-    
-
     const msg = { text: "First Msg", user: "Szymon", ara: "cool" };
     const msg2 = { text: "second Msg", user: "Robert" };
     const msg3 = { text: "Third Msg", user: "Max" };
@@ -52,14 +47,13 @@ describe("create room", () => {
     await room.addMsg(room, msg3);
 
     const roomMsg = await Rooms.findById({_id: room._id}).exec();
-    console.log("roomMsg", roomMsg);
 
     expect(roomMsg.messages[0].text).toEqual("First Msg");
     expect(roomMsg.messages[1].text).toEqual("second Msg");
     expect(roomMsg.messages[2].text).toEqual("Third Msg");
   });
 
-  test("join room", async () => {
+  test("join and leave room", async () => {
     const room = new Rooms({
       title: "new room",
     });
@@ -73,21 +67,13 @@ describe("create room", () => {
     await Rooms.findOneAndUpdate(joinThisRoom, { $push: { users: newUser } });
 
     const joinUser = await Rooms.findById(joinThisRoom).exec();
-    console.log("joinUser", joinUser);
 
     expect(joinUser.users[0].name).toEqual("Szymon");
-    console.log('_id', joinUser.users[0]._id)
-    await removeUser(room, joinUser);
 
-    const leave = await Rooms.findOne();
-    expect(leave.users.length).toEqual(0);
-   
-    // console.log('userLeaveRoom', await Rooms.findOne());
-    // console.log("joinUser", joinUser);
-    //expect(joinUser.users.length).toEqual(0);
+    await room.removeUser(room, joinUser);
+
+    expect(room.users.length).toEqual(0)
   });
-
-
 
   // test("join user to room", async () => {
   //   const room = new Rooms({
