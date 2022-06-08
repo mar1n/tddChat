@@ -98,6 +98,29 @@ describe("create room", () => {
     }
   });
 
+  test('3 people inside the room, one user left room, number of people is 2', async () => {
+    const room = new Rooms({
+      title: "new room"
+    });
+
+    await room.save();
+
+    const threeUsers = [{ name: "Szymon"},{ name: "Max"},{ name: "John"}];
+
+    const joinThisRoom = { _id: room._id };
+
+    await Rooms.findOneAndUpdate(joinThisRoom, {$push: {users: {$each: threeUsers } }});
+
+    const numberOfUsers = await Rooms.findOne({title: "new room"})
+    expect(numberOfUsers.users.length).toEqual(3);
+
+    const joinUser = await Rooms.findById(joinThisRoom).exec();
+    await room.removeUser(room, joinUser);
+    const oneUserLeft = await Rooms.findOne({title: "new room"});
+    expect(oneUserLeft.users.length).toEqual(2);
+    
+  });
+
   // test("join user to room", async () => {
   //   const room = new Rooms({
   //     title: "Space",
