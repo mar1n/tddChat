@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const roomsSchema = require("../schema/room");
 
 roomsSchema.methods.addMsg = async function (room, msg) {
-  const filter = { _id: room._id };
-  return this.model('Rooms').findOneAndUpdate(filter, { $push: { messages: msg } });
+  const roomId = { _id: room._id };
+  return this.model('Rooms').findOneAndUpdate(roomId, { $push: { messages: msg } });
 }
 
 roomsSchema.methods.removeUser = async function (room, joinUser) {
@@ -18,7 +18,7 @@ roomsSchema.methods.removeUser = async function (room, joinUser) {
     },
     { new: true }
     ).exec();
-  }
+}
 
 const rooms = mongoose.model('Rooms', roomsSchema);
 module.exports = rooms;

@@ -39,14 +39,14 @@ describe("create room", () => {
     });
     await room.save();
 
-    const msg = { text: "First Msg", user: "Szymon", ara: "cool" };
-    const msg2 = { text: "second Msg", user: "Robert" };
-    const msg3 = { text: "Third Msg", user: "Max" };
+    const msg = { text: "First Msg", name: "Szymon", ara: "cool" };
+    const msg2 = { text: "second Msg", name: "Robert" };
+    const msg3 = { text: "Third Msg", name: "Max" };
     await room.addMsg(room, msg);
     await room.addMsg(room, msg2);
     await room.addMsg(room, msg3);
 
-    const roomMsg = await Rooms.findById({_id: room._id}).exec();
+    const roomMsg = await Rooms.findById({ _id: room._id }).exec();
 
     expect(roomMsg.messages[0].text).toEqual("First Msg");
     expect(roomMsg.messages[1].text).toEqual("second Msg");
@@ -72,7 +72,30 @@ describe("create room", () => {
 
     await room.removeUser(room, joinUser);
 
-    expect(room.users.length).toEqual(0)
+    expect(room.users.length).toEqual(0);
+  });
+
+  test("unknow user can not post message", async () => {
+    const room = new Rooms({
+      title: "new room",
+    });
+
+    await room.save();
+
+    const joinThisRoom = { _id: room._id };
+
+    const newUser = { name: "Szymon" };
+
+    await Rooms.findOneAndUpdate(joinThisRoom, { $push: { users: newUser } });
+
+    try {
+      const userIn = await Rooms.findOne({"users.name": "Stranger"}).exec();
+      if(userIn === null) {
+        throw "User does not exist!!!"
+      }
+    } catch(err) {
+      expect("User does not exist!!!").toEqual(err);
+    }
   });
 
   // test("join user to room", async () => {
