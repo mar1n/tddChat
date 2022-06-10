@@ -121,6 +121,24 @@ describe("create room", () => {
     
   });
 
+  test('leave empty room give an error', async () => {
+    
+    try {
+      const room = new Rooms({title: "new room"});
+  
+      await room.save();
+  
+      const joinThisRoom = { _id: room._id };
+
+      const joinUser = await Rooms.findById(joinThisRoom).exec();
+
+      await room.removeUser(room, joinUser); 
+
+    } catch(err) {
+      expect("You can not leave empty room!!!").toEqual(err);
+    }
+  });
+
   // test("join user to room", async () => {
   //   const room = new Rooms({
   //     title: "Space",

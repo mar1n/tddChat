@@ -7,17 +7,21 @@ roomsSchema.methods.addMsg = async function (room, msg) {
 }
 
 roomsSchema.methods.removeUser = async function (room, joinUser) {
-  return this.model('Rooms').findOneAndUpdate(
-    { _id: room._id },
-    {
-      $pull: {
-        users: {
-          _id: joinUser.users[0]._id,
+  if(joinUser.users[0] === undefined) {
+    throw "You can not leave empty room!!!"
+  } else {
+    return this.model('Rooms').findOneAndUpdate(
+      { _id: room._id },
+      {
+        $pull: {
+          users: {
+            _id: joinUser.users[0]._id,
+          },
         },
       },
-    },
-    { new: true }
-    ).exec();
+      { new: true }
+      ).exec();
+  }
 }
 
 const rooms = mongoose.model('Rooms', roomsSchema);
