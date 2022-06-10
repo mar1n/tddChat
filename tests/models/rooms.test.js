@@ -89,10 +89,8 @@ describe("create room", () => {
     await Rooms.findOneAndUpdate(joinThisRoom, { $push: { users: newUser } });
 
     try {
-      const userIn = await Rooms.findOne({"users.name": "Stranger"}).exec();
-      if(userIn === null) {
-        throw "User does not exist!!!"
-      }
+      const msg =  { text: "First Msg", name: "Stranger", ara: "cool" };
+      await room.addMsg(room, msg);
     } catch(err) {
       expect("User does not exist!!!").toEqual(err);
     }
