@@ -138,7 +138,7 @@ describe("create room", () => {
     }
   });
 
-  test("msg include timeStamp", async () => {
+  test.skip("msg include timeStamp", async () => {
     const date = new Date().toISOString();
 
     const msg1 = new Messages({
@@ -173,7 +173,7 @@ describe("create room", () => {
     expect(roomMsg.messages[2].timeStamp.toISOString()).toEqual(date);
   });
 
-  test('if message is invalid message wont be added', async () => {
+  test.skip('if message is invalid message wont be added', async () => {
     try {
       const date = new Date().toISOString();
   
@@ -205,6 +205,8 @@ describe("create room", () => {
       error.message; // 'E11000 duplicate key error...'
     }
   });
+
+  
 
   // test("join user to room", async () => {
   //   const room = new Rooms({

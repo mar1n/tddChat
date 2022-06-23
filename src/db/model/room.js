@@ -5,7 +5,7 @@ const messagesModel = require("../model/message");
 
 roomsSchema.methods.addMsg = async function (room, msg) {
 
-  await msg.save();
+  await msg.validate();
   const userIn = this.model("Rooms").findOne({ "users.name": msg.name }).exec();
   if (userIn === null) {
     throw "User does not exist!!!";
