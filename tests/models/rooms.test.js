@@ -138,7 +138,7 @@ describe("create room", () => {
     }
   });
 
-  test.skip("msg include timeStamp", async () => {
+  test("msg include timeStamp", async () => {
     const date = new Date().toISOString();
 
     const msg1 = new Messages({
@@ -146,19 +146,16 @@ describe("create room", () => {
       name: "Szymon",
       timeStamp: date,
     });
-    await msg1.save();
     const msg2 = new Messages({
       text: "random text",
       name: "Szymon",
       timeStamp: date,
     });
-    await msg2.save();
     const msg3 = new Messages({
       text: "random text",
       name: "Szymon",
       timeStamp: date,
     });
-    await msg3.save();
 
     const room = new Rooms({
       title: "new Room",
@@ -176,7 +173,25 @@ describe("create room", () => {
     expect(roomMsg.messages[2].timeStamp.toISOString()).toEqual(date);
   });
 
-  test("only one user can have a given email", async () => {
+  test('if message is invalid message wont be added', async () => {
+    try {
+      const date = new Date().toISOString();
+  
+      const msg1 = new Messages({
+        text: "random text",
+        timeStamp: date,
+      });
+
+      const room = new Rooms({
+        title: "new Room",
+      });
+      await room.save();
+      await room.addMsg(room, msg1);
+    } catch (err) {
+      expect(err.message).toEqual('Messages validation failed: name: Path `name` is required.')
+    }
+  });
+  test.skip("only one user can have a given email", async () => {
     await User.create([
       { email: "gmail@google.com" },
       { email: "bill@microsoft.com" },
