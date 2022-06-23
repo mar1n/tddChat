@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Rooms = require("../../src/db/model/room");
 const Messages = require("../../src/db/model/message");
+const User = require("../../src/db/model/user");
 
 describe("hello world", () => {
   test("should first", () => {
@@ -24,7 +25,7 @@ describe("create room", () => {
     await Rooms.deleteMany();
     await mongoose.connection.close();
   });
-  test("add room", async () => {
+  test.skip("add room", async () => {
     const room = new Rooms({
       title: "Space",
     });
@@ -34,7 +35,7 @@ describe("create room", () => {
 
     expect(findRoom._id).toEqual(room._id);
   });
-  test("add message to room", async () => {
+  test.skip("add message to room", async () => {
     const room = new Rooms({
       title: "Space",
     });
@@ -54,7 +55,7 @@ describe("create room", () => {
     expect(roomMsg.messages[2].text).toEqual("Third Msg");
   });
 
-  test("join and leave room", async () => {
+  test.skip("join and leave room", async () => {
     const room = new Rooms({
       title: "new room",
     });
@@ -76,7 +77,7 @@ describe("create room", () => {
     expect(room.users.length).toEqual(0);
   });
 
-  test("unknow user can not post message", async () => {
+  test.skip("unknow user can not post message", async () => {
     const room = new Rooms({
       title: "new room",
     });
@@ -97,7 +98,7 @@ describe("create room", () => {
     }
   });
 
-  test("3 people inside the room, one user left room, number of people is 2", async () => {
+  test.skip("3 people inside the room, one user left room, number of people is 2", async () => {
     const room = new Rooms({
       title: "new room",
     });
@@ -121,7 +122,7 @@ describe("create room", () => {
     expect(oneUserLeft.users.length).toEqual(2);
   });
 
-  test("leave empty room give an error", async () => {
+  test.skip("leave empty room give an error", async () => {
     try {
       const room = new Rooms({ title: "new room" });
 
@@ -137,7 +138,7 @@ describe("create room", () => {
     }
   });
 
-  test("msg include timeStamp", async () => {
+  test.skip("msg include timeStamp", async () => {
     const date = new Date().toISOString();
 
     const msg1 = new Messages({
@@ -173,7 +174,21 @@ describe("create room", () => {
     expect(roomMsg.messages[0].timeStamp.toISOString()).toEqual(date);
     expect(roomMsg.messages[1].timeStamp.toISOString()).toEqual(date);
     expect(roomMsg.messages[2].timeStamp.toISOString()).toEqual(date);
+  });
 
+  test("only one user can have a given email", async () => {
+    await User.create([
+      { email: "gmail@google.com" },
+      { email: "bill@microsoft.com" },
+      { email: "test@gmail.com" },
+    ]);
+    console.log('User', User);
+    await User.init();
+    try {
+      await User.create({ email: "gmail@google.com" });
+    } catch (error) {
+      error.message; // 'E11000 duplicate key error...'
+    }
   });
 
   // test("join user to room", async () => {

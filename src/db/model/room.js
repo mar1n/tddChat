@@ -9,9 +9,9 @@ roomsSchema.methods.addMsg = async function (room, msg) {
     throw "User does not exist!!!";
   } else {
     const roomId = { _id: room._id };
-    const message = new messagesModel({ text: "ssss", name: "Szymon"})
-    let something = message.validateSync();
-    console.log('validate', something);
+   // const message = new messagesModel({ text: "ssss", name: "Szymon"})
+    //let something = message.validateSync();
+    //console.log('validate', something);
     return this.model("Rooms").findOneAndUpdate(roomId, {
       $push: { messages: msg },
     });
