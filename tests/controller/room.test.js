@@ -24,16 +24,19 @@ const supertest = require("supertest");
 const app = createServer();
 
 describe("rooom controller", () => {
-    test('testing server', async () => { 
-        // const user = new User({
-        //     title: "new room"
-        // });
+  test("testing server", async () => {
+    // const user = new User({
+    //     title: "new room"
+    // });
 
-        // const room = new Room({
-        //     title:
-        // })
-        await supertest(app)
-            .post("/post-test")
-            .expect(200)
-     })
+    // const room = new Room({
+    //     title:
+    // })
+    await supertest(app)
+      .post("/room/new")
+      .set('Accept', 'application/json')
+      .expect("Content-Type", /json/)
+      .expect(200)
+      
+  });
 });

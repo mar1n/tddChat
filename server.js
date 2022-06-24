@@ -1,14 +1,18 @@
 const express = require("express");
-const routes = require("./src/routes/room");
+const router = require("./src/routes/room");
 
 function createServer() {
   const app = express();
   app.use(express.json());
-  app.post("/post-test", (req, res) => {
+  app.get("/post-test", async (req, res) => {
+    res.set('Content-Type', 'applicaton/json');
+    res.send({
+        id: '1234'
+    });
     console.log("Got body:", req.body);
-    res.sendStatus(200);
+    res.status(200);
   });
-  app.use("/api", routes);
+  app.use("/", router);
   return app;
 }
 

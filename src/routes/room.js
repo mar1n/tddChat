@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const {roomController} = require("../controller/room");
+const { roomController } = require("../controller/room");
 
-router.post("/room", roomController);
+router.post("/room/new", roomController);
 
 module.exports = router;
