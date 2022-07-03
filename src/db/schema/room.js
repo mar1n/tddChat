@@ -2,31 +2,14 @@ const mongoose = require("mongoose");
 const messageSchema = require("./message");
 const userSchema = require("./user");
 
-messageSchema.pre("validate", function (next) {
- console.log('validate');
-  // next();
-  // if (this.timeStamp === undefined) {
-  //   return next(new Error('#sadpanda'));
-  // }
-  next();
-});
-
-// messageSchema.pre("save", function (next) {
-//   console.log("3");
+// userSchema.pre('save', function (next) {
+//   console.log('xxx',this.email = _.uniq(this.email));
 //   next();
-// });
+// })
 const roomsSchema = mongoose.Schema({
   title: { type: String, required: true },
-  users: [userSchema],
-  messages: [messageSchema],
+  users: {type: [userSchema], validate: v => Array.isArray(v) && v.length > 0 },
+  messages: {type: [messageSchema], required:true}
 });
-roomsSchema.pre("validate", function (next) {
-  console.log('validate');
-   // next();
-   // if (this.timeStamp === undefined) {
-   //   return next(new Error('#sadpanda'));
-   // }
-   next();
- });
 
 module.exports = roomsSchema;

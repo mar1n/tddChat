@@ -1,8 +1,11 @@
+const Room = require("../db/model/room");
+
 exports.roomController = async (req, res) => {
+    console.log("Got body:", req.body);
+    const { name, text } = req.body;
     res.set('Content-Type', 'applicaton/json');
-    res.send({
+    res.json({
         id: '1234'
     });
-    console.log("Got body:", req.body);
     res.status(200);
 }
