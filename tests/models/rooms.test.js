@@ -27,9 +27,10 @@ describe("create room", () => {
     await User.deleteMany();
     await mongoose.connection.close();
   });
-  test.skip("add room", async () => {
+  test("add room", async () => {
     const room = new Rooms({
       title: "Space",
+      users: [{ email: "creatorOfRoom@gmail.com"}]
     });
     await room.save();
 
@@ -37,9 +38,10 @@ describe("create room", () => {
 
     expect(findRoom._id).toEqual(room._id);
   });
-  test.skip("add message to room", async () => {
+  test("add message to room", async () => {
     const room = new Rooms({
       title: "Space",
+      users: [{ email: "creatorOfRoom@gmail.com"}]
     });
     await room.save();
 
@@ -57,40 +59,42 @@ describe("create room", () => {
     expect(roomMsg.messages[2].text).toEqual("Third Msg");
   });
 
-  test.skip("join and leave room", async () => {
+  test("join and leave room", async () => {
     const room = new Rooms({
       title: "new room",
+      users: [{ email: "creatorOfRoom@gmail.com"}]
     });
 
     await room.save();
 
     const joinThisRoom = { _id: room._id };
 
-    const newUser = { name: "Szymon" };
+    const newUser = { email: "szymon@gmail.com" };
 
-    await Rooms.findOneAndUpdate(joinThisRoom, { $push: { users: newUser } });
+    await Rooms.findOneAndUpdate(joinThisRoom, { $push: { users: newUser } }, { runValidators: true });
 
     const joinUser = await Rooms.findById(joinThisRoom).exec();
 
-    expect(joinUser.users[0].name).toEqual("Szymon");
+    expect(joinUser.users[1].email).toEqual("szymon@gmail.com");
 
     await room.removeUser(room, joinUser);
 
-    expect(room.users.length).toEqual(0);
+    expect(room.users.length).toEqual(1);
   });
 
-  test.skip("unknow user can not post message", async () => {
+  test("unknown user can not post message", async () => {
     const room = new Rooms({
       title: "new room",
+      users: [{ email: "creatorOfRoom@gmail.com"}]
     });
 
     await room.save();
 
     const joinThisRoom = { _id: room._id };
 
-    const newUser = { name: "Szymon" };
+    const newUser = { email: "over@gmail.com" };
 
-    await Rooms.findOneAndUpdate(joinThisRoom, { $push: { users: newUser } });
+    await Rooms.findOneAndUpdate(joinThisRoom, { $push: { users: newUser } }, { runValidators: true });
 
     try {
       const msg = { text: "First Msg", name: "Stranger", ara: "cool" };
@@ -103,24 +107,25 @@ describe("create room", () => {
   test("3 people inside the room, one user left room, number of people is 2", async () => {
     const room = new Rooms({
       title: "new room",
-      users: [ {email: "cykcykacz@gmail.com"}]
+      users: [{ email: "creatorOfRoom@gmail.com"}]
     });
     await room.save();
 
-    const threeUsers = { email: "attack@gmail.com" };
+    const user1 = { email: "attack@gmail.com" };
+    const user2 = { email: "over@gmail.com" };
 
     const joinThisRoom = { _id: room._id };
 
-    // await Rooms.findOneAndUpdate(joinThisRoom, {
-    //   $push: { users: { $each: threeUsers } },
-    // }, { runValidators: true });
-    await Rooms.findOneAndUpdate({ _id: room._id, 'users.email': { $ne: "attack@gmail.com" }}, {
-      $push: { users: threeUsers },
-    }, { runValidators: true, new: false, upsert: true });
+    await Rooms.findOneAndUpdate({ _id: room._id, 'users.email': { $ne: user1.email }}, {
+      $push: { users: user1 },
+    }, { runValidators: true });
+
+    await Rooms.findOneAndUpdate({ _id: room._id, 'users.email': { $ne: user2.email }}, {
+      $push: { users: user2 },
+    }, { runValidators: true });
 
     const numberOfUsers = await Rooms.findOne({ title: "new room" });
-    console.log('numberOfUsers', numberOfUsers);
-    //numberOfUsers.validate();
+    
     expect(numberOfUsers.users.length).toEqual(3);
 
     const joinUser = await Rooms.findById(joinThisRoom).exec();
@@ -129,9 +134,9 @@ describe("create room", () => {
     expect(oneUserLeft.users.length).toEqual(2);
   });
 
-  test.skip("leave empty room give an error", async () => {
+  test("you can't leave the room if you are not a member ", async () => {
     try {
-      const room = new Rooms({ title: "new room" });
+      const room = new Rooms({ title: "new room", users: [{ email: "creatorOfRoom@gmail.com"}] });
 
       await room.save();
 
@@ -141,11 +146,11 @@ describe("create room", () => {
 
       await room.removeUser(room, joinUser);
     } catch (err) {
-      expect("You can not leave empty room!!!").toEqual(err);
+      expect("You can not leave this room!!!").toEqual(err);
     }
   });
 
-  test.skip("msg include timeStamp", async () => {
+  test("msg include timeStamp", async () => {
     const date = new Date().toISOString();
 
     const msg1 = new Messages({
@@ -166,6 +171,7 @@ describe("create room", () => {
 
     const room = new Rooms({
       title: "new Room",
+      users: [{ email: "creatorOfRoom@gmail.com"}]
     });
     await room.save();
 
@@ -180,7 +186,7 @@ describe("create room", () => {
     expect(roomMsg.messages[2].timeStamp.toISOString()).toEqual(date);
   });
 
-  test.skip("if message is invalid message wont be added", async () => {
+  test("if message is invalid message wont be added", async () => {
     try {
       const date = new Date().toISOString();
 
@@ -191,6 +197,7 @@ describe("create room", () => {
 
       const room = new Rooms({
         title: "new Room",
+        users: [{ email: "creatorOfRoom@gmail.com"}]
       });
       await room.save();
       await room.addMsg(room, msg1);
@@ -200,52 +207,19 @@ describe("create room", () => {
       );
     }
   });
-  test.skip("only one user can have a given email", async () => {
+  test("only one user can have a given email", async () => {
     await User.create([
       { email: "gmail@google.com" },
       { email: "bill@microsoft.com" },
       { email: "test@gmail.com" },
     ]);
-    console.log("User", User);
-    console.log("User ", await User.init());
+    
+    await User.init();
     try {
       await User.create({ email: "gmail@gooogle.com" });
     } catch (error) {
       error.message; // 'E11000 duplicate key error...'
     }
   });
-  test.skip("add new users to the room", async () => {
-    const room = new Rooms({
-      title: "new Room",
-    });
-    await room.save(async (err, user) => {
-      if (err) {
-        console.log("xxxx");
-      }
-      await user.users.save([
-        { email: "gmail@google.com" },
-        { email: "bill@microsoft.com" },
-        { email: "test@gmail.com" },
-      ]);
-      try {
-        await user.users.save({ email: "gmail@gooogle.com" });
-      } catch (error) {
-        error.message; // 'E11000 duplicate key error...'
-      }
-      console.log("user", user);
-      // console.log('user', user.users.create([
-      //   { email: "gmail@google.com" },
-      //   { email: "bill@microsoft.com" },
-      //   { email: "test@gmail.com" },
-      // ]));
-    });
 
-    console.log("room", room);
-
-    // await User.create([
-    //   { email: "gmail@google.com" },
-    //   { email: "bill@microsoft.com" },
-    //   { email: "test@gmail.com" },
-    // ]);
-  });
 });
