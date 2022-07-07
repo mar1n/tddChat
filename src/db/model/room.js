@@ -5,15 +5,14 @@ const messagesModel = require("../model/message");
 
 roomsSchema.methods.addMsg = async function (room, msg) {
 
-  const userIn = this.model("Rooms").findOne({ "users.name": msg.name }).exec();
-  if (userIn === null) {
+  const userIn = this.model("Rooms").find({ "users.email": "creatorOfRoom@gmail.com" });
+  if (!userIn) {
     throw "User does not exist!!!";
   } else {
     const roomId = { _id: room._id };
-
     return this.model("Rooms").findOneAndUpdate(roomId, {
       $push: { messages: msg },
-    });
+    }, {new: true });
   }
 };
 
