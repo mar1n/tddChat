@@ -1,11 +1,13 @@
 const mongoose = require("mongoose");
 const roomsSchema = require("../schema/room");
 const messagesModel = require("../model/message");
-
+const Messages = require("../model/message");
 
 roomsSchema.methods.addMsg = async function (room, msg) {
+  const msg1 = await Messages.create(msg);
 
-  const userIn = this.model("Rooms").find({ "users.email": "creatorOfRoom@gmail.com" });
+  const userIn = await this.model("Rooms").find({ "users.name": msg.name });
+
   if (!userIn) {
     throw "User does not exist!!!";
   } else {

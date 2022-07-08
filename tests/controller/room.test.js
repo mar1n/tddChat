@@ -25,7 +25,19 @@ describe("rooom controller", () => {
     await User.deleteMany();
     await mongoose.connection.close();
   });
-  test("testing server", async () => {
+  test.skip('create room', async () => {
+    const response = await supertest(app)
+      .post("/room/create")
+      .send({title: "Room 1", user: "creatorOfRoom@gmail.com"})
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(200);
+
+
+      const createdRoom = await Rooms.findOne({title: "Room 1"});
+      expect(createdRoom.title).toEqual("Room 1");
+  });
+  test.skip("add the message to the room", async () => {
     const room = new Rooms({
       title: "title",
       users: [{ email: "creatorOfRoom@gmail.com" }],

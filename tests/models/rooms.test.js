@@ -107,20 +107,20 @@ describe("create room", () => {
   test.skip("3 people inside the room, one user left room, number of people is 2", async () => {
     const room = new Rooms({
       title: "new room",
-      users: [{ email: "creatorOfRoom@gmail.com"}]
+      users: [{ name: "Novak"}]
     });
     await room.save();
 
-    const user1 = { email: "attack@gmail.com" };
-    const user2 = { email: "over@gmail.com" };
+    const user1 = { name: "Ronaldo" };
+    const user2 = { name: "Rambo" };
 
     const joinThisRoom = { _id: room._id };
 
-    await Rooms.findOneAndUpdate({ _id: room._id, 'users.email': { $ne: user1.email }}, {
+    await Rooms.findOneAndUpdate({ _id: room._id, 'users.name': { $ne: user1.name }}, {
       $push: { users: user1 },
     }, { runValidators: true });
 
-    await Rooms.findOneAndUpdate({ _id: room._id, 'users.email': { $ne: user2.email }}, {
+    await Rooms.findOneAndUpdate({ _id: room._id, 'users.name': { $ne: user2.name }}, {
       $push: { users: user2 },
     }, { runValidators: true });
 
@@ -136,7 +136,7 @@ describe("create room", () => {
 
   test.skip("you can't leave the room if you are not a member ", async () => {
     try {
-      const room = new Rooms({ title: "new room", users: [{ email: "creatorOfRoom@gmail.com"}] });
+      const room = new Rooms({ title: "new room", users: [{ name: "John"}] });
 
       await room.save();
 
@@ -171,7 +171,7 @@ describe("create room", () => {
 
     const room = new Rooms({
       title: "new Room",
-      users: [{ email: "creatorOfRoom@gmail.com"}]
+      users: [{ name: "Rocky"}]
     });
     await room.save();
 
@@ -187,20 +187,17 @@ describe("create room", () => {
   });
 
   test.skip("if message is invalid message wont be added", async () => {
+    expect.hasAssertions();
+    const date = new Date().toISOString();
+
+    const room = new Rooms({
+      title: "new Room",
+      users: [{name: "bill"}]
+    });
+
+    await room.save();
     try {
-      const date = new Date().toISOString();
-
-      const msg1 = new Messages({
-        text: "random text",
-        timeStamp: date,
-      });
-
-      const room = new Rooms({
-        title: "new Room",
-        users: [{ email: "creatorOfRoom@gmail.com"}]
-      });
-      await room.save();
-      await room.addMsg(room, msg1);
+      await room.addMsg(room, {text: 'random', timeStamp: date});
     } catch (err) {
       expect(err.message).toEqual(
         "Messages validation failed: name: Path `name` is required."
@@ -208,18 +205,46 @@ describe("create room", () => {
     }
   });
   test.skip("only one user can have a given email", async () => {
+    expect.hasAssertions()
     await User.create([
-      { email: "gmail@google.com" },
-      { email: "bill@microsoft.com" },
-      { email: "test@gmail.com" },
+      { email: "gmail@google.com", name:"Rocky" },
+      { email: "bill@microsoft.com", name:"Ronaldo" },
+      { email: "test@gmail.com", name: "Jordan" },
     ]);
     
     await User.init();
     try {
-      await User.create({ email: "gmail@gooogle.com" });
+      await User.create({ email: "gmail@google.com", name: "unnamed" });
     } catch (error) {
-      error.message; // 'E11000 duplicate key error...'
+      expect(error.code).toEqual(11000)
     }
   });
 
+  test.skip('only one room can have one title', async () => {
+    expect.hasAssertions()
+    await User.create([
+      { email: "gmail@google.com", name:"Rocky" },
+      { email: "bill@microsoft.com", name:"Ronaldo" },
+      { email: "test@gmail.com", name: "Jordan" },
+    ]);
+    await User.init();
+    const user = await User.findOne({email: "bill@microsoft.com"})
+
+    await Rooms.create({
+      title: "title",
+      users:[{ name: user.name }]
+    });
+
+    await Rooms.init();
+
+    try {
+      await Rooms.create({
+        title: "title",
+        users: [{ name: user.name }]
+      })
+      await Rooms.init();
+    } catch (err) {
+      expect(err.code).toEqual(11000)
+    }
+   })
 });
