@@ -2,10 +2,10 @@ const Rooms = require("../db/model/room");
 
 exports.createRoom = async (req, res) => {
     res.set("Content-Type", "application/json");
-    const { title, user } = req.body;
+    const { title, name } = req.body;
     const room = new Rooms({
         title,
-        users: [{email: user}]
+        users: [{name: name}]
     })
     try {
         await room.save();

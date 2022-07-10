@@ -10,7 +10,7 @@ const connectToMongo = async () => {
   };
 
 const diconnect = async () => {
-    await mongoose.connection.close();
+    return await mongoose.connection.close();
 }
 
 module.exports = { connectToMongo, diconnect}

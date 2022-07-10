@@ -1,60 +1,61 @@
-const mongoose = require("mongoose");
 const createServer = require("../../server");
-const Message = require("../../src/db/model/message");
 const Rooms = require("../../src/db/model/room");
 const User = require("../../src/db/model/user");
 const supertest = require("supertest");
+const mongoose = require("mongoose");
+const { connectToMongo, diconnect } = require("../utils/db");
 
 const app = createServer();
 
 describe("rooom controller", () => {
   beforeEach(async () => {
-    const connectToMongo = async () => {
-      let connect = await mongoose.connect("mongodb://0.0.0.0:27017/tddChat", {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        autoIndex: true,
-      });
-      return connect;
-    };
     await connectToMongo();
   });
 
   afterEach(async () => {
     await Rooms.deleteMany();
     await User.deleteMany();
-    await mongoose.connection.close();
+    await diconnect();
   });
-  test.skip('create room', async () => {
-    const response = await supertest(app)
+  test.skip("create room", async () => {
+    await supertest(app)
       .post("/room/create")
-      .send({title: "Room 1", user: "creatorOfRoom@gmail.com"})
+      .send({ title: "Room 1", name: "Ronaldo" })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200);
 
+    const createdRoom = await Rooms.findOne({ title: "Room 1" });
+    expect(createdRoom.title).toEqual("Room 1");
+  });
+  test.skip("the room title exists", async () => {
 
-      const createdRoom = await Rooms.findOne({title: "Room 1"});
-      expect(createdRoom.title).toEqual("Room 1");
+    await supertest(app)
+      .post("/room/create")
+      .send({ title: "Room 1", name: "Ronaldo" })
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(200);
+
+    const createdRoom = await Rooms.findOne({ title: "Room 1" });
+    expect(createdRoom.title).toEqual("Room 1");
   });
   test.skip("add the message to the room", async () => {
     const room = new Rooms({
       title: "title",
-      users: [{ email: "creatorOfRoom@gmail.com" }],
+      users: [{ name: "Romario" }],
     });
     await room.save();
 
     const response = await supertest(app)
       .post("/room/new")
-      .send({ text: "my msg", email: "creatorOfRoom@gmail.com", room: room })
+      .send({ text: "my msg", name: "Romario", room: room })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200);
 
-    
     expect(response._body).toEqual({ message: "message has been added" });
     const messageInRoom = await Rooms.findOne({ title: "title" });
     expect(messageInRoom.messages[0].text).toEqual("my msg");
-    
   });
 });

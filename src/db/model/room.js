@@ -4,7 +4,7 @@ const messagesModel = require("../model/message");
 const Messages = require("../model/message");
 
 roomsSchema.methods.addMsg = async function (room, msg) {
-  const msg1 = await Messages.create(msg);
+  await Messages.create(msg);
 
   const userIn = await this.model("Rooms").find({ "users.name": msg.name });
 

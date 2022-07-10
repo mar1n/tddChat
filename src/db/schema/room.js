@@ -20,5 +20,3 @@ const roomsSchema = mongoose.Schema({
 });
 
 module.exports = roomsSchema;
-
-//validate: v => Array.isArray(v) && v.length > 0
