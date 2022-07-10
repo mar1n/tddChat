@@ -1,19 +1,31 @@
+const mongoose = require("mongoose");
 const Rooms = require("../../src/db/model/room");
 const User = require("../../src/db/model/user");
-const { connectToMongo, diconnect } = require("../utils/db");
+const { connectToMongo, disconnect } = require("../utils/db");
 const { date, userName, message } = require("../utils/values");
 const { createRoom, findById } = require("../utils/document");
 
+
+
 describe("rooms", () => {
   beforeEach(async () => {
-    await connectToMongo();
+    await connectToMongo()
+    // mongoose.connect(
+    //   "mongodb://localhost:27017/acmedb",
+    //   { useNewUrlParser: true, useUnifiedTopology: true },
+    //   () => done()
+    // );
   });
-
   afterEach(async () => {
     await Rooms.deleteMany();
     await User.deleteMany();
-    await diconnect();
+    await disconnect();
   });
+  // afterEach((done) => {
+  //   mongoose.connection.db.dropDatabase(() => {
+  //     mongoose.connection.close(() => done());
+  //   });
+  // });
   test("add room", async () => {
     const room = await createRoom();
 

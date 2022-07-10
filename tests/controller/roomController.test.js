@@ -3,20 +3,21 @@ const Rooms = require("../../src/db/model/room");
 const User = require("../../src/db/model/user");
 const supertest = require("supertest");
 const mongoose = require("mongoose");
-const { connectToMongo, diconnect } = require("../utils/db");
+const { connectToMongo, disconnect } = require("../utils/db");
+const { createRoom } = require("../utils/document");
+
+beforeEach(async () => {
+  await connectToMongo()
+});
+
+afterEach(async () => {
+  await Rooms.deleteMany();
+  await disconnect();
+});
 
 const app = createServer();
 
 describe("rooom controller", () => {
-  beforeEach(async () => {
-    await connectToMongo();
-  });
-
-  afterEach(async () => {
-    await Rooms.deleteMany();
-    await User.deleteMany();
-    await diconnect();
-  });
   test.skip("create room", async () => {
     await supertest(app)
       .post("/room/create")
@@ -28,17 +29,18 @@ describe("rooom controller", () => {
     const createdRoom = await Rooms.findOne({ title: "Room 1" });
     expect(createdRoom.title).toEqual("Room 1");
   });
-  test.skip("the room title exists", async () => {
+  test("the room title exists", async () => {
+    await Rooms.create({
+      title: "Room 1",
+      users: [{ name: "Robin" }],
+    });
 
     await supertest(app)
       .post("/room/create")
       .send({ title: "Room 1", name: "Ronaldo" })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
-      .expect(200);
-
-    const createdRoom = await Rooms.findOne({ title: "Room 1" });
-    expect(createdRoom.title).toEqual("Room 1");
+      .expect(400);
   });
   test.skip("add the message to the room", async () => {
     const room = new Rooms({
