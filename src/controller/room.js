@@ -26,13 +26,13 @@ exports.createRoom = async (req, res) => {
 };
 
 exports.addMsg = async (req, res) => {
-  const { text, email, room } = req.body;
+  const { text, name, room } = req.body;
   const rooms = new Rooms();
 
   res.set("Content-Type", "applicaton/json");
 
   try {
-    await rooms.addMsg(room, { text, email });
+    await rooms.addMsg(room, { text, name });
     res.status(200);
     res.json({
       message: "message has been added",
