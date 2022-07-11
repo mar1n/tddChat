@@ -5,7 +5,7 @@ const { connectToMongo, disconnect } = require("../utils/db");
 const { createRoom } = require("../utils/document");
 
 beforeEach(async () => {
-  await connectToMongo();
+  await connectToMongo()
 });
 
 afterEach(async () => {
@@ -16,7 +16,7 @@ afterEach(async () => {
 const app = createServer();
 
 describe("rooom controller", () => {
-  test.skip("create room", async () => {
+  test("create room", async () => {
     await supertest(app)
       .post("/room/create")
       .send({ title: "Room 1", name: "Ronaldo" })
@@ -38,7 +38,7 @@ describe("rooom controller", () => {
       .expect(400);
   });
   test("add the message to the room", async () => {
-    const room = await createRoom();
+    const room = await createRoom()
 
     const response = await supertest(app)
       .post("/room/new")

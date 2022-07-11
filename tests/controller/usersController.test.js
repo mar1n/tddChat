@@ -15,14 +15,15 @@ afterEach(async () => {
 const app = createServer();
 
 describe("Users controller", () => {
-  test("signUp of the user", async () => {
+  User.create([{ email: "szymon@gmail.com", name: "Szymon" }]);
+  test.only("user email is taken", async () => {
     const response = await supertest(app)
       .post("/user/signup")
-      .send({ name: "Szymon", password: "randomTEXT" })
+      .send({ name: "Szymon", email: "szymon@gmail.com", password: "randomTEXT" })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
-      .expect(200);
+      .expect(400);
 
-      
+    expect(response.message).toEqual("Email is taken!!!");
   });
 });
