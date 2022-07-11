@@ -2,6 +2,7 @@ const express = require("express");
 const router = require("./src/routes/room");
 
 function createServer() {
+  require('dotenv').config();
   const app = express();
   app.use(express.json());
   app.get("/post-test", async (req, res) => {
