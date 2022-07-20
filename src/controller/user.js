@@ -1,8 +1,16 @@
 const User = require("../db/model/user");
 const sgMail = require("@sendgrid/mail");
+const jwt = require("jsonwebtoken");
 
 exports.signup = async (req, res) => {
-  const { email, name } = req.body;
+  const { email, name, password } = req.body;
+  const token = jwt.sign(
+    { name, email, password },
+    process.env.JWT_ACCOUNT_ACTIVATION,
+    { expiresIn: "10m" }
+  );
+
+  console.log("token", token);
 
   try {
     await User.create([{ email, name }]);
@@ -16,9 +24,31 @@ exports.signup = async (req, res) => {
   }
 };
 
+exports.activation = async (req, res) => {
+  const { token } = req.body;
+  console.log('activation token', token);
+  // if (token) {
+  //   jwt.verify(
+  //     token,
+  //     process.env.JWT_ACCOUNT_ACTIVATION,
+  //     function (err, decoded) {
+  //       if (err) {
+  //         console.log('jwt verify in account activation error',err);
+  //       }
+
+  //       const { user, name, password} = jwt.decode(token);
+  //       console.log('user', user, 'name', name, 'password', password);
+  //     }
+  //   );
+  // }
+  res.status(200).json({ message: "Account has been created!!!"})
+  // try {
+  // } catch (err) {}
+};
+
 exports.sendEMailTest = async (req, res) => {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-  
+
   const { name } = req.body;
   const msg = {
     to: "cykcykacz@gmail.com", // Change to your recipient
@@ -27,9 +57,11 @@ exports.sendEMailTest = async (req, res) => {
     text: "and easy to do anywhere, even with Node.js",
     html: "<strong>and easy to do anywhere, even with Node.js</strong>",
   };
+
   sgMail
     .send(msg)
-    .then(() => {
+    .then((r) => {
+      console.log("res", r);
       res.status(200).json({
         message: "Email has been sent!!!",
       });
