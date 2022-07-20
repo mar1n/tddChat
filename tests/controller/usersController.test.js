@@ -67,7 +67,7 @@ describe("Users controller", () => {
     expect(message).toEqual("Email has been sent!!!");
   });
   test("user email is taken", async () => {
-    User.create([{ email: "szymon@gmail.com", name: "Szymon", hashed_password: "somepasss" }]);
+    User.create([{ email: "szymon@gmail.com", name: "Szymon", password: "somepasss" }]);
     const response = await supertest(app)
       .post("/user/signup")
       .send({

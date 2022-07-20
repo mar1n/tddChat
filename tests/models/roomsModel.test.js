@@ -147,9 +147,9 @@ describe("rooms", () => {
   test("only one room can have one title", async () => {
     expect.hasAssertions();
     await User.create([
-      { email: "gmail@google.com", name: "Rocky", hashed_password: "asdaczczcasda" },
-      { email: "bill@microsoft.com", name: "Ronaldo", hashed_password: "asdaczczcasda" },
-      { email: "test@gmail.com", name: "Jordan", hashed_password: "asdaczczcasda" },
+      { email: "gmail@google.com", name: "Rocky", password: "asdaczczcasda" },
+      { email: "bill@microsoft.com", name: "Ronaldo", password: "asdaczczcasda" },
+      { email: "test@gmail.com", name: "Jordan", password: "asdaczczcasda" },
     ]);
     await User.init();
     const user = await User.findOne({ email: "bill@microsoft.com" });

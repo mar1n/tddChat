@@ -16,14 +16,14 @@ describe("Users", () => {
       {
         email: "gmail@google.com",
         name: "Rocky",
-        hashed_password: "somepasss",
+        password: "somepasss",
       },
       {
         email: "bill@microsoft.com",
         name: "Ronaldo",
-        hashed_password: "somepasss",
+        password: "somepasss",
       },
-      { email: "test@gmail.com", name: "Jordan", hashed_password: "somepasss" },
+      { email: "test@gmail.com", name: "Jordan", password: "somepasss" },
     ]);
 
     await User.init();
@@ -31,7 +31,7 @@ describe("Users", () => {
       await User.create({
         email: "gmail@google.com",
         name: "unnamed",
-        hashed_password: "somepasss",
+        password: "somepasss",
       });
     } catch (error) {
       expect(error.code).toEqual(11000);
@@ -47,7 +47,9 @@ describe("Users", () => {
         name: "unnamed",
       });
     } catch (error) {
-      expect(error.message).toEqual('User validation failed: hashed_password: Path `hashed_password` is required.');
+      expect(error.message).toEqual(
+        "User validation failed: hashed_password: Path `hashed_password` is required."
+      );
     }
   });
   test("field name is required", async () => {
@@ -56,10 +58,12 @@ describe("Users", () => {
     try {
       await User.create({
         email: "gmail@google.com",
-        hashed_password: "somepasss",
+        password: "somepasss",
       });
     } catch (error) {
-      expect(error.message).toEqual('User validation failed: name: Path `name` is required.');
+      expect(error.message).toEqual(
+        "User validation failed: name: Path `name` is required."
+      );
     }
   });
   test("field email is required", async () => {
@@ -68,10 +72,27 @@ describe("Users", () => {
     try {
       await User.create({
         name: "unnamed",
-        hashed_password: "somepasss",
+        password: "somepasss",
       });
     } catch (error) {
-      expect(error.message).toEqual('User validation failed: email: Path `email` is required.');
+      expect(error.message).toEqual(
+        "User validation failed: email: Path `email` is required."
+      );
     }
+  });
+  describe("user authentication", () => {
+    test("user provide correct password", async () => {
+      await User.create([
+        {
+          email: "ronaldo@gmail.com",
+          name: "Ronaldo",
+          password: "xxxxx",
+        },
+      ]);
+
+      const findUser = await User.findOne({ email: "ronaldo@gmail.com"});
+      const authenticate = await findUser.authenticate("xxxxx");
+      expect(authenticate).toBe(true);
+    });
   });
 });
