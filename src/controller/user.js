@@ -13,7 +13,7 @@ exports.signup = async (req, res) => {
   console.log("token", token);
 
   try {
-    await User.create([{ email, name }]);
+    await User.create([{ email, name, hashed_password: password }]);
     res.status(200).json({ message: "done" });
   } catch (err) {
     if (err.code === 11000) {

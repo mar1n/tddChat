@@ -10,22 +10,12 @@ const { createRoom, findById } = require("../utils/document");
 describe("rooms", () => {
   beforeEach(async () => {
     await connectToMongo()
-    // mongoose.connect(
-    //   "mongodb://localhost:27017/acmedb",
-    //   { useNewUrlParser: true, useUnifiedTopology: true },
-    //   () => done()
-    // );
   });
   afterEach(async () => {
     await Rooms.deleteMany();
     await User.deleteMany();
     await disconnect();
   });
-  // afterEach((done) => {
-  //   mongoose.connection.db.dropDatabase(() => {
-  //     mongoose.connection.close(() => done());
-  //   });
-  // });
   test("add room", async () => {
     const room = await createRoom();
 
@@ -157,9 +147,9 @@ describe("rooms", () => {
   test("only one room can have one title", async () => {
     expect.hasAssertions();
     await User.create([
-      { email: "gmail@google.com", name: "Rocky" },
-      { email: "bill@microsoft.com", name: "Ronaldo" },
-      { email: "test@gmail.com", name: "Jordan" },
+      { email: "gmail@google.com", name: "Rocky", hashed_password: "asdaczczcasda" },
+      { email: "bill@microsoft.com", name: "Ronaldo", hashed_password: "asdaczczcasda" },
+      { email: "test@gmail.com", name: "Jordan", hashed_password: "asdaczczcasda" },
     ]);
     await User.init();
     const user = await User.findOne({ email: "bill@microsoft.com" });
