@@ -11,18 +11,10 @@ exports.signup = async (req, res) => {
   );
 
   const userExist = await User.findOne({ email });
-  try {
-    if (userExist !== null) {
-      const error = new Error("Emial has been taken!!!");
-      error.code = 555;
-      throw error;
-    }
-  } catch (err) {
-    if (err.code === 555) {
-      return res.status(400).json({
-        message: err.message,
-      });
-    }
+  if(userExist) {
+    return res.status(400).json({
+      message: "Emial has been taken!!!"
+    });
   }
 
   const msg = {
@@ -30,7 +22,13 @@ exports.signup = async (req, res) => {
     from: "szym0nd4widowicz@gmail.com", // Change to your verified sender
     subject: "Sending with SendGrid is Fun",
     text: "and easy to do anywhere, even with Node.js",
-    html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+    html: `
+                <h1>Please use the following link to activate your account</h1>
+                <p>${process.env.CLIENT_URL}/auth/activate/${token}</p>
+                <hr />
+                <p>This email may contain sensetive information</p>
+                <p>${process.env.CLIENT_URL}</p>
+            `,
   };
 
   sgMail
@@ -53,21 +51,26 @@ exports.signup = async (req, res) => {
 exports.activation = async (req, res) => {
   const { token } = req.body;
   console.log("activation token", token);
-  // if (token) {
-  //   jwt.verify(
-  //     token,
-  //     process.env.JWT_ACCOUNT_ACTIVATION,
-  //     function (err, decoded) {
-  //       if (err) {
-  //         console.log('jwt verify in account activation error',err);
-  //       }
+  if (token) {
+    jwt.verify(
+      token,
+      process.env.JWT_ACCOUNT_ACTIVATION,
+      function (err, decoded) {
+        if (err) {
+          console.log('jwt verify in account activation error',err);
+          return res.status(400).json({
+            message: `Token has been expired!!`
+          })
+        }
+        res.status(200).json({ message: "Account has been created!!!" });
+        // const { user, name, password} = jwt.decode(token);
+        // console.log('user', user, 'name', name, 'password', password);
+      }
+    );
+  } else {
 
-  //       const { user, name, password} = jwt.decode(token);
-  //       console.log('user', user, 'name', name, 'password', password);
-  //     }
-  //   );
-  // }
-  res.status(200).json({ message: "Account has been created!!!" });
+    res.status(401).json({ message: "Where is token!!!" });
+  }
   // try {
   //   await User.create([{ email, name, hashed_password: password }]);
   //   res.status(200).json({ message: "done" });

@@ -2,7 +2,9 @@ const createServer = require("../../server");
 const User = require("../../src/db/model/user");
 const supertest = require("supertest");
 const { connectToMongo, disconnect } = require("../utils/db");
-const { JsonWebTokenError } = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
+const FakeTimers = require("@sinonjs/fake-timers");
+
 
 const fakeSgMailResponse = [
   {
@@ -34,16 +36,26 @@ jest.mock("@sendgrid/mail", () => {
 });
 const sgMail = require("@sendgrid/mail");
 
+// jest.mock('jsonwebtoken', () => ({
+//   verify: jest.fn((token, secretOrPublicKey, options, callback) => {
+//     console.log('xxxx');
+//     return callback(null, {sub: 'user_id'});
+//   })
+// }));
+
+// const jwt = require("jsonwebtoken");
 // jest.mock("../../src/validators/work", () => ({
 //   work: jest.fn((req, res, next) => next())
 // }))
 // const { work } = require("../../src/validators/work");
-
+let clock;
 beforeEach(async () => {
+  clock = FakeTimers.install();
   await connectToMongo();
 });
 
 afterEach(async () => {
+  clock = clock.uninstall();
   await disconnect();
 });
 
@@ -55,7 +67,7 @@ describe("Users controller", () => {
     await User.deleteMany();
   });
   describe("Singup the User", () => {
-    test.only("emial has been sent", async () => {
+    test("emial has been sent", async () => {
       sgMail.send.mockResolvedValue(fakeSgMailResponse);
       const response = await supertest(app)
         .post("/user/signup")
@@ -69,42 +81,42 @@ describe("Users controller", () => {
         .expect(200);
 
       const { message } = response.body;
-      expect(message).toEqual("Email has been sent!!!")
-    });
-    test.skip("email has been sent", async () => {
-      
-      const response = await supertest(app)
-        .post("/user/email")
-        .send({
-          name: "Ronaldo",
-          email: "cykcykacz@gmail.com",
-          password: "asdzxcz",
-        })
-        .set("Accept", "application/json")
-        .expect("Content-Type", /json/)
-        .expect(200);
-
-      const { message } = response.body;
       expect(message).toEqual("Email has been sent!!!");
     });
-    test.skip("user email is taken", async () => {
-      User.create([
-        { email: "szymon@gmail.com", name: "Szymon", password: "somepasss" },
-      ]);
-      const response = await supertest(app)
-        .post("/user/signup")
-        .send({
-          name: "Szymon",
-          email: "szymon@gmail.com",
-          password: "randomTEXT",
-        })
-        .set("Accept", "application/json")
-        .expect("Content-Type", /json/)
-        .expect(400);
+    // test.skip("email has been sent", async () => {
 
-      const { message } = response.body;
-      expect(message).toEqual("Email is taken!!!");
-    });
+    //   const response = await supertest(app)
+    //     .post("/user/email")
+    //     .send({
+    //       name: "Ronaldo",
+    //       email: "cykcykacz@gmail.com",
+    //       password: "asdzxcz",
+    //     })
+    //     .set("Accept", "application/json")
+    //     .expect("Content-Type", /json/)
+    //     .expect(200);
+
+    //   const { message } = response.body;
+    //   expect(message).toEqual("Email has been sent!!!");
+    // });
+    // test.skip("user email is taken", async () => {
+    //   User.create([
+    //     { email: "szymon@gmail.com", name: "Szymon", password: "somepasss" },
+    //   ]);
+    //   const response = await supertest(app)
+    //     .post("/user/signup")
+    //     .send({
+    //       name: "Szymon",
+    //       email: "szymon@gmail.com",
+    //       password: "randomTEXT",
+    //     })
+    //     .set("Accept", "application/json")
+    //     .expect("Content-Type", /json/)
+    //     .expect(400);
+
+    //   const { message } = response.body;
+    //   expect(message).toEqual("Email is taken!!!");
+    // });
     describe("validation", () => {
       test("filed name", async () => {
         const response = await supertest(app)
@@ -154,12 +166,17 @@ describe("Users controller", () => {
     });
   });
   describe("Account activation", () => {
-    test("Account activation", async () => {
+    test("Account created succesfully", async () => {
+      const token = jwt.sign(
+        { name: "Szymon", email: "szymon@gmail.com", password: "asdzxcqwe" },
+        process.env.JWT_ACCOUNT_ACTIVATION,
+        { expiresIn: "10m" }
+      );
+      
       const response = await supertest(app)
         .post("/user/activation")
         .send({
-          token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiU3p5bW9uIiwiZW1haWwiOiJzenltb25AZ21haWwuY29tIiwicGFzc3dvcmQiOiJyYW5kb21URVhUIiwiaWF0IjoxNjU3ODEyODQ5LCJleHAiOjE2NTc4MTM0NDl9.q7dFO95DTW_zQy5jlxYwTQZIHdoI4x2JXJ_fYpxGYTE",
+          token: token,
         })
         .set("Accept", "application/josn")
         .expect("Content-Type", /json/)
@@ -168,7 +185,30 @@ describe("Users controller", () => {
       const { message } = response.body;
 
       expect(message).toEqual("Account has been created!!!");
-      console.log("calls", work.mock.calls.length);
+    });
+    test("Token has been expired", async () => {
+      const hoursInMs = n => 1000 * 60 * 60 * n;
+
+      const token = jwt.sign(
+        { name: "Szymon", email: "szymon@gmail.com", password: "asdzxcqwe" },
+        process.env.JWT_ACCOUNT_ACTIVATION,
+        { expiresIn: "10m" }
+      );
+
+      clock.tick(hoursInMs(4));
+
+      const response = await supertest(app)
+        .post("/user/activation")
+        .send({
+          token: token,
+        })
+        .set("Accept", "application/josn")
+        .expect("Content-Type", /json/)
+        .expect(400);
+
+      const { message } = response.body;
+
+      expect(message).toEqual("Expired link. Signup again");
     });
   });
 });
