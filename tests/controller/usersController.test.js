@@ -55,8 +55,24 @@ describe("Users controller", () => {
     await User.deleteMany();
   });
   describe("Singup the User", () => {
-    test("email has been sent", async () => {
+    test.only("emial has been sent", async () => {
       sgMail.send.mockResolvedValue(fakeSgMailResponse);
+      const response = await supertest(app)
+        .post("/user/signup")
+        .send({
+          name: "Ronaldo",
+          email: "ronaldo@gmail.com",
+          password: "asdadadadad",
+        })
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(200);
+
+      const { message } = response.body;
+      expect(message).toEqual("Email has been sent!!!")
+    });
+    test.skip("email has been sent", async () => {
+      
       const response = await supertest(app)
         .post("/user/email")
         .send({
@@ -71,7 +87,7 @@ describe("Users controller", () => {
       const { message } = response.body;
       expect(message).toEqual("Email has been sent!!!");
     });
-    test("user email is taken", async () => {
+    test.skip("user email is taken", async () => {
       User.create([
         { email: "szymon@gmail.com", name: "Szymon", password: "somepasss" },
       ]);
