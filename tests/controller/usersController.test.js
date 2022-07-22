@@ -36,18 +36,6 @@ jest.mock("@sendgrid/mail", () => {
 });
 const sgMail = require("@sendgrid/mail");
 
-// jest.mock('jsonwebtoken', () => ({
-//   verify: jest.fn((token, secretOrPublicKey, options, callback) => {
-//     console.log('xxxx');
-//     return callback(null, {sub: 'user_id'});
-//   })
-// }));
-
-// const jwt = require("jsonwebtoken");
-// jest.mock("../../src/validators/work", () => ({
-//   work: jest.fn((req, res, next) => next())
-// }))
-// const { work } = require("../../src/validators/work");
 let clock;
 beforeEach(async () => {
   clock = FakeTimers.install();
