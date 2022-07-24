@@ -11,9 +11,9 @@ exports.signup = async (req, res) => {
   );
 
   const userExist = await User.findOne({ email });
-  if(userExist) {
+  if (userExist) {
     return res.status(400).json({
-      message: "Emial has been taken!!!"
+      message: "Emial has been taken!!!",
     });
   }
 
@@ -34,11 +34,9 @@ exports.signup = async (req, res) => {
   sgMail
     .send(msg)
     .then((r) => {
-      console.log("res", r);
       res.status(200).json({
         message: "Email has been sent!!!",
       });
-      console.log("Email sent by ", name);
     })
     .catch((error) => {
       console.error(error);
@@ -50,37 +48,28 @@ exports.signup = async (req, res) => {
 
 exports.activation = async (req, res) => {
   const { token } = req.body;
-  console.log("activation token", token);
-  if (token) {
+  
     jwt.verify(
       token,
       process.env.JWT_ACCOUNT_ACTIVATION,
-      function (err, decoded) {
+      async function (err) {
         if (err) {
-          console.log('jwt verify in account activation error',err);
-          return res.status(400).json({
-            message: `Token has been expired!!`
+          return res.status(401).json({
+            message: "Expired link. Signup again.",
+          });
+        }
+        const { name, email, password } = jwt.decode(token);
+        try {
+          await User.create([{ name, email, password }]);
+          res.status(201).json({ message: "Account has been created!!!" });
+        } catch (error) {
+          res.status(500).json({
+            message: "Problem with Database",
+            error
           })
         }
-        res.status(200).json({ message: "Account has been created!!!" });
-        // const { user, name, password} = jwt.decode(token);
-        // console.log('user', user, 'name', name, 'password', password);
       }
     );
-  } else {
-
-    res.status(401).json({ message: "Where is token!!!" });
-  }
-  // try {
-  //   await User.create([{ email, name, hashed_password: password }]);
-  //   res.status(200).json({ message: "done" });
-  // } catch (err) {
-  //   if (err.code === 11000) {
-  //     return res.status(400).json({
-  //       message: "Email is taken!!!",
-  //     });
-  //   }
-  // }
 };
 
 exports.sendEMailTest = async (req, res) => {
@@ -98,14 +87,11 @@ exports.sendEMailTest = async (req, res) => {
   sgMail
     .send(msg)
     .then((r) => {
-      console.log("res", r);
       res.status(200).json({
         message: "Email has been sent!!!",
       });
-      console.log("Email sent by ", name);
     })
     .catch((error) => {
-      console.error(error);
       res.status(500).json({
         message: "Uppss",
       });

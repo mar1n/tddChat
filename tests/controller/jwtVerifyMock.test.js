@@ -1,8 +1,7 @@
 const createServer = require("../../server");
-const User = require("../../src/db/model/user");
 const supertest = require("supertest");
 const { connectToMongo, disconnect } = require("../utils/db");
-
+const User = require("../../src/db/model/user");
 
 jest.mock("jsonwebtoken", () => {
   const originalModule = jest.requireActual("jsonwebtoken");
@@ -10,7 +9,7 @@ jest.mock("jsonwebtoken", () => {
   return {
     ...originalModule,
     verify: jest.fn((token, secretOrPublicKey, callback) => {
-      return callback(null, {sub: 'user_id'});
+      return callback(null);
     }),
   };
 });
@@ -47,31 +46,11 @@ describe("Users controller", () => {
         })
         .set("Accept", "application/josn")
         .expect("Content-Type", /json/)
-        .expect(200);
+        .expect(201);
 
       const { message } = response.body;
 
       expect(message).toEqual("Account has been created!!!");
-    });
-    test("Token has been expired", async () => {
-      const token = jwt.sign(
-        { name: "Szymon", email: "szymon@gmail.com", password: "asdzxcqwe" },
-        process.env.JWT_ACCOUNT_ACTIVATION,
-        { expiresIn: "10m" }
-      );
-
-      const response = await supertest(app)
-        .post("/user/activation")
-        .send({
-          token: token,
-        })
-        .set("Accept", "application/josn")
-        .expect("Content-Type", /json/)
-        .expect(400);
-
-      const { message } = response.body;
-
-      expect(message).toEqual("Expired link. Signup again");
     });
   });
 });

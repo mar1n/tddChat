@@ -168,11 +168,12 @@ describe("Users controller", () => {
         })
         .set("Accept", "application/josn")
         .expect("Content-Type", /json/)
-        .expect(200);
+        .expect(201);
 
       const { message } = response.body;
-
       expect(message).toEqual("Account has been created!!!");
+      const findUser = await User.findOne({email: "szymon@gmail.com"});
+      expect(findUser.name).toEqual("Szymon");
     });
     test("Token has been expired", async () => {
       const hoursInMs = n => 1000 * 60 * 60 * n;
@@ -192,11 +193,11 @@ describe("Users controller", () => {
         })
         .set("Accept", "application/josn")
         .expect("Content-Type", /json/)
-        .expect(400);
+        .expect(401);
 
       const { message } = response.body;
 
-      expect(message).toEqual("Expired link. Signup again");
+      expect(message).toEqual("Expired link. Signup again.");
     });
   });
 });
