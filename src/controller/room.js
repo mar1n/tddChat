@@ -1,6 +1,6 @@
 const Rooms = require("../db/model/room");
 
-exports.createRoom = async (req, res) => {
+exports.createRoom = async (req, res, next) => {
   res.set("Content-Type", "application/json");
   const { title, name } = req.body;
   const room = new Rooms({
@@ -13,19 +13,17 @@ exports.createRoom = async (req, res) => {
     res.status(200).json({
       message: "Room has been created",
     });
-  } catch (err) {
-    if (err.code === 11000) {
+  } catch (error) {
+    if (error.code === 11000) {
       return res.status(400).json({
         message: "This room title exisits!",
       });
     }
-    res.status(500).json({
-      message: err,
-    });
+    next(error)
   }
 };
 
-exports.addMsg = async (req, res) => {
+exports.addMsg = async (req, res, next) => {
   const { text, name, room } = req.body;
   const rooms = new Rooms();
 
@@ -37,14 +35,12 @@ exports.addMsg = async (req, res) => {
     res.json({
       message: "message has been added",
     });
-  } catch (err) {
-    if (err === "User does not exist!!!") {
+  } catch (error) {
+    if (error === "User does not exist!!!") {
       return res.status(400).json({
-        message: err,
+        message: error,
       });
     }
-    res.status(500).json({
-      message: err,
-    });
+    next(error)
   }
 };

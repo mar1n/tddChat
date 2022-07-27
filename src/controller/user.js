@@ -2,7 +2,7 @@ const User = require("../db/model/user");
 const sgMail = require("@sendgrid/mail");
 const jwt = require("jsonwebtoken");
 
-exports.signup = async (req, res) => {
+exports.signup = async (req, res, next) => {
   const { email, name, password } = req.body;
   const token = jwt.sign(
     { name, email, password },
@@ -39,14 +39,11 @@ exports.signup = async (req, res) => {
       });
     })
     .catch((error) => {
-      console.error(error);
-      res.status(500).json({
-        message: "Uppss",
-      });
+      next(error)
     });
 };
 
-exports.activation = async (req, res) => {
+exports.activation = async (req, res, next) => {
   const { token } = req.body;
   
     jwt.verify(
@@ -63,10 +60,7 @@ exports.activation = async (req, res) => {
           await User.create([{ name, email, password }]);
           res.status(201).json({ message: "Account has been created!!!" });
         } catch (error) {
-          res.status(500).json({
-            message: "Problem with Database",
-            error
-          })
+          next(error)
         }
       }
     );
