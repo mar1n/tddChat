@@ -71,40 +71,6 @@ describe("Users controller", () => {
       const { message } = response.body;
       expect(message).toEqual("Email has been sent!!!");
     });
-    // test.skip("email has been sent", async () => {
-
-    //   const response = await supertest(app)
-    //     .post("/user/email")
-    //     .send({
-    //       name: "Ronaldo",
-    //       email: "cykcykacz@gmail.com",
-    //       password: "asdzxcz",
-    //     })
-    //     .set("Accept", "application/json")
-    //     .expect("Content-Type", /json/)
-    //     .expect(200);
-
-    //   const { message } = response.body;
-    //   expect(message).toEqual("Email has been sent!!!");
-    // });
-    // test.skip("user email is taken", async () => {
-    //   User.create([
-    //     { email: "szymon@gmail.com", name: "Szymon", password: "somepasss" },
-    //   ]);
-    //   const response = await supertest(app)
-    //     .post("/user/signup")
-    //     .send({
-    //       name: "Szymon",
-    //       email: "szymon@gmail.com",
-    //       password: "randomTEXT",
-    //     })
-    //     .set("Accept", "application/json")
-    //     .expect("Content-Type", /json/)
-    //     .expect(400);
-
-    //   const { message } = response.body;
-    //   expect(message).toEqual("Email is taken!!!");
-    // });
     describe("validation", () => {
       test("filed name", async () => {
         const response = await supertest(app)

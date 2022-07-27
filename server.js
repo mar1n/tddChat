@@ -1,14 +1,15 @@
 const express = require("express");
 const router = require("./src/routes/room");
-const error = require("./src/controller/errors");
+const {errFiveHundred, errNotFound} = require("./src/controller/errors");
 
 function createServer() {
-  require('dotenv').config();
+  require("dotenv").config();
   const app = express();
   app.use(express.json());
-  
+
   app.use("/", router);
-  app.use(error);
+  app.use(errNotFound);
+  app.use(errFiveHundred);
 
   return app;
 }
