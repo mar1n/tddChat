@@ -157,13 +157,59 @@ describe("Users controller", () => {
         .send({
           token: token,
         })
-        .set("Accept", "application/josn")
+        .set("Accept", "application/json")
         .expect("Content-Type", /json/)
         .expect(401);
 
-      const { message } = response.body;
+      const { error } = response.body;
 
-      expect(message).toEqual("Expired link. Signup again.");
+      expect(error).toEqual("Expired link. Signup again.");
+    });
+  });
+  describe('Signin User', () => {
+    test('User does not exist', async () => {
+      const response = await supertest(app)
+        .post("/user/signin")
+        .send({
+          email: "cykcykacz@gmail.com",
+          password: "zxcasdqwe"
+        })
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(400)
+
+      const { error } = response.body;
+      expect(error).toEqual("User with that email doesn't exist! Please signin.");
+    });
+    test('Password is incorrect', async () => {
+      await User.create([{ name: "Szymon", email: "cykcykacz@gmail.com", password: "zxcasdqwe"}]);
+      const response = await supertest(app)
+        .post("/user/signin")
+        .send({
+          email: "cykcykacz@gmail.com",
+          password: "zxcasdqwf"
+        })
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(400)
+
+      const { error } = response.body;
+      expect(error).toEqual("Email and password do not match!");
+    });
+    test('User email and password match ', async () => {
+      await User.create([{ name: "Szymon", email: "cykcykacz@gmail.com", password: "zxcasdqwe"}]);
+      const response = await supertest(app)
+        .post("/user/signin")
+        .send({
+          email: "cykcykacz@gmail.com",
+          password: "zxcasdqwe"
+        })
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(201)
+
+        const { message } = response.body;
+        expect(message).toEqual("Login details are correct. Welcome in service.")
     });
   });
 });

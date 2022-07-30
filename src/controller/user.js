@@ -24,7 +24,7 @@ exports.signup = async (req, res, next) => {
     text: "and easy to do anywhere, even with Node.js",
     html: `
                 <h1>Please use the following link to activate your account</h1>
-                <p>${process.env.CLIENT_URL}/auth/activate/${token}</p>
+                <p>${process.env.CLIENT_URL}/user/activate/${token}</p>
                 <hr />
                 <p>This email may contain sensetive information</p>
                 <p>${process.env.CLIENT_URL}</p>
@@ -49,10 +49,10 @@ exports.activation = async (req, res, next) => {
     jwt.verify(
       token,
       process.env.JWT_ACCOUNT_ACTIVATION,
-      async function (err) {
-        if (err) {
+      async function (error) {
+        if (error) {
           return res.status(401).json({
-            message: "Expired link. Signup again.",
+            error: "Expired link. Signup again.",
           });
         }
         const { name, email, password } = jwt.decode(token);
@@ -66,28 +66,29 @@ exports.activation = async (req, res, next) => {
     );
 };
 
-exports.sendEMailTest = async (req, res) => {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+exports.signin = async (req, res) => {
+  const { email, password } = req.body;
 
-  const { name } = req.body;
-  const msg = {
-    to: "cykcykacz@gmail.com", // Change to your recipient
-    from: "szym0nd4widowicz@gmail.com", // Change to your verified sender
-    subject: "Sending with SendGrid is Fun",
-    text: "and easy to do anywhere, even with Node.js",
-    html: "<strong>and easy to do anywhere, even with Node.js</strong>",
-  };
+  const user = await User.findOne({email});
 
-  sgMail
-    .send(msg)
-    .then((r) => {
-      res.status(200).json({
-        message: "Email has been sent!!!",
-      });
+  if(!user) {
+    return res.status(400).json({
+      error: "User with that email doesn't exist! Please signin."
     })
-    .catch((error) => {
-      res.status(500).json({
-        message: "Uppss",
-      });
-    });
-};
+  }
+
+  if(!user.authenticate(password)) {
+    return res.status(400).json({
+      error: "Email and password do not match!"
+    })
+  }
+
+  const token = jwt.sign({_id: user._id}, process.env.JWT_SECRET, { expiresIn: '7d'});
+
+  const { _id, name, role } = user;
+  return res.status(201).json({
+    message: "Login details are correct. Welcome in service.",
+    token,
+    user: { _id, name, email, role }
+  })
+}
