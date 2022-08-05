@@ -1,23 +1,12 @@
 import "./App.css";
-import {Link, Route, Routes, useLocation} from 'react-router-dom'
-import Home from "./Home";
+import Layout from "./Layout";
 
 function App() {
   return (
-    <>
-      <div>
-        <nav>
-          <ul>
-            <li>
-            <Link to="/">Home</Link>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <Routes>
-        <Route path="/" element={<Home />} />
-      </Routes>
-    </>
+    <Layout>
+      <h1>Hello React</h1>
+      <div>You are at home</div>
+    </Layout>
   );
 }
 
