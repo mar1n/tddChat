@@ -1,12 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import React from "react";
 import { BrowserRouter, MemoryRouter } from "react-router-dom";
+import App from "../App";
 
 describe('Router', () => { 
-    describe('Display home page', () => { 
-        render(<App />);
+    test('Display home page', () => { 
+        render(<App />, {wrapper: BrowserRouter})
 
-        const home = screen.getByText("Home");
-        expect(home).toBeInDocument();
+        const home = screen.getByText(/You are home/i);
+        expect(home).toBeInTheDocument();
      })
  })
