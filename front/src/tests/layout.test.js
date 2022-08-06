@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import Layout from "../layout";
+import Layout from "../components/Layout/Layout";
 import { MemoryRouter } from "react-router-dom";
 describe("Layout", () => {
   test("render layout children", () => {

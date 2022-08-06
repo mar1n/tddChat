@@ -3,7 +3,7 @@ import React from "react";
 import userEvent from "@testing-library/user-event";
 
 import { BrowserRouter } from "react-router-dom";
-import Router from "../Router";
+import Router from "../components/Router/Router";
 
 describe('Router', () => { 
     test('Display home page', () => { 
