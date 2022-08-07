@@ -1,16 +1,18 @@
 import {Route, Routes} from 'react-router-dom'
 import NotFound from "../Errors/NotFound";
 import App from "../App/App";
+import Signup from "../Signup/Signup";
 
-const Router = () => {
+const Main = () => {
   return (
     <>
       <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="*" element={<NotFound />}/>
+        <Route path="/" exact element={<App />} />
+        <Route path="/signup" exact element={<Signup />} />
+        <Route path="*" exact element={<NotFound />}/>
       </Routes>
     </>
   );
 }
 
-export default Router;
+export default Main;
