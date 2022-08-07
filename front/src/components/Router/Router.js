@@ -1,4 +1,5 @@
 import {Route, Routes} from 'react-router-dom'
+import NotFound from "../Errors/NotFound";
 import App from "../App/App";
 
 const Router = () => {
@@ -6,6 +7,7 @@ const Router = () => {
     <>
       <Routes>
         <Route path="/" element={<App />} />
+        <Route path="*" element={<NotFound />}/>
       </Routes>
     </>
   );

@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import userEvent from "@testing-library/user-event";
 
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, MemoryRouter } from "react-router-dom";
 import Router from "../components/Router/Router";
 
 describe('Router', () => { 
@@ -22,4 +22,13 @@ describe('Router', () => {
         user.click(homeLink);
         expect(home).toBeInTheDocument();
      })
+     test('page not found', () => {
+        const  badRoute = "/some/bad/route"
+        render(<MemoryRouter initialEntries={[badRoute]}>
+            <Router/>
+        </MemoryRouter>)
+
+        const notFound = screen.getByText(/not found/i);
+        expect(notFound).toBeInTheDocument();
+     });
  })
