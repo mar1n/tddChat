@@ -35,6 +35,7 @@ export const createShallowRenderer = () => {
 
     return {
         shallowRender: component => renderer.render(component),
+        root: () => renderer.getRenderOutput(),
         child: n => childrenOf(renderer.getRenderOutput())[n],
         elementsMatching: matcherFn => elementsMatching(renderer.getRenderOutput(), matcherFn),
         elementMatching: matcherFn => elementsMatching(renderer.getRenderOutput(), matcherFn)[0]
