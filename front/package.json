@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@testing-library/user-event": "^14.4.2",
+    "msw": "^0.44.2",
     "react-test-renderer": "^18.2.0"
   }
 }
