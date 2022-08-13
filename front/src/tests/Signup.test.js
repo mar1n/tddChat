@@ -1,83 +1,55 @@
 import React from "react";
 import Signup from "../components/Signup/Signup";
 import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
 import ReactTestUtils, { act } from "react-dom/test-utils";
+import { renderRouter, form, label, field } from "./myhelpers";
 
 describe("Signup", () => {
   test("renders a form", () => {
-    render(
-      <MemoryRouter>
-        <Signup />
-      </MemoryRouter>
-    );
-    const form = screen.getByRole("form", { name: /signup form/i });
-    expect(form).toBeInTheDocument();
+    renderRouter(<Signup />);
+    expect(form("signup form")).toBeInTheDocument();
   });
   test("renders the first name field as text box", () => {
-    render(
-      <MemoryRouter>
-        <Signup />
-      </MemoryRouter>
-    );
-    const field = screen.getByPlaceholderText("firstName");
-    expect(field).not.toBeNull();
-    expect(field.tagName).toEqual("INPUT");
-    expect(field.type).toEqual("text");
+    renderRouter(<Signup />);
+    expect(field("firstName")).not.toBeNull();
+    expect(field("firstName").tagName).toEqual("INPUT");
+    expect(field("firstName").type).toEqual("text");
   });
   test("includes the existing value for the firstName", () => {
-    render(
-      <MemoryRouter>
-        <Signup firstName='Szymon' />
-      </MemoryRouter>
-    );
-    const field = screen.getByPlaceholderText("firstName");
-    expect(field.value).toEqual("Szymon");
+    renderRouter(<Signup firstName='Szymon' />);
+    expect(field("firstName").value).toEqual("Szymon");
   });
   test("renders a label for the first name field", () => {
-    render(
-      <MemoryRouter>
-        <Signup />
-      </MemoryRouter>
-    );
-    const label = screen.getByText("First Name");
-    expect(label.tagName).toEqual("LABEL");
-    expect(label).toBeInTheDocument();
+    renderRouter(<Signup />);
+    expect(label("First Name").tagName).toEqual("LABEL");
+    expect(label("First Name")).toBeInTheDocument();
   });
   test("save existing first name when submitted", async () => {
     expect.hasAssertions();
-    render(
-      <MemoryRouter>
-        <Signup
-          firstName='Szymon'
-          onSubmit={({ firstName }) => expect(firstName).toEqual("Szymon")}
-        />
-      </MemoryRouter>
+    renderRouter(
+      <Signup
+        firstName='Szymon'
+        onSubmit={({ firstName }) => expect(firstName).toEqual("Szymon")}
+      />
     );
-    const form = screen.getByRole("form", { name: /signup form/i });
-    await ReactTestUtils.Simulate.submit(form);
+    await ReactTestUtils.Simulate.submit(form("signup form"));
   });
   test("saves new first name when submitted", async () => {
     expect.hasAssertions();
-    render(
-      <MemoryRouter>
-        <Signup
-          firstName='Szymon'
-          onSubmit={({ firstName }) => expect(firstName).toEqual("Jamie")}
-        />
-      </MemoryRouter>
+    renderRouter(
+      <Signup
+        firstName='Szymon'
+        onSubmit={({ firstName }) => expect(firstName).toEqual("Jamie")}
+      />
     );
 
-    const field = screen.getByPlaceholderText("firstName");
-    const form = screen.getByRole("form", { name: /signup form/i });
     await act(async () => {
-      ReactTestUtils.Simulate.change(field, {
+      ReactTestUtils.Simulate.change(field("firstName"), {
         target: { value: "Jamie" },
       });
     });
     await act(async () => {
-      ReactTestUtils.Simulate.submit(form);
+      ReactTestUtils.Simulate.submit(form("signup form"));
     });
-
   });
 });
