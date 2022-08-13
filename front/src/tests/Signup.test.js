@@ -10,6 +10,7 @@ describe("Signup", () => {
       renderRouter(<Signup />);
       expect(form(name)).toBeInTheDocument();
     });
+  rendersForm();
   const renderAsATextBox = (name) =>
     test("renders the field as text box", () => {
       renderRouter(<Signup />);
@@ -19,8 +20,8 @@ describe("Signup", () => {
     });
   const includeTheExistingValue = (name) =>
     test("includes the existing value", () => {
-      renderRouter(<Signup firstName='Szymon' />);
-      expect(field(name).value).toEqual("Szymon");
+      renderRouter(<Signup />);
+      expect(field(name).value).toEqual("");
     });
   const rendersLabelField = (name) =>
     test("renders a label for the field", () => {
@@ -28,41 +29,45 @@ describe("Signup", () => {
       expect(label(name).tagName).toEqual("LABEL");
       expect(label(name)).toBeInTheDocument();
     });
-  const saveExistingValue = (fieldName, value) =>
+  const saveExistingValue = (fieldName) =>
     test("save existing value when submitted", async () => {
       expect.hasAssertions();
       renderRouter(
         <Signup
-          {...{ [fieldName]: value }}
-          onSubmit={(props) => expect(props[fieldName]).toEqual(value)}
+          onSubmit={() => expect(field(fieldName).value).toEqual("")}
         />
       );
-      await ReactTestUtils.Simulate.submit(form("signup form"));
-    });
-  const saveNewValue = (fieldName, value) =>
-  test("saves new first name when submitted", async () => {
-    expect.hasAssertions();
-    renderRouter(
-      <Signup
-        {...{ [fieldName]: "Szymon"}}
-        onSubmit={props => expect(props[fieldName]).toEqual(value)}
-      />
-    );
-
-    await act(async () => {
-      ReactTestUtils.Simulate.change(field(fieldName), {
-        target: { value: value },
+      await act(async () => {
+        ReactTestUtils.Simulate.submit(form("signup form"));
       });
     });
-    await act(async () => {
-      ReactTestUtils.Simulate.submit(form("signup form"));
+  const saveNewValue = (fieldName, value) =>
+    test("saves new first name when submitted", async () => {
+      expect.hasAssertions();
+      renderRouter(
+        <Signup
+          onSubmit={() => expect(field(fieldName).value).toEqual(value)}
+        />
+      );
+
+      await act(async () => {
+        ReactTestUtils.Simulate.change(field(fieldName), {
+          target: { value: value, name: fieldName },
+        });
+      });
+      await act(async () => {
+        ReactTestUtils.Simulate.submit(form("signup form"));
+      });
     });
-  });
   describe("First name field", () => {
     renderAsATextBox("firstName");
     includeTheExistingValue("firstName");
-    rendersLabelField("First");
-    saveExistingValue("firstName", "Szymon")
-    saveNewValue("firstName", "NewValue")
+    rendersLabelField("First Name");
+    saveExistingValue("firstName");
+    saveNewValue("firstName", "NewValue");
+  });
+  describe('Email field', () => {
+    //rendersLabelField("Email");
+    //renderAsATextBox("email");
   });
 });
