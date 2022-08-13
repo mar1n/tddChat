@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import Layout from "../Layout/Layout";
 
-const Signup = ({ onSubmit }) => {
-  const [customer, setCustomer] = useState({ firstName: "" });
-  const handleChangeFirstName = (e) => {
+interface signup {
+  onSubmit: (firstName:string) => void
+}
+
+const Signup = ({ onSubmit }: signup) => {
+  const [customer, setCustomer] = useState<{firstName: string}>({ firstName: "" });
+  const handleChangeFirstName = (e:  React.ChangeEvent<HTMLInputElement>) => {
     setCustomer((customer) => ({
       ...customer,
       [e.target.name]: e.target.value,
@@ -14,7 +18,7 @@ const Signup = ({ onSubmit }) => {
     <Layout>
       <div>
         Signup Page{" "}
-        <form aria-label='signup form' onSubmit={() => onSubmit(customer)}>
+        <form aria-label='signup form' onSubmit={() => onSubmit(firstName)}>
           <label htmlFor='firstName'>First Name</label>
           <input
             type='text'

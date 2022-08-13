@@ -1,8 +1,11 @@
-import React from "react";
+import React, { ReactNode} from "react";
 import Navigation from "../navigation/Navigation";
 import RouterButton from "../navigation/RouterButton";
 
-const Layout = ({ children }) => (
+interface layout {
+  children: ReactNode
+}
+const Layout = ({ children }: layout) => (
   <>
     <Navigation>
       <RouterButton pathname={"/"}>Home</RouterButton>

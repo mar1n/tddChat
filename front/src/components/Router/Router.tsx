@@ -1,3 +1,4 @@
+import React from "react";
 import {Route, Routes} from 'react-router-dom'
 import NotFound from "../Errors/NotFound";
 import App from "../App/App";
@@ -7,9 +8,9 @@ const Main = () => {
   return (
     <>
       <Routes>
-        <Route path="/" exact element={<App />} />
-        <Route path="/signup" exact element={<Signup />} />
-        <Route path="*" exact element={<NotFound />}/>
+        <Route path="/" element={<App />} />
+        <Route path="/signup"  element={<Signup onSubmit={() => console.log('test')} />} />
+        <Route path="*" element={<NotFound />}/>
       </Routes>
     </>
   );

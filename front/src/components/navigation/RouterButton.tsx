@@ -1,6 +1,13 @@
+import React, { ReactNode} from "react";
 import { Link } from "react-router-dom";
 
-const RouterButton = ({ children, pathname, disabled }) => {
+interface routerButton {
+  children: ReactNode,
+  pathname: string,
+  disabled?: string
+}
+
+const RouterButton = ({ children, pathname, disabled }: routerButton) => {
   let className = "button";
   if(disabled) {
     className = "disabled"
