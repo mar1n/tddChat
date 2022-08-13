@@ -14,7 +14,7 @@ const Signup = ({ firstName, onSubmit }) => {
       <div>
         Signup Page{" "}
         <form aria-label='signup form' onSubmit={() => onSubmit(customer)}>
-          <label htmlFor=''>First Name</label>
+          <label htmlFor='firstName'>First</label>
           <input
             type='text'
             placeholder='firstName'
