@@ -67,7 +67,17 @@ describe("Signup", () => {
     saveNewValue("firstName", "NewValue");
   });
   describe('Email field', () => {
-    //rendersLabelField("Email");
-    //renderAsATextBox("email");
+    rendersLabelField("Email");
+    renderAsATextBox("email");
+    includeTheExistingValue("email");
+    saveExistingValue("email");
+    saveNewValue("email", "szymon@gmail.com");
+  });
+  describe('Password', () => {
+    rendersLabelField("Passpwrd");
+    renderAsATextBox("password");
+    includeTheExistingValue("password");
+    saveExistingValue("password");
+    saveNewValue("password", "szymon@gmail.com");
   });
 });

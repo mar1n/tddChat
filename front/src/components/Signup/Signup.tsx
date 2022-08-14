@@ -2,18 +2,22 @@ import React, { useState } from "react";
 import Layout from "../Layout/Layout";
 
 interface signup {
-  onSubmit: (firstName:string) => void
+  onSubmit: (firstName: string) => void;
 }
 
 const Signup = ({ onSubmit }: signup) => {
-  const [customer, setCustomer] = useState<{firstName: string}>({ firstName: "" });
-  const handleChangeFirstName = (e:  React.ChangeEvent<HTMLInputElement>) => {
+  const [customer, setCustomer] = useState<{
+    firstName: string;
+    email: string;
+    password: string;
+  }>({ firstName: "", email: "", password: "" });
+  const handleChangeFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCustomer((customer) => ({
       ...customer,
       [e.target.name]: e.target.value,
     }));
   };
-  const { firstName } = customer;
+  const { firstName, email, password } = customer;
   return (
     <Layout>
       <div>
@@ -23,16 +27,24 @@ const Signup = ({ onSubmit }: signup) => {
           <input
             type='text'
             placeholder='firstName'
-            name="firstName"
+            name='firstName'
             value={firstName}
             onChange={handleChangeFirstName}
           />
           <label htmlFor='email'>Email</label>
           <input
             type='text'
-            id=""
+            name='email'
             placeholder='email'
-            // value={email}
+            value={email}
+            onChange={handleChangeFirstName}
+          />
+          <label htmlFor='password'>Password</label>
+          <input
+            type='text'
+            name='password'
+            placeholder='password'
+            value={password}
             onChange={handleChangeFirstName}
           />
         </form>
