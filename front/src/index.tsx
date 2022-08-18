@@ -4,6 +4,8 @@ import "./index.css";
 import Main from "./components/Router/Router";
 import { BrowserRouter as Router } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
+const { worker } = require('./mocks/browser');
+worker.start();
 
 const root = ReactDOM.createRoot(document.getElementById("root") as Element);
 root.render(

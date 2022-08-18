@@ -9,7 +9,7 @@ const Main = () => {
     <>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/signup"  element={<Signup onSubmit={() => console.log('test')} />} />
+        <Route path="/signup"  element={<Signup />} />
         <Route path="*" element={<NotFound />}/>
       </Routes>
     </>

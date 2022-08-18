@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import Layout from "../Layout/Layout";
+import axios from "axios";
+// interface signup {
+//   onSubmit: (firstName: string) => void;
+// }
 
-interface signup {
-  onSubmit: (firstName: string) => void;
-}
-
-const Signup = ({ onSubmit }: signup) => {
+const Signup = () => {
   const [customer, setCustomer] = useState<{
     firstName: string;
     email: string;
@@ -17,12 +17,22 @@ const Signup = ({ onSubmit }: signup) => {
       [e.target.name]: e.target.value,
     }));
   };
+  const clickSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const response = await axios({
+      method: 'POST',
+      url: `http://localhost:500/signup`,
+      data: {firstName, email, password}
+    })
+    console.log('response', response)
+
+  };
   const { firstName, email, password } = customer;
   return (
     <Layout>
       <div>
         Signup Page{" "}
-        <form aria-label='signup form' onSubmit={() => onSubmit(firstName)}>
+        <form aria-label='signup form' onSubmit={clickSubmit}>
           <label htmlFor='firstName'>First Name</label>
           <input
             type='text'
@@ -47,6 +57,7 @@ const Signup = ({ onSubmit }: signup) => {
             value={password}
             onChange={handleChangeFirstName}
           />
+          <input type="submit" value="submit" />
         </form>
       </div>
     </Layout>
