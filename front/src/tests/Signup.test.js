@@ -29,25 +29,12 @@ describe("Signup", () => {
       expect(label(name).tagName).toEqual("LABEL");
       expect(label(name)).toBeInTheDocument();
     });
-  const saveExistingValue = (fieldName) =>
-    test("save existing value when submitted", async () => {
-      expect.hasAssertions();
-      renderRouter(
-        <Signup
-          onSubmit={() => expect(field(fieldName).value).toEqual("")}
-        />
-      );
-      await act(async () => {
-        ReactTestUtils.Simulate.submit(form("signup form"));
-      });
-    });
+  
   const saveNewValue = (fieldName, value) =>
     test("saves new first name when submitted", async () => {
       expect.hasAssertions();
       renderRouter(
-        <Signup
-          onSubmit={() => expect(field(fieldName).value).toEqual(value)}
-        />
+        <Signup />
       );
 
       await act(async () => {
@@ -55,29 +42,49 @@ describe("Signup", () => {
           target: { value: value, name: fieldName },
         });
       });
+      expect(field(fieldName).value).toEqual(value)
       await act(async () => {
         ReactTestUtils.Simulate.submit(form("signup form"));
       });
+      expect(field(fieldName).value).toEqual("")
+    });
+    const saveNewValueError = (fieldName, value) =>
+    test("saves new first name when error", async () => {
+      expect.hasAssertions();
+      renderRouter(
+        <Signup />
+      );
+
+      await act(async () => {
+        ReactTestUtils.Simulate.change(field(fieldName), {
+          target: { value: value, name: fieldName },
+        });
+      });
+      expect(field(fieldName).value).toEqual(value)
+      await act(async () => {
+        ReactTestUtils.Simulate.submit(form("signup form"));
+      });
+      screen.getByText("Error on screen")
     });
   describe("First name field", () => {
     renderAsATextBox("firstName");
     includeTheExistingValue("firstName");
     rendersLabelField("First Name");
-    saveExistingValue("firstName");
     saveNewValue("firstName", "NewValue");
+    saveNewValueError("firstName", "");
   });
-  describe('Email field', () => {
-    rendersLabelField("Email");
-    renderAsATextBox("email");
-    includeTheExistingValue("email");
-    saveExistingValue("email");
-    saveNewValue("email", "szymon@gmail.com");
-  });
-  describe('Password', () => {
-    rendersLabelField("Passpwrd");
-    renderAsATextBox("password");
-    includeTheExistingValue("password");
-    saveExistingValue("password");
-    saveNewValue("password", "szymon@gmail.com");
-  });
+  // describe('Email field', () => {
+  //   rendersLabelField("Email");
+  //   renderAsATextBox("email");
+  //   includeTheExistingValue("email");
+  //   saveExistingValue("email");
+  //   saveNewValue("email", "szymon@gmail.com");
+  // });
+  // describe('Password', () => {
+  //   rendersLabelField("Password");
+  //   renderAsATextBox("password");
+  //   includeTheExistingValue("password");
+  //   saveExistingValue("password");
+  //   saveNewValue("password", "szymon@gmail.com");
+  // });
 });

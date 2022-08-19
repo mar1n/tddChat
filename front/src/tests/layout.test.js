@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import Layout from "../components/Layout/Layout";
 import { MemoryRouter } from "react-router-dom";
+
 describe("Layout", () => {
   test("render layout children", () => {
     render(
@@ -10,8 +11,7 @@ describe("Layout", () => {
         </Layout>
       </MemoryRouter>
     );
-    const childrenElment = screen.getByText("my layout");
-    expect(childrenElment).toBeInTheDocument();
+    screen.getByText("my layout");
   });
   test("there is div with role main-container", () => {
     render(
@@ -19,8 +19,7 @@ describe("Layout", () => {
         <Layout />
       </MemoryRouter>
     );
-    const container = screen.getByRole("main");
-    expect(container).toBeInTheDocument();
+    screen.getByRole("main");
   });
   test("navigation div", () => {
     render(
@@ -28,7 +27,6 @@ describe("Layout", () => {
         <Layout />
       </MemoryRouter>
     );
-    const container = screen.getByRole("navigation");
-    expect(container).toBeInTheDocument();
+    screen.getByRole("navigation");
   });
 });

@@ -11,6 +11,7 @@ const Signup = () => {
     email: string;
     password: string;
   }>({ firstName: "", email: "", password: "" });
+  const [validationError, setValidationError] = useState<string>("")
   const handleChangeFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCustomer((customer) => ({
       ...customer,
@@ -18,16 +19,25 @@ const Signup = () => {
     }));
   };
   const clickSubmit = async (e: React.FormEvent) => {
+    console.log('something')
     e.preventDefault();
-    const response = await axios({
-      method: 'POST',
-      url: `http://localhost:500/signup`,
-      data: {firstName, email, password}
-    })
-    console.log('response', response)
+    try {
+      await axios({
+        method: 'POST',
+        url: `http://localhost:500/signup`,
+        data: {firstName, email, password}
+      })
+
+      setCustomer({ firstName: "", email: "", password: ""})
+    } catch (err) {
+      console.log("test error")
+      setValidationError("Error on screen")
+    }
+
 
   };
   const { firstName, email, password } = customer;
+  
   return (
     <Layout>
       <div>
@@ -59,6 +69,7 @@ const Signup = () => {
           />
           <input type="submit" value="submit" />
         </form>
+        <div className="error">{validationError}</div>
       </div>
     </Layout>
   );
