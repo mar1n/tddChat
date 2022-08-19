@@ -2,18 +2,19 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import userEvent from "@testing-library/user-event";
 
-import { BrowserRouter, MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import Router from "../components/Router/Router";
+import { renderWithProviders } from "./utils/test-utils";
 
 describe("Router", () => {
   test("Display home page", () => {
-    render(<Router />, { wrapper: BrowserRouter });
+    renderWithProviders(<MemoryRouter><Router /></MemoryRouter>);
 
     const home = screen.getByText(/You are at home/i);
     expect(home).toBeInTheDocument();
   });
   test("should first", () => {
-    render(<Router />, { wrapper: BrowserRouter });
+    renderWithProviders(<MemoryRouter><Router /></MemoryRouter>);
     const user = userEvent.setup();
     const home = screen.getByText(/You are at home/i);
     expect(home).toBeInTheDocument();

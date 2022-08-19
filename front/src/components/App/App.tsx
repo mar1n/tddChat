@@ -10,8 +10,8 @@ const App = () => {
   )
   return (
     <Layout>
-      {articles.map(value => {
-        return <p>{value.id}</p>
+      {articles.map((value, index) => {
+        return <p key={index}>{value.id}</p>
       })}
       <h1>Hello React</h1>
       <div>You are at home</div>

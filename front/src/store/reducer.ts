@@ -1,6 +1,6 @@
 import * as actionTypes from "./actionTypes";
 
-const initialState: ArticleState = {
+export const initialState: ArticleState = {
   articles: [
     {
       id: 1,
