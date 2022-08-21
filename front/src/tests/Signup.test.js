@@ -7,7 +7,7 @@ import { renderRouter, form, label, field } from "./myhelpers";
 describe("Signup", () => {
   const rendersForm = (name) =>
     test("renders a form", () => {
-      renderRouter(<Signup />);
+      renderRouter(<Signup/>);
       expect(form(name)).toBeInTheDocument();
     });
   rendersForm();

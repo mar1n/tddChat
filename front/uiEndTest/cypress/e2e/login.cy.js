@@ -1,13 +1,9 @@
 describe('empty spec', () => {
   it('passes', () => {
-    cy.visit('https://example.cypress.io');
+    cy.visit('http://localhost:3000/signup');
 
-    cy.contains('type').click();
+    cy.get('[aria-label="signup form"]').submit().click();
+    cy.contains('Error on screen');
 
-    cy.url().should('include', '/commands/actions');
-
-    cy.get('.action-email')
-      .type('fake@email.com')
-      .should('have.value', 'fake@email.com')
   })
 })
