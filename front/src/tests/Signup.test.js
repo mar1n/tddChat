@@ -2,18 +2,24 @@ import React from "react";
 import Signup from "../components/Signup/Signup";
 import { render, screen } from "@testing-library/react";
 import ReactTestUtils, { act } from "react-dom/test-utils";
-import { renderRouter, form, label, field } from "./myhelpers";
+import { createContainer } from "./myhelpers";
 import { MemoryRouter } from "react-router-dom";
 import Router from "../components/Router/Router";
 
-
 describe("Signup", () => {
+  let renderRouter, form, field, label, submit, changeAndWait, withEvent;
+
+  beforeEach(() => {
+    ({ renderRouter, form, field, label, submit, changeAndWait, withEvent } =
+      createContainer());
+  });
+
   let location;
   const mockLocation = new URL("http://localhost/signup?scenario=validation");
   afterEach(() => {
     delete window.location;
     window.location = location;
-  })
+  });
   const rendersForm = (name) =>
     test("renders a form", () => {
       renderRouter(<Signup />);
@@ -39,42 +45,23 @@ describe("Signup", () => {
       expect(label(name)).toBeInTheDocument();
     });
 
-  const saveNewValue = (fieldName, value) =>
-    test("saves new first name when submitted", async () => {
-      expect.hasAssertions();
-      renderRouter(<Signup />);
-
-      await act(async () => {
-        ReactTestUtils.Simulate.change(field(fieldName), {
-          target: { value: value, name: fieldName },
-        });
-      });
-      expect(field(fieldName).value).toEqual(value);
-      await act(async () => {
-        ReactTestUtils.Simulate.submit(form("signup form"));
-      });
-      expect(field(fieldName).value).toEqual("");
-    });
   const saveFirstNameError = (fieldName, value) =>
     test("saves first name error occure", async () => {
       window.location = mockLocation;
       expect.hasAssertions();
 
       renderRouter(<Signup />);
-      await act(async () => {
-        ReactTestUtils.Simulate.change(field(fieldName), {
-          target: { value: value, name: fieldName },
-        });
-      });
-      await act(async () => {
-        ReactTestUtils.Simulate.change(field("email"), {
-          target: { value: "cykcykacz@gmail.com", name: "email" },
-        });
-      });
+
+      await changeAndWait(field(fieldName), withEvent(fieldName, value));
+
+      await changeAndWait(
+        field("email"),
+        withEvent("email", "cykcykacz@gmail.com")
+      );
+
       expect(field(fieldName).value).toEqual(value);
-      await act(async () => {
-        ReactTestUtils.Simulate.submit(form("signup form"));
-      });
+
+      await submit(form("signup form"));
       screen.getByText("Error on screen");
     });
   const saveEmailError = (fieldName, value) =>
@@ -83,20 +70,11 @@ describe("Signup", () => {
       expect.hasAssertions();
 
       renderRouter(<Signup />);
-      await act(async () => {
-        ReactTestUtils.Simulate.change(field(fieldName), {
-          target: { value: value, name: fieldName },
-        });
-      });
-      await act(async () => {
-        ReactTestUtils.Simulate.change(field("firstName"), {
-          target: { value: "Szymon", name: "firstName" },
-        });
-      });
+      await changeAndWait(field(fieldName), withEvent(fieldName, value));
+
+      await changeAndWait(field("firstName"), withEvent("firstName", "Szymon"));
       expect(field(fieldName).value).toEqual(value);
-      await act(async () => {
-        ReactTestUtils.Simulate.submit(form("signup form"));
-      });
+      await submit(form("signup form"));
       screen.getByText("Error on screen");
     });
   const savePasswordError = (fieldName, value) =>
@@ -105,25 +83,18 @@ describe("Signup", () => {
       expect.hasAssertions();
 
       renderRouter(<Signup />);
-      await act(async () => {
-        ReactTestUtils.Simulate.change(field(fieldName), {
-          target: { value: value, name: fieldName },
-        });
-      });
-      await act(async () => {
-        ReactTestUtils.Simulate.change(field("firstName"), {
-          target: { value: "Szymon", name: "firstName" },
-        });
-      });
-      await act(async () => {
-        ReactTestUtils.Simulate.change(field("email"), {
-          target: { value: "cykcykacz@gmail.com", name: "email" },
-        });
-      });
+      await changeAndWait(field(fieldName), withEvent(fieldName, value));
+
+      await changeAndWait(field("firstName"), withEvent("firstName", "Szymon"));
+      await changeAndWait(
+        field("email"),
+        withEvent("email", "cykcykacz@gmail.com")
+      );
+
       expect(field(fieldName).value).toEqual(value);
-      await act(async () => {
-        ReactTestUtils.Simulate.submit(form("signup form"));
-      });
+
+      await submit(form("signup form"));
+
       screen.getByText("Error on screen");
     });
   describe("First name field", () => {
@@ -132,16 +103,16 @@ describe("Signup", () => {
     rendersLabelField("First Name");
     saveFirstNameError("firstName", "");
   });
-  describe('Email field', () => {
+  describe("Email field", () => {
     rendersLabelField("Email");
     renderAsATextBox("email");
     includeTheExistingValue("email");
-    saveEmailError("email", "cykcykaczgmail.com")
+    saveEmailError("email", "cykcykaczgmail.com");
   });
-  describe('Password', () => {
+  describe("Password", () => {
     rendersLabelField("Password");
     renderAsATextBox("password");
     includeTheExistingValue("password");
-    savePasswordError("password", "12345")
+    savePasswordError("password", "12345");
   });
 });
