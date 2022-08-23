@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Layout from "../Layout/Layout";
 import axios from "axios";
+
 // interface signup {
 //   onSubmit: (firstName: string) => void;
 // }
@@ -19,7 +20,6 @@ const Signup = () => {
     }));
   };
   const clickSubmit = async (e: React.FormEvent) => {
-    console.log('something')
     e.preventDefault();
     try {
       await axios({
