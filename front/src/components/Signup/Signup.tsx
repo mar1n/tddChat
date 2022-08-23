@@ -29,9 +29,9 @@ const Signup = () => {
       })
 
       setCustomer({ firstName: "", email: "", password: ""})
-    } catch (err) {
-      console.log("test error")
-      setValidationError("Error on screen")
+    } catch (err: any) {
+      console.log("test error", err.response.data.error)
+      setValidationError(err.response.data.error)
     }
 
 

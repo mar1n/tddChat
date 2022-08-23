@@ -62,7 +62,7 @@ describe("Signup", () => {
       expect(field(fieldName).value).toEqual(value);
 
       await submit(form("signup form"));
-      screen.getByText("Error on screen");
+      screen.getByText("Name is required");
     });
   const saveEmailError = (fieldName, value) =>
     test("saves when email error occure", async () => {
@@ -75,7 +75,7 @@ describe("Signup", () => {
       await changeAndWait(field("firstName"), withEvent("firstName", "Szymon"));
       expect(field(fieldName).value).toEqual(value);
       await submit(form("signup form"));
-      screen.getByText("Error on screen");
+      screen.getByText("Must be a valid email address");
     });
   const savePasswordError = (fieldName, value) =>
     test("saves when passwod error occure", async () => {
@@ -95,7 +95,7 @@ describe("Signup", () => {
 
       await submit(form("signup form"));
 
-      screen.getByText("Error on screen");
+      screen.getByText("Password must be at least 6 characteres long");
     });
   describe("First name field", () => {
     renderAsATextBox("firstName");
