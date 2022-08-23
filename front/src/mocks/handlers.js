@@ -2,22 +2,36 @@ import { rest } from "msw";
 
 export const handlers = [
   rest.post("http://localhost:500/signup", async (req, res, ctx) => {
-    console.log('url.location', window.location.search);
-    console.log('req', req);
-    // Persist user's authentication in the session
-    console.log('req.json()', await req.json())
-    console.log('req', req.body.firstName === "");
-    if(req.body.firstName === "") {
-      return res(
-        ctx.json({ error: "some Msg"}),
-        ctx.status(422)
-      )
+    const PageParams = new URLSearchParams(window.location.search);
+    const scenario = PageParams.get('scenario')
+
+    if(scenario === "validation") {
+
+      const { firstName, email, password } = await req.json();
+
+      if(firstName === "") {
+        return res(
+          ctx.json({ error: "Name is required"}),
+          ctx.status(422)
+        )
+      }
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if(!re.test(email)) {
+        return res(
+          ctx.json({ error: "Must be a valid email address"}),
+          ctx.status(422)
+        )
+      }
+      if(password.length < 6) {
+        return res(
+          ctx.json({ error: "Password must be at least 6 characteres long"}),
+          ctx.status(422)
+        )
+      }
     }
-    sessionStorage.setItem("is-authenticated", "true");
 
     return res(
-      // Respond with a 200 status code
-      ctx.json({key: 'value'}),
+      ctx.json({message: 'Email has been sent!!!'}),
       ctx.status(200)
     );
   }),

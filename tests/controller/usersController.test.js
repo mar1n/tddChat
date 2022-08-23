@@ -179,7 +179,7 @@ describe("Users controller", () => {
         .expect(400)
 
       const { error } = response.body;
-      expect(error).toEqual("User with that email doesn't exist! Please signin.");
+      expect(error).toEqual("Email and password do not match!");
     });
     test('Password is incorrect', async () => {
       await User.create([{ name: "Szymon", email: "cykcykacz@gmail.com", password: "zxcasdqwe"}]);

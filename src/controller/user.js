@@ -73,7 +73,7 @@ exports.signin = async (req, res) => {
 
   if(!user) {
     return res.status(400).json({
-      error: "User with that email doesn't exist! Please signin."
+      error: "Email and password do not match!"
     })
   }
 
