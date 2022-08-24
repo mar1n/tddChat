@@ -2,42 +2,41 @@ import React, { useState } from "react";
 import Layout from "../Layout/Layout";
 import axios from "axios";
 
-// interface signup {
-//   onSubmit: (firstName: string) => void;
-// }
-
 const Signup = () => {
   const [customer, setCustomer] = useState<{
     firstName: string;
     email: string;
     password: string;
   }>({ firstName: "", email: "", password: "" });
-  const [validationError, setValidationError] = useState<string>("")
-  const handleChangeFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [validationError, setValidationError] = useState<string>("");
+  const [buttonSwitch, setButtonSwitch] = useState<boolean>(false);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCustomer((customer) => ({
       ...customer,
       [e.target.name]: e.target.value,
     }));
+    setButtonSwitch(false);
   };
   const clickSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setButtonSwitch(true);
     try {
       await axios({
-        method: 'POST',
+        method: "POST",
         url: `http://localhost:500/signup`,
-        data: {firstName, email, password}
-      })
+        data: { firstName, email, password },
+      });
 
-      setCustomer({ firstName: "", email: "", password: ""})
+      setCustomer({ firstName: "", email: "", password: "" });
+      setButtonSwitch(false);
     } catch (err: any) {
-      console.log("test error", err.response.data.error)
-      setValidationError(err.response.data.error)
+      console.log("test error", err.response.data.error);
+      setValidationError(err.response.data.error);
+      setButtonSwitch(true);
     }
-
-
   };
   const { firstName, email, password } = customer;
-  
+
   return (
     <Layout>
       <div>
@@ -49,7 +48,7 @@ const Signup = () => {
             placeholder='firstName'
             name='firstName'
             value={firstName}
-            onChange={handleChangeFirstName}
+            onChange={handleChange}
           />
           <label htmlFor='email'>Email</label>
           <input
@@ -57,7 +56,7 @@ const Signup = () => {
             name='email'
             placeholder='email'
             value={email}
-            onChange={handleChangeFirstName}
+            onChange={handleChange}
           />
           <label htmlFor='password'>Password</label>
           <input
@@ -65,11 +64,13 @@ const Signup = () => {
             name='password'
             placeholder='password'
             value={password}
-            onChange={handleChangeFirstName}
+            onChange={handleChange}
           />
-          <input type="submit" value="submit" />
+          <button role='submit' type='submit' disabled={buttonSwitch}>
+            Submit
+          </button>
         </form>
-        <div className="error">{validationError}</div>
+        <div className='error'>{validationError}</div>
       </div>
     </Layout>
   );

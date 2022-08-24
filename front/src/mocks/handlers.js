@@ -17,14 +17,12 @@ export const handlers = [
       }
       const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if(!re.test(email)) {
-        console.log('email');
         return res(
           ctx.json({ error: "Must be a valid email address"}),
           ctx.status(422)
         )
       }
       if(password.length < 6) {
-        console.log('password')
         return res(
           ctx.json({ error: "Password must be at least 6 characteres long"}),
           ctx.status(422)

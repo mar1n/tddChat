@@ -26,6 +26,11 @@ describe("Signup", () => {
       expect(form(name)).toBeInTheDocument();
     });
   rendersForm();
+  test("render submit button", () => {
+    renderRouter(<Signup />);
+    const submitButton = screen.getByRole("submit");
+    expect(submitButton).not.toBeDisabled();
+  });
   const renderAsATextBox = (name) =>
     test("renders the field as text box", () => {
       renderRouter(<Signup />);
@@ -73,9 +78,15 @@ describe("Signup", () => {
       await changeAndWait(field(fieldName), withEvent(fieldName, value));
 
       await changeAndWait(field("firstName"), withEvent("firstName", "Szymon"));
+      await changeAndWait(field("password"), withEvent("password", "1234567"));
+
       expect(field(fieldName).value).toEqual(value);
       await submit(form("signup form"));
+
       screen.getByText("Must be a valid email address");
+
+      const submitButton = screen.getByRole("submit");
+      expect(submitButton).toBeDisabled();
     });
   const savePasswordError = (fieldName, value) =>
     test("saves when passwod error occure", async () => {
