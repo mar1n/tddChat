@@ -38,10 +38,11 @@ describe("Signup", () => {
       expect(field(name).tagName).toEqual("INPUT");
       expect(field(name).type).toEqual("text");
     });
-  const includeTheExistingValue = (name) =>
-    test("includes the existing value", () => {
+  const includeTheExistingValue = (fieldName, value) =>
+    test("includes the existing value", async () => {
       renderRouter(<Signup />);
-      expect(field(name).value).toEqual("");
+      await changeAndWait(field(fieldName), withEvent(fieldName, value));
+      expect(field(fieldName).value).toEqual(value);
     });
   const rendersLabelField = (name) =>
     test("renders a label for the field", () => {
@@ -110,20 +111,20 @@ describe("Signup", () => {
     });
   describe("First name field", () => {
     renderAsATextBox("firstName");
-    includeTheExistingValue("firstName");
     rendersLabelField("First Name");
+    includeTheExistingValue("firstName", "randomText");
     saveFirstNameError("firstName", "");
   });
   describe("Email field", () => {
     rendersLabelField("Email");
     renderAsATextBox("email");
-    includeTheExistingValue("email");
+    includeTheExistingValue("email", "randomText");
     saveEmailError("email", "cykcykaczgmail.com");
   });
   describe("Password", () => {
     rendersLabelField("Password");
     renderAsATextBox("password");
-    includeTheExistingValue("password");
+    includeTheExistingValue("password", "randomText");
     savePasswordError("password", "12345");
   });
 });
