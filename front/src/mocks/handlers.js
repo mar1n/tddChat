@@ -36,6 +36,29 @@ export const handlers = [
     );
   }),
 
+  rest.post("http://localhost:500/signin", async (req, res, ctx) => {
+    const { email, password } = await req.json();
+    console.log('email', email)
+    console.log('password', password)
+    if(email !== "cykcykacz@gmail.com") {
+      return res(
+        ctx.json({message: 'Email has been sent!!!'}),
+        ctx.status(400)
+      )
+    }
+
+    if(password !== "testPassword") {
+      return res(
+        ctx.json({message: 'Email has been sent!!!'}),
+        ctx.status(400)
+      )
+    }
+
+    return res(
+      ctx.json({ _id: 1223, name: "Szymon", email: "szym0nd4widowicz@gmail.com", role: "admin"}),
+      ctx.sta
+    )
+  }),
   rest.get("/user", (req, res, ctx) => {
     // Check if the user is authenticated in this session
 
