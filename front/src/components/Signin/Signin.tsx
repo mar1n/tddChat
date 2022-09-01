@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Layout from "../Layout/Layout";
 import axios from "axios";
 
-const Signup = () => {
+const Signin = () => {
     const [customer, setCustomer] = useState<{
       firstName: string;
       email: string;
@@ -64,8 +64,8 @@ const Signup = () => {
             type='text'
             name='password'
             placeholder='password'
-            // value={password}
-            // onChange={handleChange}
+            value={password}
+            onChange={handleChange}
           />
           <button role='submit' type='submit' disabled={buttonSwitch}>
             Submit
@@ -77,4 +77,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Signin;

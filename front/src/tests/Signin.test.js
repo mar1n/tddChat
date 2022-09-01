@@ -50,6 +50,6 @@ describe("Signin", () => {
   describe("Password field", () => {
     renderAsATextBox("password");
     rendersLabelField("Password");
-    //includeTheExistingValue("password");
+    includeTheExistingValue("password", "randomText");
   });
 });

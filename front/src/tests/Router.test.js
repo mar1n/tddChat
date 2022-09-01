@@ -13,15 +13,39 @@ describe("Router", () => {
     const home = screen.getByText(/You are at home/i);
     expect(home).toBeInTheDocument();
   });
-  test("should first", () => {
+  test("display home page content after click home link", async() => {
     renderWithProviders(<MemoryRouter><Router /></MemoryRouter>);
     const user = userEvent.setup();
     const home = screen.getByText(/You are at home/i);
     expect(home).toBeInTheDocument();
 
     const homeLink = screen.getByRole("link", { name: "Home" });
-    user.click(homeLink);
+    await user.click(homeLink);
     expect(home).toBeInTheDocument();
+  });
+  test("display home page content after click signup link", async () => {
+    renderWithProviders(<MemoryRouter><Router /></MemoryRouter>);
+    const user = userEvent.setup();
+    const home = screen.getByText(/You are at home/i);
+    expect(home).toBeInTheDocument();
+
+    const sinupLink = screen.getByRole("link", { name: "Signup" });
+    
+    await user.click(sinupLink);
+    const signupContent = screen.getByText(/Signup Page/i);
+    expect(signupContent).toBeInTheDocument();
+  });
+  test("display home page content after click signin link", async () => {
+    renderWithProviders(<MemoryRouter><Router /></MemoryRouter>);
+    const user = userEvent.setup();
+    const home = screen.getByText(/You are at home/i);
+    expect(home).toBeInTheDocument();
+
+    const sinupLink = screen.getByRole("link", { name: "Signin" });
+
+    await user.click(sinupLink);
+    const signupContent = screen.getByText(/Signin Page/i);
+    expect(signupContent).toBeInTheDocument();
   });
   test("page not found", () => {
     const badRoute = "/some/bad/route";
@@ -43,6 +67,17 @@ describe("Router", () => {
     );
 
     const signupPage = screen.getByText(/Signup page/i);
+    expect(signupPage).toBeInTheDocument();
+  });
+  test("signin page", () => {
+    const signinRoute = "/signin";
+    render(
+      <MemoryRouter initialEntries={[signinRoute]}>
+        <Router />
+      </MemoryRouter>
+    );
+
+    const signupPage = screen.getByText(/Signin page/i);
     expect(signupPage).toBeInTheDocument();
   });
 });

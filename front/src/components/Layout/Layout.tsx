@@ -10,6 +10,7 @@ const Layout = ({ children }: layout) => (
     <Navigation>
       <RouterButton pathname={"/"}>Home</RouterButton>
       <RouterButton pathname={"/signup"}>Signup</RouterButton>
+      <RouterButton pathname={"/signin"}>Signin</RouterButton>
     </Navigation>
     <main>{children}</main>
   </>
