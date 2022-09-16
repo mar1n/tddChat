@@ -13,7 +13,7 @@ const Main = () => {
         <Route path="/" element={<App />} />
         <Route path="/signup"  element={<Signup />} />
         <Route path="/signin"  element={<Signin />} />
-        <Route path="/activation/:token" element={<Activation />} />
+        <Route path="/activation/:id" element={<Activation />} />
         <Route path="*" element={<NotFound />}/>
       </Routes>
     </>

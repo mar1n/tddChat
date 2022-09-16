@@ -105,5 +105,7 @@ describe("Router", () => {
     );
     const activationPage = screen.getByText(/Activation page/i);
     expect(activationPage).toBeInTheDocument();
+    const welcomeText = screen.getByText(/Hey Szymon, active your account/i);
+    expect(welcomeText).toBeInTheDocument();
   });
 });

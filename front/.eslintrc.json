@@ -1,5 +1,5 @@
 {
-  "parser": "@babel/eslint-parser",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 6,
     "requireConfigFile": false,
@@ -10,8 +10,8 @@
       "experimentalObjectRestSpread": true
     },
     "babelOptions": {
-      "presets": ["@babel/preset-react"]
-   },
+      "presets": ["@babel/preset-react", "@babel/preset-env"]
+   }
   },
   "extends": ["plugin:cypress/recommended"]
 }
