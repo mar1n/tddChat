@@ -8,13 +8,21 @@ import { renderWithProviders } from "./utils/test-utils";
 
 describe("Router", () => {
   test("Display home page", () => {
-    renderWithProviders(<MemoryRouter><Router /></MemoryRouter>);
+    renderWithProviders(
+      <MemoryRouter>
+        <Router />
+      </MemoryRouter>
+    );
 
     const home = screen.getByText(/You are at home/i);
     expect(home).toBeInTheDocument();
   });
-  test("display home page content after click home link", async() => {
-    renderWithProviders(<MemoryRouter><Router /></MemoryRouter>);
+  test("display home page content after click home link", async () => {
+    renderWithProviders(
+      <MemoryRouter>
+        <Router />
+      </MemoryRouter>
+    );
     const user = userEvent.setup();
     const home = screen.getByText(/You are at home/i);
     expect(home).toBeInTheDocument();
@@ -24,19 +32,27 @@ describe("Router", () => {
     expect(home).toBeInTheDocument();
   });
   test("display home page content after click signup link", async () => {
-    renderWithProviders(<MemoryRouter><Router /></MemoryRouter>);
+    renderWithProviders(
+      <MemoryRouter>
+        <Router />
+      </MemoryRouter>
+    );
     const user = userEvent.setup();
     const home = screen.getByText(/You are at home/i);
     expect(home).toBeInTheDocument();
 
-    const sinupLink = screen.getByRole("link", { name: "Signup" });
-    
+    const sinupLink = await screen.getByRole("link", { name: "Signup" });
+
     await user.click(sinupLink);
-    const signupContent = screen.getByText(/Signup Page/i);
+    const signupContent = await screen.getByText(/Signup Page/i);
     expect(signupContent).toBeInTheDocument();
   });
   test("display home page content after click signin link", async () => {
-    renderWithProviders(<MemoryRouter><Router /></MemoryRouter>);
+    renderWithProviders(
+      <MemoryRouter>
+        <Router />
+      </MemoryRouter>
+    );
     const user = userEvent.setup();
     const home = screen.getByText(/You are at home/i);
     expect(home).toBeInTheDocument();
@@ -79,5 +95,15 @@ describe("Router", () => {
 
     const signupPage = screen.getByText(/Signin page/i);
     expect(signupPage).toBeInTheDocument();
+  });
+  test("activation page", () => {
+    const activationRoute = "/activation/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiU3p5bW9uIiwiZW1haWwiOiJzenltb25AZ21haWwuY29tIiwicGFzc3dvcmQiOiJhc2R6eGNxd2UiLCJpYXQiOjAsImV4cCI6NjAwfQ.NC4hxKs_tAnUkZhg12PJWpVOGEUqRxh97ghKNiUZzKU";
+    render(
+      <MemoryRouter initialEntries={[activationRoute]}>
+        <Router />
+      </MemoryRouter>
+    );
+    const activationPage = screen.getByText(/Activation page/i);
+    expect(activationPage).toBeInTheDocument();
   });
 });
