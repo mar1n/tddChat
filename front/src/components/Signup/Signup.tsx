@@ -30,7 +30,6 @@ const Signup = () => {
       setCustomer({ firstName: "", email: "", password: "" });
       setButtonSwitch(false);
     } catch (err: any) {
-      console.log("test error", err.response.data.error);
       setValidationError(err.response.data.error);
       setButtonSwitch(true);
     }
