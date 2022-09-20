@@ -3,16 +3,14 @@ import { Link } from "react-router-dom";
 
 interface routerButton {
   children: ReactNode,
-  pathname: string,
+  path: string,
+  className: string,
   disabled?: string
 }
 
-const RouterButton = ({ children, pathname, disabled }: routerButton) => {
-  let className = "button";
-  if(disabled) {
-    className = "disabled"
-  }
-  return <Link to={{pathname: pathname}} className={className}>{children}</Link>;
+const RouterButton = ({ children, path, className }: routerButton) => {
+
+  return <Link to={{pathname: path}} className={className}>{children}</Link>;
 };
 
 export default RouterButton;

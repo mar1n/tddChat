@@ -41,10 +41,10 @@ describe("Router", () => {
     const home = screen.getByText(/You are at home/i);
     expect(home).toBeInTheDocument();
 
-    const sinupLink = await screen.getByRole("link", { name: "Signup" });
+    const sinupLink =  screen.getByRole("link", { name: "Signup" });
 
     await user.click(sinupLink);
-    const signupContent = await screen.getByText(/Signup Page/i);
+    const signupContent =  screen.getByText(/Signup Page/i);
     expect(signupContent).toBeInTheDocument();
   });
   test("display home page content after click signin link", async () => {

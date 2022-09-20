@@ -1,4 +1,6 @@
 import React, {ReactNode} from "react";
+import "./Navigation.css";
+
 interface navigation {
   children: ReactNode
 }

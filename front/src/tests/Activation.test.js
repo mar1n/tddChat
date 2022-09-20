@@ -76,4 +76,5 @@ describe("Activation", () => {
     const validationError = screen.getByText("Expired link. Signup again.");
     expect(validationError).toBeInTheDocument();
   });
+  test.skip('Account has been activated, pls signin', () => {  })
 });
