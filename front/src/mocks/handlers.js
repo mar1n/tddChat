@@ -39,27 +39,38 @@ export const handlers = [
     console.log("password", password);
     if (email !== "cykcykacz@gmail.com") {
       return res(
-        ctx.json({ message: "Email has been sent!!!" }),
+        ctx.json({ message: "Email and password do not match!" }),
         ctx.status(400)
       );
     }
 
     if (password !== "testPassword") {
       return res(
-        ctx.json({ message: "Email has been sent!!!" }),
+        ctx.json({ message: "Email and password do not match!" }),
         ctx.status(400)
       );
     }
+    try {
+      const token = jwt.sign({ _id: 1123 }, "9989897DSDADA888DA", {
+        expiresIn: "7d",
+      });
 
-    return res(
-      ctx.json({
-        _id: 1223,
-        name: "Szymon",
-        email: "szym0nd4widowicz@gmail.com",
-        role: "admin",
-      }),
-      ctx.status(201)
-    );
+      return res(
+        ctx.json({
+          message: "Login details are correct. Welcome in service.",
+          token,
+          user: {
+            _id: 1223,
+            name: "Szymon",
+            email: "szym0nd4widowicz@gmail.com",
+            role: "admin",
+          },
+        }),
+        ctx.status(201)
+      );
+    } catch (error) {
+      console.log("error signin", error);
+    }
   }),
   rest.post(
     "http://localhost:500/account-activation",
@@ -72,7 +83,10 @@ export const handlers = [
           ctx.status(201)
         );
       } catch (error) {
-        return res(ctx.json({ message: "Expired link. Signup again." }), ctx.status(401));
+        return res(
+          ctx.json({ message: "Expired link. Signup again." }),
+          ctx.status(401)
+        );
       }
     }
   ),

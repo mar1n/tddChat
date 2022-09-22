@@ -52,4 +52,7 @@ describe("Signin", () => {
     rendersLabelField("Password");
     includeTheExistingValue("password", "randomText");
   });
+  describe('redirect if user is authenticate to home page', () => {
+    
+  });
 });
