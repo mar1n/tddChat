@@ -5,6 +5,8 @@ import ReactTestUtils, { act } from "react-dom/test-utils";
 import { createContainer } from "./myhelpers";
 import { MemoryRouter } from "react-router-dom";
 import Router from "../components/Router/Router";
+import { renderWithProviders } from "./utils/test-utils";
+import cookie from "js-cookie";
 
 describe("Signin", () => {
   let renderRouter, form, field, label, submit, changeAndWait, withEvent;
@@ -12,6 +14,19 @@ describe("Signin", () => {
   beforeEach(() => {
     ({ renderRouter, form, field, label, submit, changeAndWait, withEvent } =
       createContainer());
+    jest.spyOn(cookie, "get").mockImplementation(() => {
+      return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjExMjMsImlhdCI6MTY2Mzk2NTg4MiwiZXhwIjoxNjY0NTcwNjgyfQ.H0hKZMENmc7UTQF55gzlodyC9yvukGb1rkD_Fck-uos";
+    });
+    jest
+      .spyOn(window.localStorage.__proto__, "getItem")
+      .mockImplementation(() => {
+        return '{"_id":1223,"name":"Szymon","email":"szym0nd4widowicz@gmail.com","role":"admin"}';
+      });
+  });
+
+  afterEach(() => {
+    cookie.get.mockClear();
+    window.localStorage.__proto__.getItem.mockClear();
   });
 
   test("render a form", () => {
@@ -52,7 +67,25 @@ describe("Signin", () => {
     rendersLabelField("Password");
     includeTheExistingValue("password", "randomText");
   });
-  describe('redirect if user is authenticate to home page', () => {
-    
+  test("user is authenticate, redirect  to home page", async () => {
+    const signinRoute = "/signin";
+    renderWithProviders(
+      <MemoryRouter initialEntries={[signinRoute]}>
+        <Router />
+      </MemoryRouter>
+    );
+    await changeAndWait(
+      field("email"),
+      withEvent("email", "cykcykacz@gmail.com")
+    );
+    await changeAndWait(
+      field("password"),
+      withEvent("password", "testPassword")
+    );
+
+    await submit(form("signin form"));
+
+    const homeText = screen.getByText("You are at home");
+    expect(homeText).toBeInTheDocument();
   });
 });

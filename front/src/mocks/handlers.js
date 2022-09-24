@@ -35,8 +35,6 @@ export const handlers = [
 
   rest.post("http://localhost:500/signin", async (req, res, ctx) => {
     const { email, password } = await req.json();
-    console.log("email", email);
-    console.log("password", password);
     if (email !== "cykcykacz@gmail.com") {
       return res(
         ctx.json({ message: "Email and password do not match!" }),
