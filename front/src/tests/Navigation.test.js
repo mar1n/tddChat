@@ -5,9 +5,10 @@ import Navigation from "../components/navigation/Navigation";
 import RouterButton from "../components/navigation/RouterButton";
 import Router from "../components/Router/Router";
 import userEvent from "@testing-library/user-event";
+import cookie from "js-cookie";
 
 describe("Navigation", () => {
-  test("render all links", () => {
+  test("Render all links.", () => {
     render(
       <MemoryRouter>
         <Navigation>
@@ -25,19 +26,47 @@ describe("Navigation", () => {
     const signin = screen.getByRole("link", { name: "Signin" });
     expect(signin).toBeInTheDocument();
   });
-  test('default path has style/className active', async () => { 
+  test("Default path has style/className active.", async () => {
     renderWithProviders(
       <MemoryRouter>
-        <Router/>
+        <Router />
       </MemoryRouter>
     );
     const user = userEvent.setup();
-    
-    const signin = screen.getByRole("link", { name: "Signin"});
+
+    const signin = screen.getByRole("link", { name: "Signin" });
     await user.click(signin);
-    const signin2 = screen.getByRole("link", { name: "Signin"});
+    const signin2 = screen.getByRole("link", { name: "Signin" });
     expect(signin2).toHaveClass("active");
-    const home = screen.getByRole("link", { name: "Home"});
+    const home = screen.getByRole("link", { name: "Home" });
     expect(home).toHaveClass("button");
-   })
+  });
+  describe("Navigation for login user.", () => {
+    beforeEach(() => {
+      jest.spyOn(cookie, "get").mockImplementation(() => {
+        return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjExMjMsImlhdCI6MTY2Mzk2NTg4MiwiZXhwIjoxNjY0NTcwNjgyfQ.H0hKZMENmc7UTQF55gzlodyC9yvukGb1rkD_Fck-uos";
+      });
+      jest
+        .spyOn(window.localStorage.__proto__, "getItem")
+        .mockImplementation(() => {
+          return '{"_id":1223,"name":"Szymon","email":"szym0nd4widowicz@gmail.com","role":"admin"}';
+        });
+    });
+    test("Login user can see only home and log out links.", () => {
+      renderWithProviders(
+        <MemoryRouter>
+          <Router />
+        </MemoryRouter>
+      );
+
+      const home = screen.getByRole("link", { name: "Home" });
+      expect(home).toBeInTheDocument();
+      const signOut = screen.getByRole("link", { name: "Signout" });
+      expect(signOut).toBeInTheDocument();
+      const signIn = screen.queryByText("Signin");
+      expect(signIn).toBeNull();
+      const signUp = screen.queryByText("Signup");
+      expect(signUp).toBeNull();
+    });
+  });
 });

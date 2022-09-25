@@ -5,12 +5,13 @@ interface routerButton {
   children: ReactNode,
   path: string,
   className: string,
+  onClick?: () => void,
   disabled?: string
 }
 
-const RouterButton = ({ children, path, className }: routerButton) => {
+const RouterButton = ({ children, path, className, onClick }: routerButton) => {
 
-  return <Link to={{pathname: path}} className={className}>{children}</Link>;
+  return <Link to={{pathname: path}} onClick={onClick} className={className}>{children}</Link>;
 };
 
 export default RouterButton;
