@@ -52,6 +52,11 @@ describe("Navigation", () => {
           return '{"_id":1223,"name":"Szymon","email":"szym0nd4widowicz@gmail.com","role":"admin"}';
         });
     });
+
+    afterEach(() => {
+      cookie.get.mockClear();
+      window.localStorage.__proto__.getItem.mockClear();
+    });
     test("Login user can see only home and log out links.", () => {
       renderWithProviders(
         <MemoryRouter>
