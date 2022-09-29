@@ -44,6 +44,9 @@ const Layout = ({ children }: layout) => {
             Signout
           </RouterButton>
         )}
+        <RouterButton path={"/rooms"} className={isActive("/rooms")}>
+          Rooms
+        </RouterButton>
       </Navigation>
       <main>{children}</main>
     </>
