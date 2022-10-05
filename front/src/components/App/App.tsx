@@ -1,13 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import Layout from "../Layout/Layout";
-import { useSelector, shallowEqual } from "react-redux";
-
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
+import { fetchTodos } from "../../store/reducer";
 const App = () => {
+  const dispatch = useDispatch()
   const articles: readonly IArticle[] = useSelector(
     (state: ArticleState) => state.articles,
     shallowEqual
   )
+  useEffect(() => {
+
+    const anonymous = async () => {
+      await fetchTodos(dispatch);
+      console.log("anonymous")
+    }
+    anonymous();
+    console.log('App')
+  }, [])
   return (
     <Layout>
       {articles.map((value, index) => {

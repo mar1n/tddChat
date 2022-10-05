@@ -2,11 +2,9 @@ import React, { PropsWithChildren } from "react";
 import { render } from "@testing-library/react";
 import { Provider } from "react-redux";
 
-import Store from "../../store/store";
+import { Store } from "../../store/store";
 
-export function renderWithProviders(
-  ui: React.ReactElement,
-) {
+export function renderWithProviders(ui: React.ReactElement) {
   function Wrapper({ children }: PropsWithChildren<{}>): JSX.Element {
     return <Provider store={Store}>{children}</Provider>;
   }

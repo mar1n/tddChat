@@ -88,6 +88,18 @@ export const handlers = [
       }
     }
   ),
+  rest.get(
+    "http://localhost:500/rooms",
+    async (req, res, ctx) => {
+      return res(
+        ctx.json({
+          title: "post 3",
+          body: "Harum quidem rerum facilis est et expedita distinctio quas molestias excepturi sint",
+        },),
+        ctx.status(201)
+      )
+    }
+  ),
   rest.get("/user", (req, res, ctx) => {
     // Check if the user is authenticated in this session
 

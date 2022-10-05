@@ -1,4 +1,6 @@
 import * as actionTypes from "./actionTypes";
+import { AppDispatch } from "./store";
+import axios from "axios";
 
 export const initialState: ArticleState = {
   articles: [
@@ -14,6 +16,19 @@ export const initialState: ArticleState = {
     },
   ],
 };
+
+export async function fetchTodos(dispatch: AppDispatch) {
+  //const response = await client.get('/fakeApi/todos')
+  const response = await axios({
+    method: "GET",
+    url: `http://localhost:500/rooms`,
+  });
+  console.log('response', response)
+  dispatch({
+    type: "ADD_ARTICLE",
+    article: { id: Math.random(), ...response.data }
+  });
+}
 
 const rootReducer = (
   state: ArticleState = initialState,
