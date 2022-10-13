@@ -3,6 +3,7 @@ import "./App.css";
 import Layout from "../Layout/Layout";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import { fetchTodos } from "../../store/reducer";
+
 const App = () => {
   const dispatch = useDispatch()
   const articles: readonly IArticle[] = useSelector(
@@ -10,13 +11,10 @@ const App = () => {
     shallowEqual
   )
   useEffect(() => {
-
     const anonymous = async () => {
       await fetchTodos(dispatch);
-      console.log("anonymous")
     }
     anonymous();
-    console.log('App')
   }, [])
   return (
     <Layout>

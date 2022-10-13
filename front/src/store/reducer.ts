@@ -23,7 +23,6 @@ export async function fetchTodos(dispatch: AppDispatch) {
     method: "GET",
     url: `http://localhost:500/rooms`,
   });
-  console.log('response', response)
   dispatch({
     type: "ADD_ARTICLE",
     article: { id: Math.random(), ...response.data }

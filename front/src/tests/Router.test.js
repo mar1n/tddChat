@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import React from "react";
 import userEvent from "@testing-library/user-event";
 
@@ -7,12 +7,14 @@ import Router from "../components/Router/Router";
 import { renderWithProviders } from "./utils/test-utils";
 
 describe("Router", () => {
-  test("Display home page", () => {
-    renderWithProviders(
-      <MemoryRouter>
-        <Router />
-      </MemoryRouter>
-    );
+  test("Display home page", async () => {
+    await act(() => {
+      renderWithProviders(
+        <MemoryRouter>
+          <Router />
+        </MemoryRouter>
+      );
+    }) 
 
     const home = screen.getByText(/You are at home/i);
     expect(home).toBeInTheDocument();

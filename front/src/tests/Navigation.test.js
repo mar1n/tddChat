@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { renderWithProviders } from "./utils/test-utils";
 import Navigation from "../components/navigation/Navigation";
@@ -27,11 +27,13 @@ describe("Navigation", () => {
     expect(signin).toBeInTheDocument();
   });
   test("Default path has style/className active.", async () => {
-    renderWithProviders(
-      <MemoryRouter>
-        <Router />
-      </MemoryRouter>
-    );
+    await act(() => {
+      renderWithProviders(
+        <MemoryRouter>
+          <Router />
+        </MemoryRouter>
+      );
+    }) 
     const user = userEvent.setup();
 
     const signin = screen.getByRole("link", { name: "Signin" });
@@ -57,12 +59,14 @@ describe("Navigation", () => {
       cookie.get.mockClear();
       window.localStorage.__proto__.getItem.mockClear();
     });
-    test("Login user can see only home and log out links.", () => {
-      renderWithProviders(
-        <MemoryRouter>
-          <Router />
-        </MemoryRouter>
-      );
+    test("Login user can see only home and log out links.", async () => {
+      await act(() => {
+        renderWithProviders(
+          <MemoryRouter>
+            <Router />
+          </MemoryRouter>
+        );
+      }) 
 
       const home = screen.getByRole("link", { name: "Home" });
       expect(home).toBeInTheDocument();
