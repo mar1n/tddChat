@@ -4,28 +4,20 @@ import axios from "axios";
 
 export const initialState: ArticleState = {
   articles: [
-    {
-      id: 1,
-      title: "post 1",
-      body: "Quisque cursus, metus vitae pharetra Nam libero tempore, cum soluta nobis est eligendi",
-    },
-    {
-      id: 2,
-      title: "post 2",
-      body: "Harum quidem rerum facilis est et expedita distinctio quas molestias excepturi sint",
-    },
+    
   ],
 };
 
-export async function fetchTodos(dispatch: AppDispatch) {
+export async function fetchRooms(dispatch: AppDispatch) {
   //const response = await client.get('/fakeApi/todos')
   const response = await axios({
     method: "GET",
     url: `http://localhost:500/rooms`,
   });
+  console.log('thunk')
   dispatch({
-    type: "ADD_ARTICLE",
-    article: { id: Math.random(), ...response.data }
+    type: "roomsAdd",
+    rooms: { ...response.data }
   });
 }
 

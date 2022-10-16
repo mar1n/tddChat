@@ -1,6 +1,8 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import Layout from "../components/Layout/Layout";
 import { MemoryRouter } from "react-router-dom";
+import { renderWithProviders } from "./utils/test-utils";
+import Router from "../components/Router/Router";
 
 describe("Layout", () => {
   test("render layout children", () => {
@@ -29,4 +31,16 @@ describe("Layout", () => {
     );
     screen.getByRole("navigation");
   });
+  test('Navigation items.', async () => { 
+    await act(() => {
+      renderWithProviders(
+        <MemoryRouter>
+          <Router />
+        </MemoryRouter>
+      );
+    })
+
+    const roomsLink = screen.getByRole("link", { name: "Rooms"});
+    expect(roomsLink).toBeInTheDocument();
+   })
 });
