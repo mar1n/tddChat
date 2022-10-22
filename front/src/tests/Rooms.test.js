@@ -5,7 +5,7 @@ import { renderWithProviders } from "./utils/test-utils";
 
 describe("Rooms", () => {
   test("render rooms page", () => {
-    render(<Rooms />);
+    renderWithProviders(<Rooms />);
 
     const welcomMessage = screen.getByText("Rooms page.");
     expect(welcomMessage).toBeInTheDocument();
@@ -31,12 +31,7 @@ describe("Rooms", () => {
     const user = userEvent.setup();
 
     const list = screen.getByRole("rooms-list");
-    console.log("sss", list.length);
     expect(list).toBeInTheDocument();
-
-    // const { getAllByRole } = within(list);
-    // const itemList = getAllByRole("listitem");
-    expect(getAllByRole("listitem").length).toBe(0);
 
     const createButton = screen.getByRole("button");
     await user.click(createButton);

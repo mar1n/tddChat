@@ -100,6 +100,18 @@ export const handlers = [
       )
     }
   ),
+  rest.post(
+    "http://localhost:500/createRoom",
+    async (req, res, ctx) => {
+      return res(
+        ctx.json({
+          title: "room of peace",
+          body: "World peace.",
+        },),
+        ctx.status(201)
+      )
+    }
+  ),
   rest.get("/user", (req, res, ctx) => {
     // Check if the user is authenticated in this session
 

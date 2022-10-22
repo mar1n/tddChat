@@ -13,7 +13,6 @@ const Signin = () => {
   const [validationError, setValidationError] = useState<string>("");
   const [buttonSwitch, setButtonSwitch] = useState<boolean>(false);
 
-  //const [buttonSwitchRe, setButtonSwitchRE] = useState<boolean>(false);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCustomer((customer) => ({
       ...customer,
@@ -31,14 +30,11 @@ const Signin = () => {
         data: { email, password },
       });
       autheticate(response, () => {
-        console.log("cool");
         setCustomer({ email: "", password: "" });
         setButtonSwitch(false);
-        //setButtonSwitchRE(true);
         history("/");
       });
     } catch (err: any) {
-      console.log("test error", err.response.data.error);
       setValidationError(err.response.data.error);
       setButtonSwitch(true);
     }

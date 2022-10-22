@@ -1,10 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import thunk from "redux-thunk";
-//import rootReducer from "./reducer";
 import roomsSlice from "./reducers/roomsSlice";
-import { asyncFuntionMiddleware } from "./middleware";
 
-const middleware = [thunk, asyncFuntionMiddleware];
+const middleware = [thunk];
 
 export const Store = configureStore({
   reducer: {

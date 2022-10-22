@@ -26,6 +26,17 @@ export const fetchRoomsThunk = createAsyncThunk(
   }
 );
 
+export const createRoomThunk = createAsyncThunk(
+  "rooms/createRoom",
+  async () => {
+    const response = await axios({
+      method: "POST",
+      url: `http://localhost:500/createRoom`,
+    });
+    return response.data;
+  }
+);
+
 const roomsSlice = createSlice({
   name: "rooms",
   initialState: [] as roomsState[],
@@ -36,7 +47,9 @@ const roomsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchRoomsThunk.fulfilled, (state, action) => {
-      state.push(action.payload);
+      return [...state, action.payload];
+    }).addCase(createRoomThunk.fulfilled, (state, action) => {
+      return [...state, action.payload];
     });
   },
 });
