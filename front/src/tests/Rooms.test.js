@@ -4,31 +4,30 @@ import userEvent from "@testing-library/user-event";
 import { renderWithProviders } from "./utils/test-utils";
 
 describe("Rooms", () => {
-  test("render rooms page", () => {
+  test("Render rooms page.", () => {
     renderWithProviders(<Rooms />);
 
     const welcomMessage = screen.getByText("Rooms page.");
     expect(welcomMessage).toBeInTheDocument();
-    const createButton = screen.getByRole("button");
-    expect(createButton).toBeInTheDocument();
+    const addRoomButton = screen.getByRole("switch");
+    expect(addRoomButton).toBeInTheDocument();
   });
-  test("list rooms", async () => {
-    const initialTodos = {
-      articles: [
-        {
-          id: 1,
-          title: "post 1",
-          body: "Quisque cursus, metus vitae pharetra Nam libero tempore, cum soluta nobis est eligendi",
-        },
-        {
-          id: 2,
-          title: "post 2",
-          body: "Harum quidem rerum facilis est et expedita distinctio quas molestias excepturi sint",
-        },
-      ],
-    };
+  test('Create room pop up.', async () => {
+    renderWithProviders(<Rooms/>);
+
+    const open = screen.getByRole("switch")
+    const user = userEvent.setup();
+
+    await user.click(open);
+    const createRoomPopUp = screen.getByRole("popUp");
+    expect(createRoomPopUp).toBeInTheDocument();
+  });
+  test("List rooms.", async () => {
     const { getAllByRole } = renderWithProviders(<Rooms />);
     const user = userEvent.setup();
+
+    const open = screen.getByRole("switch")
+    await user.click(open);
 
     const list = screen.getByRole("rooms-list");
     expect(list).toBeInTheDocument();

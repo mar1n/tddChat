@@ -112,6 +112,20 @@ export const handlers = [
       )
     }
   ),
+  rest.get(
+    "http://localhost:500/selectRoom",
+    async (req, res, ctx) => {
+      const { title, user } = await req.json();
+      if(title === "room of peace" && user === "Robin") {
+        return res(
+          ctx.json({
+            messages: [{ text: "My nam is robin from a forest.", name: "Robin"}]
+          }),
+          ctx.status(201)
+        )
+      }
+    }
+  ),
   rest.get("/user", (req, res, ctx) => {
     // Check if the user is authenticated in this session
 
