@@ -17,10 +17,12 @@ describe("Rooms", () => {
 
     const open = screen.getByRole("switch")
     const user = userEvent.setup();
+    const createRoomPopUp = screen.queryByText("Create Room");
+    expect(createRoomPopUp).not.toBeInTheDocument();
 
     await user.click(open);
-    const createRoomPopUp = screen.getByRole("popUp");
-    expect(createRoomPopUp).toBeInTheDocument();
+    const createRoomPopUpAfterClick = screen.queryByText("Create Room");
+    expect(createRoomPopUpAfterClick).toBeInTheDocument();
   });
   test("List rooms.", async () => {
     const { getAllByRole } = renderWithProviders(<Rooms />);
@@ -31,9 +33,28 @@ describe("Rooms", () => {
 
     const list = screen.getByRole("rooms-list");
     expect(list).toBeInTheDocument();
+    const noRooms = screen.queryByText("No Rooms");
+    expect(noRooms).toBeInTheDocument();
 
     const createButton = screen.getByRole("button");
     await user.click(createButton);
     expect(getAllByRole("listitem").length).toBe(1);
+  });
+  test('Select Room.', async () => {
+    const { getAllByRole } = renderWithProviders(<Rooms />);
+    const user = userEvent.setup();
+
+    const open = screen.getByRole("switch")
+    await user.click(open);
+
+    const list = screen.getByRole("rooms-list");
+    expect(list).toBeInTheDocument();
+    const noRooms = screen.queryByText("No Rooms");
+    expect(noRooms).toBeInTheDocument();
+
+    const createButton = screen.getByRole("button");
+    await user.click(createButton);
+    expect(getAllByRole("listitem").length).toBe(1);
+    expect()
   });
 });

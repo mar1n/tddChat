@@ -17,7 +17,7 @@ const Rooms = () => {
     <>
       Rooms page. <button role={"switch"} onClick={() => setOpenCreate(!openCreate)}>Add room</button>
       <div role='rooms-list'>
-        {rooms.map((value, index) => {
+        {rooms.length === 0 ? 'No Rooms' : rooms.map((value, index) => {
           return (
             <div role={"listitem"} key={index}>
               {value.title}

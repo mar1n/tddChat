@@ -119,7 +119,7 @@ export const handlers = [
       if(title === "room of peace" && user === "Robin") {
         return res(
           ctx.json({
-            messages: [{ text: "My nam is robin from a forest.", name: "Robin"}]
+            messages: [{ text: "My nam is Robin from a forest.", name: "Robin"}]
           }),
           ctx.status(201)
         )
