@@ -1,14 +1,28 @@
 import React, { PropsWithChildren } from "react";
 import { render } from "@testing-library/react";
+import type { RenderOptions } from "@testing-library/react";
+import type { PreloadedState } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 
-import { Store } from "../../store/store";
+import type { RootState, AppStore } from "../../store/store";
+import { setupStore } from "../../store/store"
 
-export function renderWithProviders(ui: React.ReactElement) {
+interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
+  preloadedState?: PreloadedState<RootState>
+  store?: AppStore
+}
+
+export function renderWithProviders(
+  ui: React.ReactElement,
+  {
+    preloadedState = {rooms: []},
+    store = setupStore(preloadedState),
+    ...renderOptions
+  }: ExtendedRenderOptions = {}
+) {
   function Wrapper({ children }: PropsWithChildren<{}>): JSX.Element {
-    return <Provider store={Store}>{children}</Provider>;
+    return <Provider store={store}>{children}</Provider>
   }
 
-  // Return an object with the store and all of RTL's query functions
-  return { Store, ...render(ui, { wrapper: Wrapper }) };
+  return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) }
 }

@@ -44,17 +44,16 @@ describe("Rooms", () => {
     const { getAllByRole } = renderWithProviders(<Rooms />);
     const user = userEvent.setup();
 
-    const open = screen.getByRole("switch")
-    await user.click(open);
-
     const list = screen.getByRole("rooms-list");
     expect(list).toBeInTheDocument();
     const noRooms = screen.queryByText("No Rooms");
     expect(noRooms).toBeInTheDocument();
+    const open = screen.getByRole("switch")
+    await user.click(open);
+
 
     const createButton = screen.getByRole("button");
     await user.click(createButton);
     expect(getAllByRole("listitem").length).toBe(1);
-    expect()
   });
 });
