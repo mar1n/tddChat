@@ -7,11 +7,12 @@ type state = {
   rooms: roomsState[];
 };
 const Rooms = () => {
+  const [title, setTitle] = useState('');
   const [openCreate, setOpenCreate] = useState(false);
   const dispatch = useDispatch<AppThunkDispatch>();
   const rooms = useSelector((state: state) => state.rooms);
   const createRoom = () => {
-    dispatch(createRoomThunk());
+    dispatch(createRoomThunk(title));
   };
   return (
     <>
@@ -28,6 +29,7 @@ const Rooms = () => {
       <div role={"message-screen"}></div>
       {openCreate && (
         <div role={"popUp"}>
+          <input type="text" name="title" onChange={(e) => setTitle(e.target.value)} />
           <button role={"button"} onClick={createRoom}>
             Create Room
           </button>

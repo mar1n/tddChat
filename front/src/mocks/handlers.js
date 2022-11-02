@@ -103,9 +103,10 @@ export const handlers = [
   rest.post(
     "http://localhost:500/createRoom",
     async (req, res, ctx) => {
+      const { title } = await req.json();
       return res(
         ctx.json({
-          title: "room of peace",
+          title: title,
           body: "World peace.",
         },),
         ctx.status(201)
