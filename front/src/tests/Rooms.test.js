@@ -5,9 +5,9 @@ import { renderWithProviders } from "./utils/test-utils";
 import { createContainer } from "./myhelpers";
 
 describe("Rooms", () => {
-  let field;
+  let field, changeAndWait, withEvent;
   beforeEach(() => {
-    ({ field } = createContainer());
+    ({ field, changeAndWait, withEvent } = createContainer());
   });
   test("Render rooms page.", () => {
     renderWithProviders(<Rooms />);
@@ -59,6 +59,10 @@ describe("Rooms", () => {
     expect(noRooms).toBeInTheDocument();
     const open = screen.getByRole("switch");
     await user.click(open);
+
+    expect(field("title")).not.toBeNull();
+    await changeAndWait(field("title"), withEvent("title", "Robin adventure"))
+    expect(field("title").value).toEqual("Robin adventure");
 
     const createButton = screen.getByRole("button");
     await user.click(createButton);
