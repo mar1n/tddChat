@@ -35,17 +35,3 @@ export const createContainer = () => {
     withEvent,
   };
 };
-export const renderRouter = (component) => {
-  return render(
-    <>
-      <MemoryRouter>{component}</MemoryRouter>
-    </>
-  );
-};
-export const simulateEventAndWait = (eventName) => async (element, eventData) =>
-  await act(async () => ReactTestUtils.Simulate[eventName](element, eventData));
-
-export const form = (role) =>
-  screen.getByRole("form", { name: new RegExp(role, "i") });
-export const label = (text) => screen.getByText(text);
-export const field = (placeholder) => screen.getByPlaceholderText(placeholder);

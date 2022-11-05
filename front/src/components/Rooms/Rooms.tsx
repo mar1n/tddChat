@@ -29,7 +29,7 @@ const Rooms = () => {
       <div role={"message-screen"}></div>
       {openCreate && (
         <div role={"popUp"}>
-          <input type="text" name="title" onChange={(e) => setTitle(e.target.value)} />
+          <input type="text" name="title" placeholder="title" onChange={(e) => setTitle(e.target.value)} />
           <button role={"button"} onClick={createRoom}>
             Create Room
           </button>
