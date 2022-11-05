@@ -61,11 +61,14 @@ describe("Rooms", () => {
     await user.click(open);
 
     expect(field("title")).not.toBeNull();
-    await changeAndWait(field("title"), withEvent("title", "Robin adventure"))
+    await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
     expect(field("title").value).toEqual("Robin adventure");
 
     const createButton = screen.getByRole("button");
     await user.click(createButton);
+    expect(screen.getByText(/Robin adventure/i));
     expect(getAllByRole("listitem").length).toBe(1);
+    await user.click(screen.getByText(/Robin adventure/i));
+    expect(screen.getByText(/Robin adventure/i)).toHaveClass("selected");
   });
 });

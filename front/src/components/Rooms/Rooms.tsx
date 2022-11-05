@@ -10,11 +10,15 @@ const Rooms = () => {
   const [title, setTitle] = useState("");
   const [openCreate, setOpenCreate] = useState(false);
   const [error, setError] = useState("");
+  const [selectedClass, setSelectedClass] = useState(NaN);
   const dispatch = useDispatch<AppThunkDispatch>();
   const rooms = useSelector((state: state) => state.rooms);
   const createRoom = () => {
     dispatch(createRoomThunk(title));
   };
+  const selectRoom = (index: number) => {
+    setSelectedClass(index)
+  }
   return (
     <>
       Rooms page.{" "}
@@ -26,7 +30,7 @@ const Rooms = () => {
           ? "No Rooms"
           : rooms.map((value, index) => {
               return (
-                <div role={"listitem"} key={index}>
+                <div role={"listitem"} key={index} onClick={() => selectRoom(index)} className={index === selectedClass ? "selected" : ""}>
                   {value.title}
                 </div>
               );
