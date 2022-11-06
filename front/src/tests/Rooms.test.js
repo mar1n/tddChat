@@ -92,5 +92,12 @@ describe("Rooms", () => {
     expect(screen.getByRole("message-screen")).toBeInTheDocument();
     expect(screen.getByText(/Robin Hood Room/i)).toHaveClass("selected");
     expect(screen.getByText(/Robin is from forest./i)).toBeInTheDocument();
+    expect(field("addMessage")).not.toBeNull();
+    expect(screen.getByRole("button-addMessage")).toBeInTheDocument();
+    await changeAndWait(field("addMessage"), withEvent("addMessage", "Robin jump over the river and he met Big John."))
+    expect(field("addMessage").value).toEqual("Robin jump over the river and he met Big John.")
+    await user.click(screen.getByRole("button-addMessage"));
+    expect(screen.getByText("Robin jump over the river and he met Big John."))
+
   });
 });

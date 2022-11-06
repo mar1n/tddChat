@@ -11,6 +11,7 @@ const Rooms = () => {
   const [title, setTitle] = useState("");
   const [openCreate, setOpenCreate] = useState(false);
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [selectedRoom, setSelectedRoom] = useState("");
   const dispatch = useDispatch<AppThunkDispatch>();
   const rooms = useSelector((state: state) => state.rooms);
@@ -19,8 +20,10 @@ const Rooms = () => {
   };
   const selectRoom = (title: string) => {
     setSelectedRoom(title);
-
   };
+  const addMessage = (text: string) => {
+    dispatch(addMessageThunk(text));
+  }
   return (
     <>
       Rooms page.{" "}
@@ -44,17 +47,28 @@ const Rooms = () => {
             })}
       </div>
       <div>
-      {selectedRoom === "" ? "Select Room" : (
-        <div role={"message-screen"}>
-          {rooms.map((value) => {
-           if(value.title === selectedRoom && value && value.messages) {
-             return value.messages.map((msg, index) => {
-              return <div key={index}><span>{msg.name}</span><p>{msg.text}</p></div>
-             })
-           }
-          })}
-        </div>
-      )}
+        {selectedRoom === "" ? (
+          "Select Room"
+        ) : (
+          <div role={"message-screen"}>
+            {rooms.map((value) => {
+              if (value.title === selectedRoom && value && value.messages) {
+                return value.messages.map((msg, index) => {
+                  return (
+                    <div key={index}>
+                      <span>{msg.name}</span>
+                      <p>{msg.text}</p>
+                    </div>
+                  );
+                });
+              }
+            })}
+            <div>
+              <input type='text' name='addMessage' placeholder='addMessage' value={message} onChange={(e) => setMessage(e.target.value)} />
+              <button role={"button-addMessage"} onClick={() => addMessage(message)}>Add Message</button>
+            </div>
+          </div>
+        )}
       </div>
       {openCreate && (
         <div role={"popUp"}>

@@ -40,6 +40,13 @@ export const createRoomThunk = createAsyncThunk(
   }
 );
 
+export const addMessageThunk = createAsyncThunk(
+  "rooms/addMessage",
+  async(text:string, name: string) => {
+    
+  }
+)
+
 const roomsSlice = createSlice({
   name: "rooms",
   initialState: [] as roomsState[],
