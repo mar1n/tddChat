@@ -1,3 +1,4 @@
+import { p } from "msw/lib/glossary-297d38ba";
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createRoomThunk, roomsState } from "../../store/reducers/roomsSlice";
@@ -10,15 +11,16 @@ const Rooms = () => {
   const [title, setTitle] = useState("");
   const [openCreate, setOpenCreate] = useState(false);
   const [error, setError] = useState("");
-  const [selectedClass, setSelectedClass] = useState(NaN);
+  const [selectedRoom, setSelectedRoom] = useState("");
   const dispatch = useDispatch<AppThunkDispatch>();
   const rooms = useSelector((state: state) => state.rooms);
   const createRoom = () => {
     dispatch(createRoomThunk(title));
   };
-  const selectRoom = (index: number) => {
-    setSelectedClass(index)
-  }
+  const selectRoom = (title: string) => {
+    setSelectedRoom(title);
+
+  };
   return (
     <>
       Rooms page.{" "}
@@ -30,13 +32,30 @@ const Rooms = () => {
           ? "No Rooms"
           : rooms.map((value, index) => {
               return (
-                <div role={"listitem"} key={index} onClick={() => selectRoom(index)} className={index === selectedClass ? "selected" : ""}>
+                <div
+                  role={"listitem"}
+                  key={index}
+                  onClick={() => selectRoom(value.title)}
+                  className={value.title === selectedRoom ? "selected" : ""}
+                >
                   {value.title}
                 </div>
               );
             })}
       </div>
-      <div role={"message-screen"}></div>
+      <div>
+      {selectedRoom === "" ? "Select Room" : (
+        <div role={"message-screen"}>
+          {rooms.map((value) => {
+           if(value.title === selectedRoom && value && value.messages) {
+             return value.messages.map((msg, index) => {
+              return <div key={index}><span>{msg.name}</span><p>{msg.text}</p></div>
+             })
+           }
+          })}
+        </div>
+      )}
+      </div>
       {openCreate && (
         <div role={"popUp"}>
           <input

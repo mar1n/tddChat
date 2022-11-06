@@ -71,4 +71,26 @@ describe("Rooms", () => {
     await user.click(screen.getByText(/Robin adventure/i));
     expect(screen.getByText(/Robin adventure/i)).toHaveClass("selected");
   });
+  test("Add messages.", async () => {
+    const initialsRooms = [
+      {
+        title: "Robin Hood Room",
+        users: [{ name: "Szymon" }],
+        messages: [{ text: "Robin is from forest.", name: "Szymon" }],
+      },
+    ];
+    renderWithProviders(<Rooms />, {
+      preloadedState: {
+        rooms: initialsRooms,
+      },
+    });
+
+    const user = userEvent.setup();
+    expect(screen.queryByText("No Rooms")).not.toBeInTheDocument();
+    expect(screen.queryByText("Select Room")).toBeInTheDocument();
+    await user.click(screen.getByText(/Robin Hood Room/i));
+    expect(screen.getByRole("message-screen")).toBeInTheDocument();
+    expect(screen.getByText(/Robin Hood Room/i)).toHaveClass("selected");
+    expect(screen.getByText(/Robin is from forest./i)).toBeInTheDocument();
+  });
 });
