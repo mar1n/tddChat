@@ -67,7 +67,7 @@ describe("Signin", () => {
     rendersLabelField("Password");
     includeTheExistingValue("password", "randomText");
   });
-  test("user is authenticate, redirect  to home page", async () => {
+  test("user is authenticated, redirect  to home page", async () => {
     const signinRoute = "/signin";
     renderWithProviders(
       <MemoryRouter initialEntries={[signinRoute]}>
@@ -87,5 +87,6 @@ describe("Signin", () => {
 
     const homeText = screen.getByText("You are at home");
     expect(homeText).toBeInTheDocument();
+    expect(screen.getByText("Hello Robin")).toBeInTheDocument();
   });
 });

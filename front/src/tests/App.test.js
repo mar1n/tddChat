@@ -15,4 +15,19 @@ describe("App", () => {
     const element = screen.getByText(/Hello React/i);
     expect(element).toBeInTheDocument();
   });
+  test('Display user name when logged in.', async () => {
+    await act(() => {
+      renderWithProviders(
+        <MemoryRouter>
+          <App />
+        </MemoryRouter>,
+        {
+          preloadedState: {
+            user: "Robin",
+          },
+        }
+      );
+    });
+    expect(screen.getByText(/Hello Robin/i));
+  });
 });

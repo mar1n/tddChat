@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import Layout from "../Layout/Layout";
 import axios from "axios";
-import { autheticate} from "../utils/helper";
+import { autheticate } from "../utils/helper";
 import { useNavigate } from "react-router-dom";
-
+import { useDispatch } from "react-redux";
+import type { AppThunkDispatch } from "../../store/store";
+import { setUser } from "../../store/reducers/userSlice";
 const Signin = () => {
   const history = useNavigate();
   const [customer, setCustomer] = useState<{
@@ -12,7 +14,7 @@ const Signin = () => {
   }>({ email: "", password: "" });
   const [validationError, setValidationError] = useState<string>("");
   const [buttonSwitch, setButtonSwitch] = useState<boolean>(false);
-
+  const dispatch = useDispatch<AppThunkDispatch>();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCustomer((customer) => ({
       ...customer,
@@ -30,6 +32,7 @@ const Signin = () => {
         data: { email, password },
       });
       autheticate(response, () => {
+        dispatch(setUser())
         setCustomer({ email: "", password: "" });
         setButtonSwitch(false);
         history("/");

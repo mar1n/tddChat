@@ -2,17 +2,20 @@ import { configureStore, AnyAction, combineReducers } from "@reduxjs/toolkit";
 import type { PreloadedState } from "@reduxjs/toolkit";
 import thunk, { ThunkDispatch } from "redux-thunk";
 import roomsSlice from "./reducers/roomsSlice";
+import userSlice from "./reducers/userSlice";
 const middleware = [thunk];
 
 export const Store = configureStore({
   reducer: {
     rooms: roomsSlice,
+    user: userSlice
   },
   middleware,
 });
 
 const rootReducer = combineReducers({
   rooms: roomsSlice,
+  user: userSlice
 });
 
 export const setupStore = (preloadedState?: PreloadedState<RootState>) => {

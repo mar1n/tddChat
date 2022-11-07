@@ -1,4 +1,3 @@
-import { p } from "msw/lib/glossary-297d38ba";
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createRoomThunk, roomsState } from "../../store/reducers/roomsSlice";
@@ -7,6 +6,7 @@ import type { AppThunkDispatch } from "../../store/store";
 type state = {
   rooms: roomsState[];
 };
+
 const Rooms = () => {
   const [title, setTitle] = useState("");
   const [openCreate, setOpenCreate] = useState(false);
