@@ -32,7 +32,8 @@ const Signin = () => {
         data: { email, password },
       });
       autheticate(response, () => {
-        dispatch(setUser())
+        const { data: { user: { email} } } = response
+        dispatch(setUser({user: email }))
         setCustomer({ email: "", password: "" });
         setButtonSwitch(false);
         history("/");

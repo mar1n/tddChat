@@ -60,7 +60,7 @@ export const handlers = [
           user: {
             _id: 1223,
             name: "Szymon",
-            email: "szym0nd4widowicz@gmail.com",
+            email: "cykcykacz@gmail.com",
             role: "admin",
           },
         }),

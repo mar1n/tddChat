@@ -89,7 +89,7 @@ describe("Router", () => {
   });
   test("signin page", () => {
     const signinRoute = "/signin";
-    render(
+    renderWithProviders(
       <MemoryRouter initialEntries={[signinRoute]}>
         <Router />
       </MemoryRouter>

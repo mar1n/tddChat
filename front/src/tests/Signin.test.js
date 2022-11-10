@@ -30,30 +30,30 @@ describe("Signin", () => {
   });
 
   test("render a form", () => {
-    renderRouter(<Signin />);
+    renderWithProviders(<MemoryRouter><Signin /></MemoryRouter>);
     expect(form("signin form")).toBeInTheDocument();
   });
   test("render submit button", () => {
-    renderRouter(<Signin />);
+    renderWithProviders(<MemoryRouter><Signin /></MemoryRouter>);
     const submitButton = screen.getByRole("submit");
     expect(submitButton).not.toBeDisabled();
   });
   const rendersLabelField = (name) =>
     test("renders a label for the field", () => {
-      renderRouter(<Signin />);
+      renderWithProviders(<MemoryRouter><Signin /></MemoryRouter>);
       expect(label(name).tagName).toEqual("LABEL");
       expect(label(name)).toBeInTheDocument();
     });
   const renderAsATextBox = (name) =>
     test("renders the field as text box", () => {
-      renderRouter(<Signin />);
+      renderWithProviders(<MemoryRouter><Signin /></MemoryRouter>);
       expect(field(name)).not.toBeNull();
       expect(field(name).tagName).toEqual("INPUT");
       expect(field(name).type).toEqual("text");
     });
   const includeTheExistingValue = (fieldName, value) =>
     test("includes the existing value", async () => {
-      renderRouter(<Signin />);
+      renderWithProviders(<MemoryRouter><Signin /></MemoryRouter>);
       await changeAndWait(field(fieldName), withEvent(fieldName, value));
       expect(field(fieldName).value).toEqual(value);
     });
@@ -87,6 +87,6 @@ describe("Signin", () => {
 
     const homeText = screen.getByText("You are at home");
     expect(homeText).toBeInTheDocument();
-    expect(screen.getByText("Hello Robin")).toBeInTheDocument();
+    expect(screen.getByText(/Hello cykcykacz@gmail.com/i)).toBeInTheDocument();
   });
 });
