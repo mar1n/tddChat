@@ -46,6 +46,9 @@ describe("Rooms", () => {
     expect(noRooms).toBeInTheDocument();
 
     const createButton = screen.getByRole("button");
+    expect(createButton).toBeDisabled();
+    await changeAndWait(field("title"), withEvent("title", "Robin adventure"))
+    expect(createButton).not.toBeDisabled();
     await user.click(createButton);
     expect(getAllByRole("listitem").length).toBe(1);
   });

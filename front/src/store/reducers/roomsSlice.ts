@@ -17,11 +17,15 @@ export interface roomsState {
 
 export const fetchRoomsThunk = createAsyncThunk(
   "rooms/fetchRooms",
-  async () => {
+  async (userName : string) => {
     const response = await axios({
       method: "GET",
       url: `http://localhost:500/rooms`,
+      data: {
+        userName: userName
+      }
     });
+    console.log("data", response.data)
     return response.data;
   }
 );
@@ -40,12 +44,12 @@ export const createRoomThunk = createAsyncThunk(
   }
 );
 
-export const addMessageThunk = createAsyncThunk(
-  "rooms/addMessage",
-  async(text:string, name: string) => {
+// export const addMessageThunk = createAsyncThunk(
+//   "rooms/addMessage",
+//   async(text:string, name: string) => {
     
-  }
-)
+//   }
+// )
 
 const roomsSlice = createSlice({
   name: "rooms",

@@ -91,26 +91,51 @@ export const handlers = [
   rest.get(
     "http://localhost:500/rooms",
     async (req, res, ctx) => {
-      return res(
-        ctx.json({
-          title: "post 3",
-          body: "Harum quidem rerum facilis est et expedita distinctio quas molestias excepturi sint",
-        },),
-        ctx.status(201)
-      )
+      const { userName } = await ctx.json();
+      console.log('userName', userName);
+      const initialRoomState = [
+        {
+          title: "Robin Hood",
+          users: [{name: "Robin"}, {name: "John"}],
+          messages: []
+        }
+      ]
+      if(initialRoomState.find(room => room.users.find(user => userName))) {
+        const result = initialRoomState.filter(room => room.users.find(user => userName))
+        return res(
+          ctx.json(result),
+          ctx.status(201)
+        )
+      } else {
+        return res(
+          ctx.json({
+            error: "Room not found."
+          }),
+          ctx.status(400)
+        )
+      }
     }
   ),
   rest.post(
     "http://localhost:500/createRoom",
     async (req, res, ctx) => {
       const { title } = await req.json();
-      return res(
-        ctx.json({
-          title: title,
-          body: "World peace.",
-        },),
-        ctx.status(201)
-      )
+      if(title) {
+        return res(
+          ctx.json({
+            title: title,
+            body: "World peace.",
+          },),
+          ctx.status(201)
+        )
+      } else {
+        return res(
+          ctx.json({
+            error: "There is some problem with creating room."
+          },),
+          ctx.status(400)
+        )
+      }
     }
   ),
   rest.get(
@@ -125,6 +150,17 @@ export const handlers = [
           ctx.status(201)
         )
       }
+    }
+  ),
+  rest.post(
+    "http://localhost:500/addMsg",
+    async(req, res, ctx) => {
+      const { text, name, room } = await req.json();
+      return res(
+        ctx.json({
+          message: "Message has been added."
+        })
+      )
     }
   ),
   rest.get("/user", (req, res, ctx) => {

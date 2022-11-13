@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { createRoomThunk, roomsState } from "../../store/reducers/roomsSlice";
+import {
+  createRoomThunk,
+  fetchRoomsThunk,
+  roomsState,
+} from "../../store/reducers/roomsSlice";
 import type { AppThunkDispatch } from "../../store/store";
-
+import { userState } from "../../store/reducers/userSlice";
 type state = {
   rooms: roomsState[];
 };
@@ -11,10 +15,16 @@ const Rooms = () => {
   const [title, setTitle] = useState("");
   const [openCreate, setOpenCreate] = useState(false);
   const [error, setError] = useState("");
+  const [buttonDisabled, setButtonDisabled] = useState(true)
   const [message, setMessage] = useState("");
   const [selectedRoom, setSelectedRoom] = useState("");
   const dispatch = useDispatch<AppThunkDispatch>();
   const rooms = useSelector((state: state) => state.rooms);
+  const user = useSelector((state: userState) => state.user);
+  useEffect(() => {
+    console.log("useEffect");
+    dispatch(fetchRoomsThunk(user));
+  }, []);
   const createRoom = () => {
     dispatch(createRoomThunk(title));
   };
@@ -22,8 +32,13 @@ const Rooms = () => {
     setSelectedRoom(title);
   };
   const addMessage = (text: string) => {
-    dispatch(addMessageThunk(text));
-  }
+    //dispatch(addMessageThunk(text));
+  };
+  const buttonDisabledValue = () => {
+    if(!title.trim.length && title === "") {
+      setButtonDisabled(false);
+    } 
+  };
   return (
     <>
       Rooms page.{" "}
@@ -64,8 +79,19 @@ const Rooms = () => {
               }
             })}
             <div>
-              <input type='text' name='addMessage' placeholder='addMessage' value={message} onChange={(e) => setMessage(e.target.value)} />
-              <button role={"button-addMessage"} onClick={() => addMessage(message)}>Add Message</button>
+              <input
+                type='text'
+                name='addMessage'
+                placeholder='addMessage'
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+              <button
+                role={"button-addMessage"}
+                onClick={() => addMessage(message)}
+              >
+                Add Message
+              </button>
             </div>
           </div>
         )}
@@ -77,9 +103,13 @@ const Rooms = () => {
             name='title'
             placeholder='title'
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => (setTitle(e.target.value), buttonDisabledValue())}
           />
-          <button role={"button"} onClick={createRoom}>
+          <button
+            role={"button"}
+            onClick={createRoom}
+            disabled={buttonDisabled}
+          >
             Create Room
           </button>
           <span>{error}</span>
