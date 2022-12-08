@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   createRoomThunk,
   fetchRoomsThunk,
+  addMessageThunk,
   roomsState,
 } from "../../store/reducers/roomsSlice";
 import type { AppThunkDispatch } from "../../store/store";
@@ -19,10 +20,10 @@ const Rooms = () => {
   const [message, setMessage] = useState("");
   const [selectedRoom, setSelectedRoom] = useState("");
   const dispatch = useDispatch<AppThunkDispatch>();
-  const rooms = useSelector((state: state) => state.rooms);
   const user = useSelector((state: userState) => state.user);
+  const rooms = useSelector((state: state) => state.rooms);
   useEffect(() => {
-    console.log("useEffect");
+    console.log("useEffect", user);
     dispatch(fetchRoomsThunk(user));
   }, []);
   const createRoom = () => {

@@ -18,6 +18,7 @@ export interface roomsState {
 export const fetchRoomsThunk = createAsyncThunk(
   "rooms/fetchRooms",
   async (userName : string) => {
+    console.log("fetchRoomsThunk", userName)
     const response = await axios({
       method: "GET",
       url: `http://localhost:500/rooms`,
@@ -44,12 +45,21 @@ export const createRoomThunk = createAsyncThunk(
   }
 );
 
-// export const addMessageThunk = createAsyncThunk(
-//   "rooms/addMessage",
-//   async(text:string, name: string) => {
-    
-//   }
-// )
+export const addMessageThunk = createAsyncThunk(
+  "rooms/addMessage",
+  async (values: {text: string, name: string, roomTitle: string}) => {
+    const response = await axios({
+      method: "POST",
+      url: `http://localhost:500/addMsg`,
+      data: {
+        text: values.text,
+        name: values.name,
+        roomTitle: values.roomTitle
+      }
+    })
+    return response.data
+  }
+)
 
 const roomsSlice = createSlice({
   name: "rooms",
@@ -64,6 +74,8 @@ const roomsSlice = createSlice({
       return [...state, action.payload];
     }).addCase(createRoomThunk.fulfilled, (state, action) => {
       return [...state, action.payload];
+    }).addCase(addMessageThunk.fulfilled, (state, action) => {
+      return [...state, action.payload]
     });
   },
 });

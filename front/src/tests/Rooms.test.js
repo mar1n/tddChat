@@ -74,7 +74,7 @@ describe("Rooms", () => {
     await user.click(screen.getByText(/Robin adventure/i));
     expect(screen.getByText(/Robin adventure/i)).toHaveClass("selected");
   });
-  test("Add messages.", async () => {
+  test.only("Add messages.", async () => {
     const initialsRooms = [
       {
         title: "Robin Hood Room",
@@ -85,6 +85,7 @@ describe("Rooms", () => {
     renderWithProviders(<Rooms />, {
       preloadedState: {
         rooms: initialsRooms,
+        user: "Robin"
       },
     });
 

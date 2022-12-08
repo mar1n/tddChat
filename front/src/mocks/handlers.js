@@ -88,81 +88,80 @@ export const handlers = [
       }
     }
   ),
-  rest.get(
-    "http://localhost:500/rooms",
-    async (req, res, ctx) => {
-      const { userName } = await ctx.json();
-      console.log('userName', userName);
-      const initialRoomState = [
-        {
-          title: "Robin Hood",
-          users: [{name: "Robin"}, {name: "John"}],
-          messages: []
-        }
-      ]
-      if(initialRoomState.find(room => room.users.find(user => userName))) {
-        const result = initialRoomState.filter(room => room.users.find(user => userName))
-        return res(
-          ctx.json(result),
-          ctx.status(201)
-        )
-      } else {
-        return res(
-          ctx.json({
-            error: "Room not found."
-          }),
-          ctx.status(400)
-        )
-      }
-    }
-  ),
-  rest.post(
-    "http://localhost:500/createRoom",
-    async (req, res, ctx) => {
-      const { title } = await req.json();
-      if(title) {
-        return res(
-          ctx.json({
-            title: title,
-            body: "World peace.",
-          },),
-          ctx.status(201)
-        )
-      } else {
-        return res(
-          ctx.json({
-            error: "There is some problem with creating room."
-          },),
-          ctx.status(400)
-        )
-      }
-    }
-  ),
-  rest.get(
-    "http://localhost:500/selectRoom",
-    async (req, res, ctx) => {
-      const { title, user } = await req.json();
-      if(title === "room of peace" && user === "Robin") {
-        return res(
-          ctx.json({
-            messages: [{ text: "My nam is Robin from a forest.", name: "Robin"}]
-          }),
-          ctx.status(201)
-        )
-      }
-    }
-  ),
-  rest.post(
-    "http://localhost:500/addMsg",
-    async(req, res, ctx) => {
-      const { text, name, room } = await req.json();
+  rest.get("http://localhost:500/rooms", async (req, res, ctx) => {
+    const { userName } = await req.json();
+    console.log("userName", userName);
+    const initialRoomState = [
+      {
+        title: "Robin Hood",
+        users: [{ name: "Robin" }, { name: "John" }],
+        messages: [],
+      },
+    ];
+    if (initialRoomState.find((room) => room.users.find((user) => userName))) {
+      const result = initialRoomState.filter((room) =>
+        room.users.find((user) => userName)
+      );
+      return res(ctx.json(result), ctx.status(201));
+    } else {
       return res(
         ctx.json({
-          message: "Message has been added."
-        })
-      )
+          error: "Room not found.",
+        }),
+        ctx.status(400)
+      );
     }
-  ),
+  }),
+  rest.post("http://localhost:500/createRoom", async (req, res, ctx) => {
+    const { title } = await req.json();
+    if (title) {
+      return res(
+        ctx.json({
+          title: title,
+          body: "World peace.",
+        }),
+        ctx.status(201)
+      );
+    } else {
+      return res(
+        ctx.json({
+          error: "There is some problem with creating room.",
+        }),
+        ctx.status(400)
+      );
+    }
+  }),
+  rest.get("http://localhost:500/selectRoom", async (req, res, ctx) => {
+    const { title, user } = await req.json();
+    if (title === "room of peace" && user === "Robin") {
+      return res(
+        ctx.json({
+          messages: [{ text: "My nam is Robin from a forest.", name: "Robin" }],
+        }),
+        ctx.status(201)
+      );
+    }
+  }),
+  rest.post("http://localhost:500/addMsg", async (req, res, ctx) => {
+    const { text, name, roomTitle } = await req.json();
+    const initialsRooms = [
+      {
+        title: "Robin Hood Room",
+        users: [{ name: "Szymon" }],
+        messages: [{ text: "Robin is from forest.", name: "Szymon" }],
+      },
+    ];
+    const room = initialsRooms.find((room) => room.title === roomTitle);
+    if (room) {
+      room.messages.push({ text, name });
+    }
+    return res(
+      ctx.json({
+        message: "Message has been added.",
+        room: room,
+      })
+    );
+  }),
   rest.get("/user", (req, res, ctx) => {
     // Check if the user is authenticated in this session
 
