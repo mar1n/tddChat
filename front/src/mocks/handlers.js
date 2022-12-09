@@ -143,18 +143,15 @@ export const handlers = [
     }
   }),
   rest.post("http://localhost:500/addMsg", async (req, res, ctx) => {
-    const { text, name, roomTitle } = await req.json();
-    const initialsRooms = [
-      {
-        title: "Robin Hood Room",
-        users: [{ name: "Szymon" }],
-        messages: [{ text: "Robin is from forest.", name: "Szymon" }],
-      },
-    ];
-    const room = initialsRooms.find((room) => room.title === roomTitle);
-    if (room) {
-      room.messages.push({ text, name });
-    }
+    const { text, name } = await req.json();
+    const room = {
+      title: "Robin Hood Room",
+      users: [{ name: "Szymon" }],
+      messages: [{ text: "Robin is from forest.", name: "Szymon" }],
+    };
+
+    room.messages.push({ text, name });
+
     return res(
       ctx.json({
         message: "Message has been added.",

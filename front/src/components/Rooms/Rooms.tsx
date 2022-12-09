@@ -33,7 +33,7 @@ const Rooms = () => {
     setSelectedRoom(title);
   };
   const addMessage = (text: string) => {
-    //dispatch(addMessageThunk(text));
+    dispatch(addMessageThunk({ text: text, name: user, roomTitle: "Fake room."}));
   };
   const buttonDisabledValue = () => {
     if(!title.trim.length && title === "") {

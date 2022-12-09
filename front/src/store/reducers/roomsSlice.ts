@@ -57,6 +57,7 @@ export const addMessageThunk = createAsyncThunk(
         roomTitle: values.roomTitle
       }
     })
+    console.log('addMessage thunk', response.data);
     return response.data
   }
 )
@@ -75,7 +76,8 @@ const roomsSlice = createSlice({
     }).addCase(createRoomThunk.fulfilled, (state, action) => {
       return [...state, action.payload];
     }).addCase(addMessageThunk.fulfilled, (state, action) => {
-      return [...state, action.payload]
+      console.log('action', action.payload)
+      return [...state, action.payload.room]
     });
   },
 });

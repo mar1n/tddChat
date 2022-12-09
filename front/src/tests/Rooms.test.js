@@ -104,4 +104,10 @@ describe("Rooms", () => {
     expect(screen.getByText("Robin jump over the river and he met Big John."))
 
   });
+  test.skip("Add multiple messages in one room.", () => {
+    
+  })
+  test.skip("Add message in select room and then in a diferent room.", () => {
+
+  })
 });
