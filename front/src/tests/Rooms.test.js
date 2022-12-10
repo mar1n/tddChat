@@ -47,7 +47,7 @@ describe("Rooms", () => {
 
     const createButton = screen.getByRole("button");
     expect(createButton).toBeDisabled();
-    await changeAndWait(field("title"), withEvent("title", "Robin adventure"))
+    await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
     expect(createButton).not.toBeDisabled();
     await user.click(createButton);
     expect(getAllByRole("listitem").length).toBe(1);
@@ -74,7 +74,7 @@ describe("Rooms", () => {
     await user.click(screen.getByText(/Robin adventure/i));
     expect(screen.getByText(/Robin adventure/i)).toHaveClass("selected");
   });
-  test.only("Add messages.", async () => {
+  test("Add messages.", async () => {
     const initialsRooms = [
       {
         title: "Robin Hood Room",
@@ -85,7 +85,7 @@ describe("Rooms", () => {
     renderWithProviders(<Rooms />, {
       preloadedState: {
         rooms: initialsRooms,
-        user: "Robin"
+        user: "Robin",
       },
     });
 
@@ -98,16 +98,55 @@ describe("Rooms", () => {
     expect(screen.getByText(/Robin is from forest./i)).toBeInTheDocument();
     expect(field("addMessage")).not.toBeNull();
     expect(screen.getByRole("button-addMessage")).toBeInTheDocument();
-    await changeAndWait(field("addMessage"), withEvent("addMessage", "Robin jump over the river and he met Big John."))
-    expect(field("addMessage").value).toEqual("Robin jump over the river and he met Big John.")
+    await changeAndWait(
+      field("addMessage"),
+      withEvent("addMessage", "Robin jump over the river and he met Big John.")
+    );
+    expect(field("addMessage").value).toEqual(
+      "Robin jump over the river and he met Big John."
+    );
     await user.click(screen.getByRole("button-addMessage"));
-    expect(screen.getByText("Robin jump over the river and he met Big John."))
-
+    expect(screen.getByText("Robin jump over the river and he met Big John."));
   });
-  test.skip("Add multiple messages in one room.", () => {
-    
-  })
-  test.skip("Add message in select room and then in a diferent room.", () => {
+  test.skip("Add multiple messages in one room.", () => {});
+  test("Add message in select room and then in a different room.", async () => {
+    const initialsRooms = [
+      {
+        title: "Robin Hood Room",
+        users: [{ name: "Szymon" }],
+        messages: [{ text: "Robin is from forest.", name: "Szymon" }],
+      },
+    ];
+    renderWithProviders(<Rooms />, {
+      preloadedState: {
+        rooms: initialsRooms,
+        user: "Robin",
+      },
+    });
 
-  })
+    const user = userEvent.setup();
+    expect(screen.queryByText("No Rooms")).not.toBeInTheDocument();
+    expect(screen.queryByText("Select Room")).toBeInTheDocument();
+    await user.click(screen.getByText(/Robin Hood Room/i));
+    expect(screen.getByRole("message-screen")).toBeInTheDocument();
+    expect(screen.getByText(/Robin Hood Room/i)).toHaveClass("selected");
+    expect(screen.getByText(/Robin is from forest./i)).toBeInTheDocument();
+    expect(field("addMessage")).not.toBeNull();
+    expect(screen.getByRole("button-addMessage")).toBeInTheDocument();
+    await changeAndWait(
+      field("addMessage"),
+      withEvent("addMessage", "Robin jump over the river and he met Big John.")
+    );
+    expect(field("addMessage").value).toEqual(
+      "Robin jump over the river and he met Big John."
+    );
+    await user.click(screen.getByRole("button-addMessage"));
+    expect(screen.getByText("Robin jump over the river and he met Big John."));
+    await changeAndWait(
+      field("addMessage"),
+      withEvent("addMessage", "Robin has poison arrow in his bow.")
+    );
+    await user.click(screen.getByRole("button-addMessage"));
+    expect(screen.getByText("Robin has poison arrow in his bow."));
+  });
 });

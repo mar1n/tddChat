@@ -15,7 +15,7 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
 export function renderWithProviders(
   ui: React.ReactElement,
   {
-    preloadedState = {rooms: []},
+    preloadedState = {rooms: [], user: "Szymon"},
     store = setupStore(preloadedState),
     ...renderOptions
   }: ExtendedRenderOptions = {}

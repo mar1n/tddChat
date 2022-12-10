@@ -98,10 +98,11 @@ export const handlers = [
         messages: [],
       },
     ];
-    if (initialRoomState.find((room) => room.users.find((user) => userName))) {
+    if (initialRoomState.find((room) => room.users.find((user) => user === userName))) {
       const result = initialRoomState.filter((room) =>
         room.users.find((user) => userName)
       );
+      console.log('result', result)
       return res(ctx.json(result), ctx.status(201));
     } else {
       return res(
