@@ -93,18 +93,19 @@ export const handlers = [
     console.log("userName", userName);
     const initialRoomState = [
       {
-        title: "Robin Hood",
-        users: [{ name: "Robin" }, { name: "John" }],
+        title: "Robin book",
+        users: [{ name: "Robin" }, { name: "John" }, { name: "Szymon"}],
         messages: [],
-      },
+      }
     ];
-    if (initialRoomState.find((room) => room.users.find((user) => user === userName))) {
+    if (initialRoomState.find((room) => room.users.find((user) => { console.log('user', user); return user.name === userName}))) {
       const result = initialRoomState.filter((room) =>
         room.users.find((user) => userName)
       );
       console.log('result', result)
-      return res(ctx.json(result), ctx.status(201));
+      return res(ctx.json(result[0]), ctx.status(201));
     } else {
+      console.log('not found')
       return res(
         ctx.json({
           error: "Room not found.",
@@ -119,7 +120,8 @@ export const handlers = [
       return res(
         ctx.json({
           title: title,
-          body: "World peace.",
+          users: [{ name: "Marian"}],
+          messages: []
         }),
         ctx.status(201)
       );
@@ -144,21 +146,36 @@ export const handlers = [
     }
   }),
   rest.post("http://localhost:500/addMsg", async (req, res, ctx) => {
-    const { text, name } = await req.json();
+    const { text, name, roomTitle } = await req.json();
     const room = {
       title: "Robin Hood Room",
       users: [{ name: "Szymon" }],
       messages: [{ text: "Robin is from forest.", name: "Szymon" }],
     };
-
-    room.messages.push({ text, name });
-
-    return res(
-      ctx.json({
-        message: "Message has been added.",
-        room: room,
-      })
-    );
+    const roomtwo = {
+      title: "Robin adventure",
+      users: [{ name: "Szymon" }],
+      messages: [{ text: "Robin is from Sherwood.", name: "Norbert" }],
+    };
+    console.log("roomTitle", roomTitle)
+    if(room.title === roomTitle) {
+      room.messages.push({ text, name });
+      return res(
+        ctx.json({
+          message: "Message has been added.",
+          room: room,
+        })
+      );
+    }
+    if(roomtwo.title === "Robin adventure" ) {
+      roomtwo.messages.push({ text, name });
+      return res(
+        ctx.json({
+          message: "Message has been added.",
+          room: roomtwo,
+        })
+      );
+    }
   }),
   rest.get("/user", (req, res, ctx) => {
     // Check if the user is authenticated in this session

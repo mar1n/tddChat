@@ -3,6 +3,7 @@ import Rooms from "../components/Rooms/Rooms";
 import userEvent from "@testing-library/user-event";
 import { renderWithProviders } from "./utils/test-utils";
 import { createContainer } from "./myhelpers";
+import { act } from "react-dom/test-utils";
 
 describe("Rooms", () => {
   let field, changeAndWait, withEvent;
@@ -37,23 +38,25 @@ describe("Rooms", () => {
     const { getAllByRole } = renderWithProviders(<Rooms />);
     const user = userEvent.setup();
 
-    const open = screen.getByRole("switch");
-    await user.click(open);
-
     const list = screen.getByRole("rooms-list");
     expect(list).toBeInTheDocument();
     const noRooms = screen.queryByText("No Rooms");
     expect(noRooms).toBeInTheDocument();
+
+    const open = screen.getByRole("switch");
+    await user.click(open);
 
     const createButton = screen.getByRole("button");
     expect(createButton).toBeDisabled();
     await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
     expect(createButton).not.toBeDisabled();
     await user.click(createButton);
-    expect(getAllByRole("listitem").length).toBe(1);
+    expect(getAllByRole("listitem").length).toBe(2);
   });
   test("Select Room.", async () => {
-    const { getAllByRole } = renderWithProviders(<Rooms />);
+    act(() => {
+      renderWithProviders(<Rooms />);
+    });
     const user = userEvent.setup();
 
     const list = screen.getByRole("rooms-list");
@@ -62,6 +65,8 @@ describe("Rooms", () => {
     expect(noRooms).toBeInTheDocument();
     const open = screen.getByRole("switch");
     await user.click(open);
+    expect(screen.getAllByRole("listitem").length).toBe(1);
+    expect(screen.getByText(/Robin book/i));
 
     expect(field("title")).not.toBeNull();
     await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
@@ -70,7 +75,7 @@ describe("Rooms", () => {
     const createButton = screen.getByRole("button");
     await user.click(createButton);
     expect(screen.getByText(/Robin adventure/i));
-    expect(getAllByRole("listitem").length).toBe(1);
+    expect(screen.getAllByRole("listitem").length).toBe(2);
     await user.click(screen.getByText(/Robin adventure/i));
     expect(screen.getByText(/Robin adventure/i)).toHaveClass("selected");
   });
@@ -148,5 +153,17 @@ describe("Rooms", () => {
     );
     await user.click(screen.getByRole("button-addMessage"));
     expect(screen.getByText("Robin has poison arrow in his bow."));
+    expect(screen.getByRole("switch"));
+    await user.click(screen.getByRole("switch"));
+    expect(screen.getByRole("button"));
+    await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
+    await user.click(screen.getByRole("button"));
+    await user.click(screen.getByText(/Robin adventure/i));
+    await changeAndWait(
+      field("addMessage"),
+      withEvent("addMessage", "Robin meet lady Marian.")
+    );
+    await user.click(screen.getByRole("button-addMessage"));
+    expect(screen.getByText("Robin meet lady Marian."));
   });
 });

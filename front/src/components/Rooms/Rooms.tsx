@@ -16,7 +16,7 @@ const Rooms = () => {
   const [title, setTitle] = useState("");
   const [openCreate, setOpenCreate] = useState(false);
   const [error, setError] = useState("");
-  const [buttonDisabled, setButtonDisabled] = useState(true)
+  const [buttonDisabled, setButtonDisabled] = useState(true);
   const [message, setMessage] = useState("");
   const [selectedRoom, setSelectedRoom] = useState("");
   const dispatch = useDispatch<AppThunkDispatch>();
@@ -33,13 +33,16 @@ const Rooms = () => {
     setSelectedRoom(title);
   };
   const addMessage = (text: string) => {
-    dispatch(addMessageThunk({ text: text, name: user, roomTitle: "Fake room."}));
+    dispatch(
+      addMessageThunk({ text: text, name: user, roomTitle: selectedRoom })
+    );
   };
   const buttonDisabledValue = () => {
-    if(!title.trim.length && title === "") {
+    if (!title.trim.length && title === "") {
       setButtonDisabled(false);
-    } 
+    }
   };
+  console.log("rooms", rooms);
   return (
     <>
       Rooms page.{" "}

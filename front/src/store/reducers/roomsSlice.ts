@@ -17,17 +17,22 @@ export interface roomsState {
 
 export const fetchRoomsThunk = createAsyncThunk(
   "rooms/fetchRooms",
-  async (userName : string) => {
-    console.log("fetchRoomsThunk", userName)
-    const response = await axios({
-      method: "GET",
-      url: `http://localhost:500/rooms`,
-      data: {
-        userName: userName
-      }
-    });
-    console.log("data", response.data)
-    return response.data;
+  async (userName: string) => {
+    console.log("fetchRoomsThunk", userName);
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `http://localhost:500/rooms`,
+        data: {
+          userName: userName,
+        },
+      });
+
+      console.log("data", response.data);
+      return response.data;
+    } catch (error: any) {
+      console.log("error", error.response.data.error);
+    }
   }
 );
 
@@ -38,8 +43,8 @@ export const createRoomThunk = createAsyncThunk(
       method: "POST",
       url: `http://localhost:500/createRoom`,
       data: {
-        title: title
-      }
+        title: title,
+      },
     });
     return response.data;
   }
@@ -47,20 +52,20 @@ export const createRoomThunk = createAsyncThunk(
 
 export const addMessageThunk = createAsyncThunk(
   "rooms/addMessage",
-  async (values: {text: string, name: string, roomTitle: string}) => {
+  async (values: { text: string; name: string; roomTitle: string }) => {
     const response = await axios({
       method: "POST",
       url: `http://localhost:500/addMsg`,
       data: {
         text: values.text,
         name: values.name,
-        roomTitle: values.roomTitle
-      }
-    })
-    console.log('addMessage thunk', response.data);
-    return response.data
+        roomTitle: values.roomTitle,
+      },
+    });
+    console.log("addMessage thunk", response.data);
+    return response.data;
   }
-)
+);
 
 const roomsSlice = createSlice({
   name: "rooms",
@@ -71,14 +76,24 @@ const roomsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchRoomsThunk.fulfilled, (state, action) => {
-      return [...state, action.payload];
-    }).addCase(createRoomThunk.fulfilled, (state, action) => {
-      return [...state, action.payload];
-    }).addCase(addMessageThunk.fulfilled, (state, action) => {
-      console.log('action', action.payload)
-      return [...state, action.payload.room]
-    });
+    builder
+      .addCase(fetchRoomsThunk.fulfilled, (state, action) => {
+        console.log("action.payload", action.payload);
+        return [...state, action.payload];
+      })
+      .addCase(createRoomThunk.fulfilled, (state, action) => {
+        return [...state, action.payload];
+      })
+      .addCase(addMessageThunk.fulfilled, (state, action) => {
+        console.log("action", action.payload);
+        let updateState = state.map((value) => {
+          if (value.title === action.payload.room.title) {
+            return action.payload.room;
+          }
+          return value;
+        });
+        return [...updateState];
+      });
   },
 });
 
