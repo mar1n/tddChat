@@ -4,12 +4,15 @@ import thunk, { ThunkDispatch } from "redux-thunk";
 import roomsSlice from "./reducers/roomsSlice";
 import userSlice from "./reducers/userSlice";
 import errorSlice from "./reducers/errorSlice";
+import seekUsersSlice from "./reducers/seekUsersSlice";
+
 const middleware = [thunk];
 
 export const Store = configureStore({
   reducer: {
     rooms: roomsSlice,
-    user: userSlice
+    user: userSlice,
+    seekUsers: seekUsersSlice
   },
   middleware,
 });
@@ -17,7 +20,8 @@ export const Store = configureStore({
 const rootReducer = combineReducers({
   rooms: roomsSlice,
   user: userSlice,
-  errors: errorSlice
+  errors: errorSlice,
+  seekUsers: seekUsersSlice
 });
 
 export const setupStore = (preloadedState?: PreloadedState<RootState>) => {

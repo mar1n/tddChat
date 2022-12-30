@@ -94,18 +94,25 @@ export const handlers = [
     const initialRoomState = [
       {
         title: "Robin book",
-        users: [{ name: "Robin" }, { name: "John" }, { name: "Szymon"}],
+        users: [{ name: "Robin" }, { name: "John" }, { name: "Szymon" }],
         messages: [],
-      }
+      },
     ];
-    if (initialRoomState.find((room) => room.users.find((user) => { console.log('user', user); return user.name === userName}))) {
+    if (
+      initialRoomState.find((room) =>
+        room.users.find((user) => {
+          console.log("user", user);
+          return user.name === userName;
+        })
+      )
+    ) {
       const result = initialRoomState.filter((room) =>
         room.users.find((user) => userName)
       );
-      console.log('result', result)
+      console.log("result", result);
       return res(ctx.json(result[0]), ctx.status(201));
     } else {
-      console.log('not found')
+      console.log("not found");
       return res(
         ctx.json({
           error: "Room not found.",
@@ -114,14 +121,20 @@ export const handlers = [
       );
     }
   }),
+  rest.get("http:localhost:500/seekUsers", async (req, res, ctx) => {
+    return res([
+      { name: "Sheriff of Nottingham" },
+      { name: "John, King of England" },
+    ]);
+  }),
   rest.post("http://localhost:500/createRoom", async (req, res, ctx) => {
     const { title } = await req.json();
     if (title) {
       return res(
         ctx.json({
           title: title,
-          users: [{ name: "Marian"}],
-          messages: []
+          users: [{ name: "Marian" }],
+          messages: [],
         }),
         ctx.status(201)
       );
@@ -157,8 +170,8 @@ export const handlers = [
       users: [{ name: "Szymon" }],
       messages: [{ text: "Robin is from Sherwood.", name: "Norbert" }],
     };
-    console.log("roomTitle", roomTitle)
-    if(room.title === roomTitle) {
+    console.log("roomTitle", roomTitle);
+    if (room.title === roomTitle) {
       room.messages.push({ text, name });
       return res(
         ctx.json({
@@ -167,7 +180,7 @@ export const handlers = [
         })
       );
     }
-    if(roomtwo.title === "Robin adventure" ) {
+    if (roomtwo.title === "Robin adventure") {
       roomtwo.messages.push({ text, name });
       return res(
         ctx.json({

@@ -10,16 +10,17 @@ describe("Rooms", () => {
   beforeEach(() => {
     ({ field, changeAndWait, withEvent } = createContainer());
   });
-  test("Render rooms page.", () => {
-    renderWithProviders(<Rooms />);
-
-    const welcomMessage = screen.getByText("Rooms page.");
-    expect(welcomMessage).toBeInTheDocument();
-    const addRoomButton = screen.getByRole("switch");
-    expect(addRoomButton).toBeInTheDocument();
+  test("Render rooms page.", async () => {
+    await act(async () => {
+      renderWithProviders(<Rooms />);
+    });
+    expect(screen.getByText("Rooms page.")).toBeInTheDocument();
+    expect(screen.getByRole("switch")).toBeInTheDocument();
   });
   test("Create room pop up.", async () => {
-    renderWithProviders(<Rooms />);
+    await act(async () => {
+      renderWithProviders(<Rooms />);
+    });
 
     const open = screen.getByRole("switch");
     const user = userEvent.setup();
@@ -35,7 +36,9 @@ describe("Rooms", () => {
     expect(inputPopUpAfterClick).toBeInTheDocument();
   });
   test("List rooms.", async () => {
-    const { getAllByRole } = renderWithProviders(<Rooms />);
+    act(() => {
+      renderWithProviders(<Rooms />);
+    });
     const user = userEvent.setup();
 
     const list = screen.getByRole("rooms-list");
@@ -51,7 +54,26 @@ describe("Rooms", () => {
     await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
     expect(createButton).not.toBeDisabled();
     await user.click(createButton);
-    expect(getAllByRole("listitem").length).toBe(2);
+    expect(screen.getAllByRole("listitem").length).toBe(2);
+  });
+  test.only("Create room with users.", async () => {
+    await act(async () => {
+      renderWithProviders(<Rooms />);
+    });
+
+    expect(screen.queryByText("Sheriff of Nottingham")).not.toBeInTheDocument();
+    expect(screen.queryByText("John, King of England")).not.toBeInTheDocument();
+
+    const user = userEvent.setup();
+    const open = screen.getByRole("switch");
+
+    await user.click(open);
+
+    const createButton = screen.getByRole("button");
+    expect(createButton).toBeDisabled();
+
+    expect(screen.queryByText("Sheriff of Nottingham")).toBeInTheDocument();
+    expect(screen.queryByText("John, King of England")).toBeInTheDocument();
   });
   test("Select Room.", async () => {
     act(() => {
