@@ -121,11 +121,16 @@ export const handlers = [
       );
     }
   }),
-  rest.get("http:localhost:500/seekUsers", async (req, res, ctx) => {
-    return res([
-      { name: "Sheriff of Nottingham" },
-      { name: "John, King of England" },
-    ]);
+  rest.get("http://localhost:500/seekUsers", async (req, res, ctx) => {
+    return res(
+      ctx.json({
+        message: "You, have found users.",
+        users: [
+          { name: "Sheriff of Nottingham" },
+          { name: "John, King of England" },
+        ],
+      })
+    );
   }),
   rest.post("http://localhost:500/createRoom", async (req, res, ctx) => {
     const { title } = await req.json();

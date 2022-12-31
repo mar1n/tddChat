@@ -6,11 +6,17 @@ import {
   addMessageThunk,
   roomsState,
 } from "../../store/reducers/roomsSlice";
+import { fetchSeekUsers, seekuser } from "../../store/reducers/seekUsersSlice";
+
 import type { AppThunkDispatch } from "../../store/store";
 import { userState } from "../../store/reducers/userSlice";
 type state = {
   rooms: roomsState[];
 };
+
+type another = {
+  seekUsers: seekuser[];
+}
 
 const Rooms = () => {
   const [title, setTitle] = useState("");
@@ -22,9 +28,11 @@ const Rooms = () => {
   const dispatch = useDispatch<AppThunkDispatch>();
   const user = useSelector((state: userState) => state.user);
   const rooms = useSelector((state: state) => state.rooms);
+  const seekUsers = useSelector((state: another) => state.seekUsers)
   useEffect(() => {
     console.log("useEffect", user);
     dispatch(fetchRoomsThunk(user));
+    dispatch(fetchSeekUsers());
   }, []);
   const createRoom = () => {
     dispatch(createRoomThunk(title));
@@ -42,7 +50,7 @@ const Rooms = () => {
       setButtonDisabled(false);
     }
   };
-  console.log("rooms", rooms);
+  console.log("rooms seekUsers", seekUsers);
   return (
     <>
       Rooms page.{" "}
@@ -109,6 +117,15 @@ const Rooms = () => {
             value={title}
             onChange={(e) => (setTitle(e.target.value), buttonDisabledValue())}
           />
+          <div role={"users"}>
+            {
+              seekUsers.map(({name}) => (
+                <p className="selectUser">
+                  {name}
+                </p>
+              ))
+            }
+          </div>
           <button
             role={"button"}
             onClick={createRoom}
