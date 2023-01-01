@@ -61,8 +61,11 @@ describe("Rooms", () => {
       renderWithProviders(<Rooms />);
     });
 
-    expect(screen.queryByText("Sheriff of Nottingham")).not.toBeInTheDocument();
-    expect(screen.queryByText("John, King of England")).not.toBeInTheDocument();
+    const userOne = screen.queryByText("Sheriff of Nottingham");
+    const userTwo = screen.queryByText("John, King of England");
+
+    expect(userOne).not.toBeInTheDocument();
+    expect(userTwo).not.toBeInTheDocument();
 
     const user = userEvent.setup();
     const open = screen.getByRole("switch");
@@ -72,8 +75,25 @@ describe("Rooms", () => {
     const createButton = screen.getByRole("button");
     expect(createButton).toBeDisabled();
 
-    expect(screen.queryByText("Sheriff of Nottingham")).toBeInTheDocument();
-    expect(screen.queryByText("John, King of England")).toBeInTheDocument();
+    const userOneAfterClick = screen.queryByText("Sheriff of Nottingham");
+    const userTwoAfterClick = screen.queryByText("John, King of England");
+    expect(userOneAfterClick).toBeInTheDocument();
+    expect(userTwoAfterClick).toBeInTheDocument();
+
+    expect(screen.queryByText("Sheriff of Nottingham")).not.toHaveClass(
+      "active"
+    );
+
+    await user.click(screen.queryByText("Sheriff of Nottingham"));
+    await user.click(screen.queryByText("John, King of England"));
+
+    expect(screen.queryByText("Sheriff of Nottingham")).toHaveClass("active");
+
+    await user.click(screen.queryByText("Sheriff of Nottingham"));
+
+    expect(screen.queryByText("Sheriff of Nottingham")).toHaveClass(
+      "selectUser"
+    );
   });
   test("Select Room.", async () => {
     act(() => {

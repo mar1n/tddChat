@@ -16,7 +16,7 @@ type state = {
 
 type another = {
   seekUsers: seekuser[];
-}
+};
 
 const Rooms = () => {
   const [title, setTitle] = useState("");
@@ -25,10 +25,11 @@ const Rooms = () => {
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [message, setMessage] = useState("");
   const [selectedRoom, setSelectedRoom] = useState("");
+  const [selectedUsersList, setSelectedUsersList] = useState<Array<string>>([]);
   const dispatch = useDispatch<AppThunkDispatch>();
   const user = useSelector((state: userState) => state.user);
   const rooms = useSelector((state: state) => state.rooms);
-  const seekUsers = useSelector((state: another) => state.seekUsers)
+  const seekUsers = useSelector((state: another) => state.seekUsers);
   useEffect(() => {
     console.log("useEffect", user);
     dispatch(fetchRoomsThunk(user));
@@ -49,6 +50,14 @@ const Rooms = () => {
     if (!title.trim.length && title === "") {
       setButtonDisabled(false);
     }
+  };
+  const selectUser = (name: string) => {
+    console.log("rooms selectUser", name);
+    selectedUsersList.some((value) => value === name)
+      ? setSelectedUsersList([
+          ...selectedUsersList.filter((user) => user !== user),
+        ])
+      : setSelectedUsersList([name, ...selectedUsersList]);
   };
   console.log("rooms seekUsers", seekUsers);
   return (
@@ -118,13 +127,9 @@ const Rooms = () => {
             onChange={(e) => (setTitle(e.target.value), buttonDisabledValue())}
           />
           <div role={"users"}>
-            {
-              seekUsers.map(({name}) => (
-                <p className="selectUser">
-                  {name}
-                </p>
-              ))
-            }
+            {seekUsers.map(({ name }) => (
+              <p key={name} className={selectedUsersList.some(user => user === name) ? 'active' : 'selectUser'} onClick={() =>selectUser(name)}>{name}</p>
+            ))}
           </div>
           <button
             role={"button"}
