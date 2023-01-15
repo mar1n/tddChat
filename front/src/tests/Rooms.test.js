@@ -34,6 +34,9 @@ describe("Rooms", () => {
     expect(createRoomPopUpAfterClick).toBeInTheDocument();
     const inputPopUpAfterClick = field("title");
     expect(inputPopUpAfterClick).toBeInTheDocument();
+
+    expect(screen.queryByText("Sheriff of Nottingham")).toBeInTheDocument();
+    expect(screen.queryByText("John, King of England")).toBeInTheDocument();
   });
   test("List rooms.", async () => {
     act(() => {
@@ -94,6 +97,11 @@ describe("Rooms", () => {
     expect(screen.queryByText("Sheriff of Nottingham")).toHaveClass(
       "selectUser"
     );
+
+    await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
+    await user.click(createButton);
+    await user.click(screen.getByText("Robin adventure"));
+    expect(screen.getByText("Robin is from Sherwood."));
   });
   test("Select Room.", async () => {
     act(() => {

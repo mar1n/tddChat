@@ -133,7 +133,8 @@ export const handlers = [
     );
   }),
   rest.post("http://localhost:500/createRoom", async (req, res, ctx) => {
-    const { title } = await req.json();
+    const { title, usersList } = await req.json();
+    console.log('create room thunk usersList', usersList);
     if (title) {
       return res(
         ctx.json({
@@ -154,6 +155,7 @@ export const handlers = [
   }),
   rest.get("http://localhost:500/selectRoom", async (req, res, ctx) => {
     const { title, user } = await req.json();
+    console.log("select Room title & user", title, user)
     if (title === "room of peace" && user === "Robin") {
       return res(
         ctx.json({
@@ -162,21 +164,30 @@ export const handlers = [
         ctx.status(201)
       );
     }
+    if(title === "Robin adventure" && user === "Szymon") {
+      return res(
+        ctx.json({
+          messages: [{ text: "Robin stole gold and he will give this to poor people.", name: "Szymon"}]
+        }),
+        ctx.status(201)
+      )
+    }
   }),
   rest.post("http://localhost:500/addMsg", async (req, res, ctx) => {
     const { text, name, roomTitle } = await req.json();
     const room = {
       title: "Robin Hood Room",
-      users: [{ name: "Szymon" }],
+      users: [{ name: "Szymon", name: "Robin" }],
       messages: [{ text: "Robin is from forest.", name: "Szymon" }],
     };
     const roomtwo = {
       title: "Robin adventure",
-      users: [{ name: "Szymon" }],
-      messages: [{ text: "Robin is from Sherwood.", name: "Norbert" }],
+      users: [{ name: "Szymon", name: "Robin" }],
+      messages: [{ text: "Robin is from Sherwood.", name: "Robin" }],
     };
     console.log("roomTitle", roomTitle);
-    if (room.title === roomTitle) {
+    if (room.title === roomTitle && room.users.find(value => value.name === name)) {
+      console.log("user find")
       room.messages.push({ text, name });
       return res(
         ctx.json({
@@ -185,7 +196,7 @@ export const handlers = [
         })
       );
     }
-    if (roomtwo.title === "Robin adventure") {
+    if (roomtwo.title === "Robin adventure" && room.users.find(value => value.name === name)) {
       roomtwo.messages.push({ text, name });
       return res(
         ctx.json({
@@ -194,6 +205,12 @@ export const handlers = [
         })
       );
     }
+    return res(
+      ctx.json({
+        error: "User doesn't exist."
+      }),
+      ctx.status(400)
+    )
   }),
   rest.get("/user", (req, res, ctx) => {
     // Check if the user is authenticated in this session

@@ -25,7 +25,9 @@ const Rooms = () => {
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [message, setMessage] = useState("");
   const [selectedRoom, setSelectedRoom] = useState("");
-  const [selectedUsersList, setSelectedUsersList] = useState<Array<string>>([]);
+  const [selectedUsersList, setSelectedUsersList] = useState<
+    { name: string }[]
+  >([]);
   const dispatch = useDispatch<AppThunkDispatch>();
   const user = useSelector((state: userState) => state.user);
   const rooms = useSelector((state: state) => state.rooms);
@@ -36,6 +38,11 @@ const Rooms = () => {
     dispatch(fetchSeekUsers());
   }, []);
   const createRoom = () => {
+    let users = [{name: user}, ...selectedUsersList];
+    //let newThreadName = this.state.newThreadName;
+    let qs = Object.keys(users)
+      .map((key: any) => `users[${key}][name]=${users[key].name}`)
+      .join("&");
     dispatch(createRoomThunk(title));
   };
   const selectRoom = (title: string) => {
@@ -53,11 +60,11 @@ const Rooms = () => {
   };
   const selectUser = (name: string) => {
     console.log("rooms selectUser", name);
-    selectedUsersList.some((value) => value === name)
+    selectedUsersList.some((value) => value.name === name)
       ? setSelectedUsersList([
-          ...selectedUsersList.filter((user) => user !== user),
+          ...selectedUsersList.filter((value) => value.name !== name),
         ])
-      : setSelectedUsersList([name, ...selectedUsersList]);
+      : setSelectedUsersList([{ name: name }, ...selectedUsersList]);
   };
   console.log("rooms seekUsers", seekUsers);
   return (
@@ -128,7 +135,17 @@ const Rooms = () => {
           />
           <div role={"users"}>
             {seekUsers.map(({ name }) => (
-              <p key={name} className={selectedUsersList.some(user => user === name) ? 'active' : 'selectUser'} onClick={() =>selectUser(name)}>{name}</p>
+              <p
+                key={name}
+                className={
+                  selectedUsersList.some((user) => user.name === name)
+                    ? "active"
+                    : "selectUser"
+                }
+                onClick={() => selectUser(name)}
+              >
+                {name}
+              </p>
             ))}
           </div>
           <button
