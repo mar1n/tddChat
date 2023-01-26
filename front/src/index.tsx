@@ -7,9 +7,10 @@ import reportWebVitals from "./reportWebVitals";
 import { Store } from "./store/store";
 import { Provider } from "react-redux";
 
-
+if(process.env.REACT_APP_STAGE === 'development'){
   const { worker } = require("./mocks/browser");
   worker.start();
+}
 
 
 const root = ReactDOM.createRoot(document.getElementById("root") as Element);

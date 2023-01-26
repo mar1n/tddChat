@@ -35,15 +35,16 @@ export const fetchRoomsThunk = createAsyncThunk(
     }
   }
 );
-
+// change this from qs to array in data payload
 export const createRoomThunk = createAsyncThunk(
   "rooms/createRoom",
-  async (title: string) => {
+  async (values: {title: string; usersList: string}) => {
+    console.log("createRoomThunk userList", values.usersList)
     const response = await axios({
       method: "POST",
-      url: `http://localhost:500/createRoom`,
+      url: `http://localhost:500/createRoom?${values.usersList}`,
       data: {
-        title: title,
+        title: values.title,
       },
     });
     return response.data;
@@ -53,33 +54,42 @@ export const createRoomThunk = createAsyncThunk(
 export const addMessageThunk = createAsyncThunk(
   "rooms/addMessage",
   async (values: { text: string; name: string; roomTitle: string }) => {
-    const response = await axios({
-      method: "POST",
-      url: `http://localhost:500/addMsg`,
-      data: {
-        text: values.text,
-        name: values.name,
-        roomTitle: values.roomTitle,
-      },
-    });
-    console.log("addMessage thunk", response.data);
-    return response.data;
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `http://localhost:500/addMsg`,
+        data: {
+          text: values.text,
+          name: values.name,
+          roomTitle: values.roomTitle,
+        },
+      });
+      console.log("addMessage thunk", response.data);
+      return response.data;
+    } catch (error: any) {
+      console.log("error addMessageThunk", error.response.data.error);
+    }
   }
 );
 
 export const selectRoomThunk = createAsyncThunk(
   "rooms/selectRoom",
   async (values: { title: string; name: string}) => {
-    const response = await axios({
-      method: "GET",
-      url: `http://localhost:500/selectRoom`,
-      data: {
-        title: values.title,
-        name: values.name
-      }
-    });
-    console.log("selectRoomThunk")
-    return response.data;
+    console.log("selectRoomThunk");
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `http://localhost:500/selectRoom`,
+        data: {
+          title: values.title,
+          name: values.name
+        }
+      });
+      console.log("selectRoomThunk")
+      return response.data;
+    } catch (error: any) {
+      console.log("error", error.response.data.error);
+    }
   }
 )
 
@@ -109,6 +119,8 @@ const roomsSlice = createSlice({
           return value;
         });
         return [...updateState];
+      }).addCase(selectRoomThunk.fulfilled, (state, action) => {
+        return [...state, action.payload.room]
       });
   },
 });

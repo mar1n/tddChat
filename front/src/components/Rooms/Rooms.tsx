@@ -5,6 +5,7 @@ import {
   fetchRoomsThunk,
   addMessageThunk,
   roomsState,
+  selectRoomThunk,
 } from "../../store/reducers/roomsSlice";
 import { fetchSeekUsers, seekuser } from "../../store/reducers/seekUsersSlice";
 
@@ -38,15 +39,17 @@ const Rooms = () => {
     dispatch(fetchSeekUsers());
   }, []);
   const createRoom = () => {
-    let users = [{name: user}, ...selectedUsersList];
+    let users = [{ name: user }, ...selectedUsersList];
     //let newThreadName = this.state.newThreadName;
-    let qs = Object.keys(users)
-      .map((key: any) => `users[${key}][name]=${users[key].name}`)
+    let userslist = Object.keys(users)
+      .map((key: any) => `name=${users[key].name}`)
       .join("&");
-    dispatch(createRoomThunk(title));
+    dispatch(createRoomThunk({ title: title, usersList: userslist }));
   };
   const selectRoom = (title: string) => {
+    console.log("select Room????", title);
     setSelectedRoom(title);
+    dispatch(selectRoomThunk({ title, name: user }));
   };
   const addMessage = (text: string) => {
     dispatch(
@@ -70,7 +73,7 @@ const Rooms = () => {
   return (
     <>
       Rooms page.{" "}
-      <button role={"switch"} onClick={() => setOpenCreate(!openCreate)}>
+      <button role={"addRoom"} onClick={() => setOpenCreate(!openCreate)}>
         Add room
       </button>
       <div role='rooms-list'>
@@ -90,6 +93,7 @@ const Rooms = () => {
             })}
       </div>
       <div>
+        {/* think about it can I avoid string react state */}
         {selectedRoom === "" ? (
           "Select Room"
         ) : (
@@ -99,7 +103,7 @@ const Rooms = () => {
                 return value.messages.map((msg, index) => {
                   return (
                     <div key={index}>
-                      <span>{msg.name}</span>
+                      <p role={"message-screen-user"}>{msg.name}</p>
                       <p>{msg.text}</p>
                     </div>
                   );
@@ -149,7 +153,7 @@ const Rooms = () => {
             ))}
           </div>
           <button
-            role={"button"}
+            role={"createRoomButton"}
             onClick={createRoom}
             disabled={buttonDisabled}
           >
