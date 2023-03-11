@@ -17,12 +17,19 @@ const Main = () => {
         <Route path='/signup' element={<Signup />} />
         <Route path='/signin' element={<Signin />} />
         <Route path='/activation/:id' element={<Activation />} />
-        <Route path='/rooms' element={<Rooms />} />
         <Route
           path='/private'
           element={
             <Private>
               <Admin />
+            </Private>
+          }
+        />
+        <Route
+          path='/rooms'
+          element={
+            <Private>
+              <Rooms />
             </Private>
           }
         />

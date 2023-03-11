@@ -17,6 +17,8 @@
     "@sendgrid/mail": "^7.7.0",
     "@sinonjs/fake-timers": "^9.1.2",
     "dotenv": "^16.0.1",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "socket.io": "^4.6.1",
+    "socket.io-client": "^4.6.1"
   }
 }

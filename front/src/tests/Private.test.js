@@ -5,7 +5,7 @@ import { renderWithProviders } from "./utils/test-utils";
 import Router from "../components/Router/Router";
 import cookie from "js-cookie";
 
-describe("Private.", () => {
+describe("Private pages.", () => {
   test("Render admin page.", () => {
     render(
       <MemoryRouter>
@@ -13,9 +13,31 @@ describe("Private.", () => {
       </MemoryRouter>
     );
 
-    const welcomeText = screen.getByText("Admin Page");
+    screen.getByText("Admin Page");
   });
-  describe("Admin page.", () => {
+  describe("Not log in user.", () => {
+    test("Admin page.", () => {
+      renderWithProviders(
+        <MemoryRouter initialEntries={["/private"]}>
+          <Router />
+        </MemoryRouter>
+      );
+      expect(() => screen.getByText("Admin Page")).toThrow(
+        "Unable to find an element"
+      );
+    });
+    test("Rooms page.", () => {
+      renderWithProviders(
+        <MemoryRouter initialEntries={["/rooms"]}>
+          <Router />
+        </MemoryRouter>
+      );
+      expect(() => screen.getByText("Rooms page.")).toThrow(
+        "Unable to find an element"
+      );
+    });
+  });
+  describe("Log in user.", () => {
     beforeEach(() => {
       jest.spyOn(cookie, "get").mockImplementation(() => {
         return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjExMjMsImlhdCI6MTY2Mzk2NTg4MiwiZXhwIjoxNjY0NTcwNjgyfQ.H0hKZMENmc7UTQF55gzlodyC9yvukGb1rkD_Fck-uos";
@@ -26,14 +48,24 @@ describe("Private.", () => {
           return '{"_id":1223,"name":"Szymon","email":"szym0nd4widowicz@gmail.com","role":"admin"}';
         });
     });
-    test("User is log in.", () => {
+    test("Admin page.", () => {
       renderWithProviders(
         <MemoryRouter initialEntries={["/private"]}>
           <Router />
         </MemoryRouter>
       );
 
-      const welcomeText = screen.getByText("Admin Page")
+      const welcomeText = screen.getByText("Admin Page");
+      expect(welcomeText).toBeInTheDocument();
+    });
+    test("Rooms page.", () => {
+      renderWithProviders(
+        <MemoryRouter initialEntries={["/rooms"]}>
+          <Router />
+        </MemoryRouter>
+      );
+
+      const welcomeText = screen.getByText("Rooms page.");
       expect(welcomeText).toBeInTheDocument();
     });
   });

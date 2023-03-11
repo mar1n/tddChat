@@ -110,15 +110,4 @@ describe("Router", () => {
     const welcomeText = screen.getByText(/Hey Szymon, active your account/i);
     expect(welcomeText).toBeInTheDocument();
   });
-  test('rooms page', () => { 
-    const roomsRoute = "/rooms";
-    renderWithProviders(
-      <MemoryRouter initialEntries={[roomsRoute]}>
-        <Router />
-      </MemoryRouter>
-    );
-
-    const roomsPage = screen.getByText(/Rooms page/i);
-    expect(roomsPage).toBeInTheDocument();
-   })
 });
