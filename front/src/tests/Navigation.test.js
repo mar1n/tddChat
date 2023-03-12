@@ -72,6 +72,8 @@ describe("Navigation", () => {
       expect(home).toBeInTheDocument();
       const signOut = screen.getByRole("link", { name: "Signout" });
       expect(signOut).toBeInTheDocument();
+      const rooms = screen.getByRole("link", { name: "Rooms"});
+      expect(rooms).toBeInTheDocument();
       const signIn = screen.queryByText("Signin");
       expect(signIn).toBeNull();
       const signUp = screen.queryByText("Signup");

@@ -35,18 +35,19 @@ const Layout = ({ children }: layout) => {
           </>
         )}
         {isAuth() && (
-          <RouterButton
-            onClick={() => 
-              signout(() => history("/"))}
-            path={"/"}
-            className={"signOut"}
-          >
-            Signout
-          </RouterButton>
+          <>
+            <RouterButton
+              onClick={() => signout(() => history("/"))}
+              path={"/"}
+              className={"signOut"}
+            >
+              Signout
+            </RouterButton>
+            <RouterButton path={"/rooms"} className={isActive("/rooms")}>
+              Rooms
+            </RouterButton>
+          </>
         )}
-        <RouterButton path={"/rooms"} className={isActive("/rooms")}>
-          Rooms
-        </RouterButton>
       </Navigation>
       <main>{children}</main>
     </>
