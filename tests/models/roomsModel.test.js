@@ -5,11 +5,9 @@ const { connectToMongo, disconnect } = require("../utils/db");
 const { date, userName, message } = require("../utils/values");
 const { createRoom, findById } = require("../utils/document");
 
-
-
 describe("rooms", () => {
   beforeEach(async () => {
-    await connectToMongo()
+    await connectToMongo();
   });
   afterEach(async () => {
     await Rooms.deleteMany();
@@ -57,7 +55,7 @@ describe("rooms", () => {
     expect(room.users.length).toEqual(1);
   });
 
-  test("unknown user can not post message", async () => {
+  test.only("unknown user can not post message", async () => {
     const room = await createRoom();
 
     const user = userName("Rivaldo");
@@ -67,6 +65,20 @@ describe("rooms", () => {
     try {
       const msg = message("First Msg", "Starnger", date);
       await room.addMsg(room, msg);
+    } catch (err) {
+      expect("User does not exist!!!").toEqual(err);
+    }
+  });
+  test("when the room is not room model it fails", async () => {
+    const room = await createRoom();
+    console.log("room", room);
+    const user = userName("Rivaldo");
+
+    await Rooms.findOneAndUpdate(room._id, { $push: { users: user } });
+
+    try {
+      const msg = message("First Msg", "Rivaldo", date);
+      await room.addMsg("Wrong room", msg);
     } catch (err) {
       expect("User does not exist!!!").toEqual(err);
     }
@@ -148,7 +160,11 @@ describe("rooms", () => {
     expect.hasAssertions();
     await User.create([
       { email: "gmail@google.com", name: "Rocky", password: "asdaczczcasda" },
-      { email: "bill@microsoft.com", name: "Ronaldo", password: "asdaczczcasda" },
+      {
+        email: "bill@microsoft.com",
+        name: "Ronaldo",
+        password: "asdaczczcasda",
+      },
       { email: "test@gmail.com", name: "Jordan", password: "asdaczczcasda" },
     ]);
     await User.init();

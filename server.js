@@ -1,11 +1,14 @@
+require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
 const router = require("./src/routes/room");
 const {errFiveHundred, errNotFound} = require("./src/controller/errors");
 const http = require("http");
+const { addMsgWebSocket } = require("./src/controller/room");
 
 function createServer() {
-  require("dotenv").config();
   const app = express();
+  app.use(cors());
   app.use(express.json());
 
   app.use("/", router);
@@ -20,9 +23,11 @@ function createServer() {
   });
 
   io.on("connection", (socket) => {
-    router.post("/room/new", addMsg);
-    socket.on("/room/new", (msg) => {
-      
+    //router.post("/room/new", addMsg);
+    socket.on("/room/new", async (msg) => {
+      console.log('msg', msg)
+      console.log(await addMsgWebSocket(msg));
+
     })
     // const backEndMessage = {
     //   name: "BackEnd Message",

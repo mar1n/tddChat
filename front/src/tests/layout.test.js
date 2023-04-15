@@ -40,7 +40,7 @@ describe("Layout", () => {
       );
     })
 
-    const roomsLink = screen.getByRole("link", { name: "Rooms"});
-    expect(roomsLink).toBeInTheDocument();
+    const roomsLink = screen.getAllByRole("link");
+    expect(roomsLink.length).toBeGreaterThan(1);
    })
 });

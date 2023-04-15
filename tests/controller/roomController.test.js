@@ -51,4 +51,18 @@ describe("rooom controller", () => {
     const messageInRoom = await Rooms.findOne({ title: "Space" });
     expect(messageInRoom.messages[0].text).toEqual("my msg");
   });
+  test("add the message to the room that doesnt exist", async () => {
+    const room = await createRoom()
+
+    const response = await supertest(app)
+      .post("/room/new")
+      .send({ text: "my msg", name: "Robin", room: "Unknow" })
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(200);
+
+    // expect(response._body).toEqual({ message: "message has been added" });
+    // const messageInRoom = await Rooms.findOne({ title: "Space" });
+    // expect(messageInRoom.messages[0].text).toEqual("my msg");
+  });
 });

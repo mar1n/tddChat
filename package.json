@@ -2,11 +2,15 @@
   "name": "tddChat",
   "version": "1.0.0",
   "main": "index.js",
+  "jest" : {
+    "verbose": true
+  },
   "scripts": {
-    "test": "jest --runInBand"
+    "test": "jest"
   },
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.0",
     "express-validator": "^6.14.2",
     "jest": "^28.0.3",

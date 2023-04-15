@@ -19,7 +19,7 @@ exports.createRoom = async (req, res, next) => {
         message: "This room title exisits!",
       });
     }
-    next(error)
+    next(error);
   }
 };
 
@@ -41,6 +41,24 @@ exports.addMsg = async (req, res, next) => {
         message: error,
       });
     }
-    next(error)
+    next(error);
+  }
+};
+
+exports.addMsgWebSocket = async (roomDetails) => {
+  const { text, name, room } = roomDetails;
+  const rooms = new Rooms();
+
+  try {
+    const msg = await rooms.addMsg(room, { text, name });
+    console.log('Message', msg);
+
+  } catch (error) {
+    if (error) {
+      console.log("error",error);
+      return {
+        message: error,
+      };
+    }
   }
 };

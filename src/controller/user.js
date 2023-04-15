@@ -1,11 +1,16 @@
 const User = require("../db/model/user");
 const sgMail = require("@sendgrid/mail");
 const jwt = require("jsonwebtoken");
+//console.log("sendGridApiKey", process.env.SENDGRID_API_KEY);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.signup = async (req, res, next) => {
-  const { email, name, password } = req.body;
+  console.log("signup");
+  console.log("SENDGRID_API_KEY", process.env.SENDGRID_API_KEY);
+  console.log("JWT_ACCOUNT_ACTIVATION", process.env.JWT_ACCOUNT_ACTIVATION);
+  const { email, firstName, password } = req.body;
   const token = jwt.sign(
-    { name, email, password },
+    { firstName, email, password },
     process.env.JWT_ACCOUNT_ACTIVATION,
     { expiresIn: "10m" }
   );
@@ -30,7 +35,7 @@ exports.signup = async (req, res, next) => {
                 <p>${process.env.CLIENT_URL}</p>
             `,
   };
-
+  console.log(`aaaaaaa`);
   sgMail
     .send(msg)
     .then((r) => {
@@ -39,56 +44,55 @@ exports.signup = async (req, res, next) => {
       });
     })
     .catch((error) => {
-      next(error)
+      console.log("signup error", error);
+      next(error);
     });
 };
 
 exports.activation = async (req, res, next) => {
   const { token } = req.body;
-  
-    jwt.verify(
-      token,
-      process.env.JWT_ACCOUNT_ACTIVATION,
-      async function (error) {
-        if (error) {
-          return res.status(401).json({
-            error: "Expired link. Signup again.",
-          });
-        }
-        const { name, email, password } = jwt.decode(token);
-        try {
-          await User.create([{ name, email, password }]);
-          res.status(201).json({ message: "Account has been created!!!" });
-        } catch (error) {
-          next(error)
-        }
-      }
-    );
+
+  jwt.verify(token, process.env.JWT_ACCOUNT_ACTIVATION, async function (error) {
+    if (error) {
+      return res.status(401).json({
+        error: "Expired link. Signup again.",
+      });
+    }
+    const { firstName, email, password } = jwt.decode(token);
+    try {
+      await User.create([{ firstName, email, password }]);
+      res.status(201).json({ message: "Account has been created!!!" });
+    } catch (error) {
+      next(error);
+    }
+  });
 };
 
 exports.signin = async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({email});
+  const user = await User.findOne({ email });
 
-  if(!user) {
+  if (!user) {
     return res.status(400).json({
-      error: "Email and password do not match!"
-    })
+      error: "Email and password do not match!",
+    });
   }
 
-  if(!user.authenticate(password)) {
+  if (!user.authenticate(password)) {
     return res.status(400).json({
-      error: "Email and password do not match!"
-    })
+      error: "Email and password do not match!",
+    });
   }
 
-  const token = jwt.sign({_id: user._id}, process.env.JWT_SECRET, { expiresIn: '7d'});
+  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: "7d",
+  });
 
-  const { _id, name, role } = user;
+  const { _id, firstName, role } = user;
   return res.status(201).json({
     message: "Login details are correct. Welcome in service.",
     token,
-    user: { _id, name, email, role }
-  })
-}
+    user: { _id, firstName, email, role },
+  });
+};
