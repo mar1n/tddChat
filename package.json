@@ -8,7 +8,7 @@
     "testPathIgnorePatterns": ["front"]
   },
   "scripts": {
-    "test": "jest --testNamePattern=\"unknown user can not post message\""
+    "test": "jest"
   },
   "license": "MIT",
   "dependencies": {

@@ -44,7 +44,7 @@ describe("rooms", () => {
     await Rooms.findOneAndUpdate(
       { _id: room._id, "users.firstName": { $ne: user3.firstName } },
       {
-        $push: { users: user2 },
+        $push: { users: user3 },
       }
     );
 
@@ -156,6 +156,30 @@ describe("rooms", () => {
     const msg3 = message("Third Msg", "Max");
 
     const room = await createRoom();
+
+    const user1 = userName("Szymon");
+    const user2 = userName("Robert");
+    const user3 = userName("Max");
+    await Rooms.findOneAndUpdate(
+      { _id: room._id, "users.firstName": { $ne: user1.firstName } },
+      {
+        $push: { users: user1 },
+      }
+    );
+
+    await Rooms.findOneAndUpdate(
+      { _id: room._id, "users.firstName": { $ne: user2.firstName } },
+      {
+        $push: { users: user2 },
+      }
+    );
+
+    await Rooms.findOneAndUpdate(
+      { _id: room._id, "users.firstName": { $ne: user3.firstName } },
+      {
+        $push: { users: user3 },
+      }
+    );
 
     await room.addMsg(room, msg1);
     await room.addMsg(room, msg2);
