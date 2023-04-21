@@ -24,6 +24,30 @@ describe("rooms", () => {
   test("add message to room", async () => {
     const room = await createRoom();
 
+    const user1 = userName("Szymon");
+    const user2 = userName("Robert");
+    const user3 = userName("Max");
+    await Rooms.findOneAndUpdate(
+      { _id: room._id, "users.firstName": { $ne: user1.firstName } },
+      {
+        $push: { users: user1 },
+      }
+    );
+
+    await Rooms.findOneAndUpdate(
+      { _id: room._id, "users.firstName": { $ne: user2.firstName } },
+      {
+        $push: { users: user2 },
+      }
+    );
+
+    await Rooms.findOneAndUpdate(
+      { _id: room._id, "users.firstName": { $ne: user3.firstName } },
+      {
+        $push: { users: user2 },
+      }
+    );
+
     const msg = message("First Msg", "Szymon", date);
     const msg2 = message("second Msg", "Robert", date);
     const msg3 = message("Third Msg", "Max", date);
@@ -48,14 +72,14 @@ describe("rooms", () => {
 
     const joinUser = await findById(room._id);
 
-    expect(joinUser.users[1].name).toEqual("Ronaldo");
+    expect(joinUser.users[1].firstName).toEqual("Ronaldo");
 
     await room.removeUser(room, joinUser);
 
     expect(room.users.length).toEqual(1);
   });
 
-  test.only("unknown user can not post message", async () => {
+  test("unknown user can not post message", async () => {
     const room = await createRoom();
 
     const user = userName("Rivaldo");
@@ -66,12 +90,12 @@ describe("rooms", () => {
       const msg = message("First Msg", "Starnger", date);
       await room.addMsg(room, msg);
     } catch (err) {
+      console.log('err', err);
       expect("User does not exist!!!").toEqual(err);
     }
   });
   test("when the room is not room model it fails", async () => {
     const room = await createRoom();
-    console.log("room", room);
     const user = userName("Rivaldo");
 
     await Rooms.findOneAndUpdate(room._id, { $push: { users: user } });
@@ -91,14 +115,14 @@ describe("rooms", () => {
     const user2 = userName("Rivaldo");
 
     await Rooms.findOneAndUpdate(
-      { _id: room._id, "users.name": { $ne: user1.name } },
+      { _id: room._id, "users.name": { $ne: user1.firstName } },
       {
         $push: { users: user1 },
       }
     );
 
     await Rooms.findOneAndUpdate(
-      { _id: room._id, "users.name": { $ne: user2.name } },
+      { _id: room._id, "users.name": { $ne: user2.firstName } },
       {
         $push: { users: user2 },
       }
@@ -151,7 +175,7 @@ describe("rooms", () => {
       await room.addMsg(room, { text: "random", timeStamp: date });
     } catch (err) {
       expect(err.message).toEqual(
-        "Messages validation failed: name: Path `name` is required."
+        "Messages validation failed: firstName: Path `firstName` is required."
       );
     }
   });
@@ -159,21 +183,21 @@ describe("rooms", () => {
   test("only one room can have one title", async () => {
     expect.hasAssertions();
     await User.create([
-      { email: "gmail@google.com", name: "Rocky", password: "asdaczczcasda" },
+      { email: "gmail@google.com", firstName: "Rocky", password: "asdaczczcasda" },
       {
         email: "bill@microsoft.com",
-        name: "Ronaldo",
+        firstName: "Ronaldo",
         password: "asdaczczcasda",
       },
-      { email: "test@gmail.com", name: "Jordan", password: "asdaczczcasda" },
+      { email: "test@gmail.com", firstName: "Jordan", password: "asdaczczcasda" },
     ]);
     await User.init();
     const user = await User.findOne({ email: "bill@microsoft.com" });
 
-    await createRoom("title", user.name);
+    await createRoom("title", user.firstName);
 
     try {
-      await createRoom("title", user.name);
+      await createRoom("title", user.firstName);
     } catch (err) {
       expect(err.code).toEqual(11000);
     }

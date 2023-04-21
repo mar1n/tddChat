@@ -2,10 +2,10 @@ const Rooms = require("../db/model/room");
 
 exports.createRoom = async (req, res, next) => {
   res.set("Content-Type", "application/json");
-  const { title, name } = req.body;
+  const { title, firstName } = req.body;
   const room = new Rooms({
     title,
-    users: [{ name: name }],
+    users: [{ firstName: firstName }],
   });
 
   try {
@@ -24,13 +24,13 @@ exports.createRoom = async (req, res, next) => {
 };
 
 exports.addMsg = async (req, res, next) => {
-  const { text, name, room } = req.body;
+  const { text, firstName, room } = req.body;
   const rooms = new Rooms();
 
   res.set("Content-Type", "applicaton/json");
 
   try {
-    await rooms.addMsg(room, { text, name });
+    await rooms.addMsg(room, { text, firstName });
     res.status(200);
     res.json({
       message: "message has been added",
@@ -46,16 +46,13 @@ exports.addMsg = async (req, res, next) => {
 };
 
 exports.addMsgWebSocket = async (roomDetails) => {
-  const { text, name, room } = roomDetails;
+  const { text, firstName, room } = roomDetails;
   const rooms = new Rooms();
 
   try {
-    const msg = await rooms.addMsg(room, { text, name });
-    console.log('Message', msg);
-
+    const msg = await rooms.addMsg(room, { text, firstName });
   } catch (error) {
     if (error) {
-      console.log("error",error);
       return {
         message: error,
       };

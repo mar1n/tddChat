@@ -1,9 +1,9 @@
 const Rooms = require("../../src/db/model/room");
 
-const createRoom = async (title = "Space", name = "Robin") => {
+const createRoom = async (title = "Space", firstName = "Robin") => {
   const room = new Rooms({
     title: title,
-    users: [{ name: name }],
+    users: [{ firstName }],
   });
   return await room.save();
 };

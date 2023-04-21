@@ -11,7 +11,7 @@ const userSchema = mongoose.Schema(
       match: /.+\@.+\..+/,
       unique: true,
     },
-    name: {
+    firstName: {
       type: String,
       trim: true,
       required: true,

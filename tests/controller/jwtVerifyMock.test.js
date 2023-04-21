@@ -3,16 +3,17 @@ const supertest = require("supertest");
 const { connectToMongo, disconnect } = require("../utils/db");
 const User = require("../../src/db/model/user");
 
-jest.mock("jsonwebtoken", () => {
-  const originalModule = jest.requireActual("jsonwebtoken");
+// jest.mock("jsonwebtoken", () => {
+//   const originalModule = jest.requireActual("jsonwebtoken");
 
-  return {
-    ...originalModule,
-    verify: jest.fn((token, secretOrPublicKey, callback) => {
-      return callback(null);
-    }),
-  };
-});
+//   return {
+//     ...originalModule,
+//     verify: jest.fn((token, secretOrPublicKey, callback) => {
+//       console.log('mockkkkkk')
+//       return callback(null);
+//     }),
+//   };
+// });
 
 const jwt = require("jsonwebtoken");
 
@@ -34,7 +35,7 @@ describe("Users controller", () => {
   describe("Account activation", () => {
     test("Account created succesfully", async () => {
       const token = jwt.sign(
-        { name: "Szymon", email: "szymon@gmail.com", password: "asdzxcqwe" },
+        { firstName: "Szymon", email: "szymon@gmail.com", password: "asdzxcqwe" },
         process.env.JWT_ACCOUNT_ACTIVATION,
         { expiresIn: "10m" }
       );

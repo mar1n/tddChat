@@ -60,7 +60,7 @@ describe("Users controller", () => {
       const response = await supertest(app)
         .post("/user/signup")
         .send({
-          name: "Ronaldo",
+          firstName: "Ronaldo",
           email: "ronaldo@gmail.com",
           password: "asdadadadad",
         })
@@ -76,7 +76,7 @@ describe("Users controller", () => {
         const response = await supertest(app)
           .post("/user/signup")
           .send({
-            name: "",
+            firstName: "",
             email: "szymon@gmail.com",
             password: "randomTEXT",
           })
@@ -85,13 +85,13 @@ describe("Users controller", () => {
           .expect(422);
 
         const { error } = response.body;
-        expect(error).toEqual("Name is required");
+        expect(error).toEqual("firstName is required");
       });
       test("password lenght", async () => {
         const response = await supertest(app)
           .post("/user/signup")
           .send({
-            name: "Szymon",
+            firstName: "Szymon",
             email: "gmail.com",
             password: "randommm",
           })
@@ -106,7 +106,7 @@ describe("Users controller", () => {
         const response = await supertest(app)
           .post("/user/signup")
           .send({
-            name: "Szymon",
+            firstName: "Szymon",
             email: "szymon@gmail.com",
             password: "ran",
           })
@@ -122,7 +122,7 @@ describe("Users controller", () => {
   describe("Account activation", () => {
     test("Account created succesfully", async () => {
       const token = jwt.sign(
-        { name: "Szymon", email: "szymon@gmail.com", password: "asdzxcqwe" },
+        { firstName: "Szymon", email: "szymon@gmail.com", password: "asdzxcqwe" },
         process.env.JWT_ACCOUNT_ACTIVATION,
         { expiresIn: "10m" }
       );
@@ -139,13 +139,13 @@ describe("Users controller", () => {
       const { message } = response.body;
       expect(message).toEqual("Account has been created!!!");
       const findUser = await User.findOne({email: "szymon@gmail.com"});
-      expect(findUser.name).toEqual("Szymon");
+      expect(findUser.firstName).toEqual("Szymon");
     });
     test("Token has been expired", async () => {
       const hoursInMs = n => 1000 * 60 * 60 * n;
 
       const token = jwt.sign(
-        { name: "Szymon", email: "szymon@gmail.com", password: "asdzxcqwe" },
+        { firstName: "Szymon", email: "szymon@gmail.com", password: "asdzxcqwe" },
         process.env.JWT_ACCOUNT_ACTIVATION,
         { expiresIn: "10m" }
       );
@@ -182,7 +182,7 @@ describe("Users controller", () => {
       expect(error).toEqual("Email and password do not match!");
     });
     test('Password is incorrect', async () => {
-      await User.create([{ name: "Szymon", email: "cykcykacz@gmail.com", password: "zxcasdqwe"}]);
+      await User.create([{ firstName: "Szymon", email: "cykcykacz@gmail.com", password: "zxcasdqwe"}]);
       const response = await supertest(app)
         .post("/user/signin")
         .send({
@@ -197,7 +197,7 @@ describe("Users controller", () => {
       expect(error).toEqual("Email and password do not match!");
     });
     test('User email and password match ', async () => {
-      await User.create([{ name: "Szymon", email: "cykcykacz@gmail.com", password: "zxcasdqwe"}]);
+      await User.create([{ firstName: "Szymon", email: "cykcykacz@gmail.com", password: "zxcasdqwe"}]);
       const response = await supertest(app)
         .post("/user/signin")
         .send({

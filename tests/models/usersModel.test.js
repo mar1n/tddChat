@@ -15,22 +15,22 @@ describe("Users", () => {
     await User.create([
       {
         email: "gmail@google.com",
-        name: "Rocky",
+        firstName: "Rocky",
         password: "somepasss",
       },
       {
         email: "bill@microsoft.com",
-        name: "Ronaldo",
+        firstName: "Ronaldo",
         password: "somepasss",
       },
-      { email: "test@gmail.com", name: "Jordan", password: "somepasss" },
+      { email: "test@gmail.com", firstName: "Jordan", password: "somepasss" },
     ]);
 
     await User.init();
     try {
       await User.create({
         email: "gmail@google.com",
-        name: "unnamed",
+        firstName: "unnamed",
         password: "somepasss",
       });
     } catch (error) {
@@ -44,7 +44,7 @@ describe("Users", () => {
     try {
       await User.create({
         email: "gmail@google.com",
-        name: "unnamed",
+        firstName: "unnamed",
       });
     } catch (error) {
       expect(error.message).toEqual(
@@ -62,7 +62,7 @@ describe("Users", () => {
       });
     } catch (error) {
       expect(error.message).toEqual(
-        "User validation failed: name: Path `name` is required."
+        "User validation failed: firstName: Path `firstName` is required."
       );
     }
   });
@@ -71,7 +71,7 @@ describe("Users", () => {
 
     try {
       await User.create({
-        name: "unnamed",
+        firstName: "unnamed",
         password: "somepasss",
       });
     } catch (error) {
@@ -85,7 +85,7 @@ describe("Users", () => {
       await User.create([
         {
           email: "ronaldo@gmail.com",
-          name: "Ronaldo",
+          firstName: "Ronaldo",
           password: "xxxxx",
         },
       ]);

@@ -1,7 +1,6 @@
 const date = new Date().toISOString();
 
-const userName = (name) => ({ name: name});
-const message = (text, name) => ({text: text, name:name});
-
+const userName = (firstName) => ({ firstName });
+const message = (text, firstName) => ({ text: text, firstName });
 
 module.exports = { date, userName, message };

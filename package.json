@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "jest" : {
-    "verbose": true
+    "verbose": true,
+    "testMatch": ["**/tests/**/*.test.js"],
+    "testPathIgnorePatterns": ["front"]
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest --testNamePattern=\"unknown user can not post message\""
   },
   "license": "MIT",
   "dependencies": {

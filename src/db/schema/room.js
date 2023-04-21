@@ -10,7 +10,7 @@ const roomsSchema = mongoose.Schema({
   },
   users: [
     {
-      name: {
+      firstName: {
         type: String,
         required: true,
       },

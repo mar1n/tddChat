@@ -6,9 +6,10 @@ const Messages = require("../model/message");
 roomsSchema.methods.addMsg = async function (room, msg) {
   await Messages.create(msg);
 
-  const userIn = await this.model("Rooms").find({ "users.name": msg.name });
-console.log('userIn', userIn);
-  if (!userIn) {
+  const userIn = await this.model("Rooms").find({ "users.firstName": msg.firstName });
+
+  if (userIn.length === 0) {
+    console.log("errr")
     throw "User does not exist!!!";
   } else {
     const roomId = { _id: room._id };

@@ -19,7 +19,7 @@ describe("rooom controller", () => {
   test("create room", async () => {
     await supertest(app)
       .post("/room/create")
-      .send({ title: "Room 1", name: "Ronaldo" })
+      .send({ title: "Room 1", firstName: "Ronaldo" })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200);
@@ -32,7 +32,7 @@ describe("rooom controller", () => {
 
     await supertest(app)
       .post("/room/create")
-      .send({ title: "Room 1", name: "Ronaldo" })
+      .send({ title: "Room 1", firstName: "Ronaldo" })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(400);
@@ -42,7 +42,7 @@ describe("rooom controller", () => {
 
     const response = await supertest(app)
       .post("/room/new")
-      .send({ text: "my msg", name: "Robin", room: room })
+      .send({ text: "my msg", firstName: "Robin", room: room })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200);
@@ -56,7 +56,7 @@ describe("rooom controller", () => {
 
     const response = await supertest(app)
       .post("/room/new")
-      .send({ text: "my msg", name: "Robin", room: "Unknow" })
+      .send({ text: "my msg", firstName: "Robin", room: "Unknow" })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200);
