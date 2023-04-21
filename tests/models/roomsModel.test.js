@@ -80,19 +80,20 @@ describe("rooms", () => {
   });
 
   test("unknown user can not post message", async () => {
+    function asynccompileAndroidCode() {
+      throw new Error("you are using the wrong JDK!");
+    }
+
     const room = await createRoom();
 
     const user = userName("Rivaldo");
 
     await Rooms.findOneAndUpdate(room._id, { $push: { users: user } });
+    const msg = message("First Msg", "Starnger", date);
 
-    try {
-      const msg = message("First Msg", "Starnger", date);
-      await room.addMsg(room, msg);
-    } catch (err) {
-      console.log('err', err);
-      expect("User does not exist!!!").toEqual(err);
-    }
+    await expect(() => room.addMsg(room, msg)).rejects.toThrow(
+      "User does not exist!!!"
+    );
   });
   test("when the room is not room model it fails", async () => {
     const room = await createRoom();
@@ -207,13 +208,21 @@ describe("rooms", () => {
   test("only one room can have one title", async () => {
     expect.hasAssertions();
     await User.create([
-      { email: "gmail@google.com", firstName: "Rocky", password: "asdaczczcasda" },
+      {
+        email: "gmail@google.com",
+        firstName: "Rocky",
+        password: "asdaczczcasda",
+      },
       {
         email: "bill@microsoft.com",
         firstName: "Ronaldo",
         password: "asdaczczcasda",
       },
-      { email: "test@gmail.com", firstName: "Jordan", password: "asdaczczcasda" },
+      {
+        email: "test@gmail.com",
+        firstName: "Jordan",
+        password: "asdaczczcasda",
+      },
     ]);
     await User.init();
     const user = await User.findOne({ email: "bill@microsoft.com" });

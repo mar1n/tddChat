@@ -10,7 +10,7 @@ roomsSchema.methods.addMsg = async function (room, msg) {
 
   if (userIn.length === 0) {
     console.log("errr")
-    throw "User does not exist!!!";
+    return Promise.reject(new Error("User does not exist!!!"));
   } else {
     const roomId = { _id: room._id };
     return this.model("Rooms").findOneAndUpdate(roomId, {
