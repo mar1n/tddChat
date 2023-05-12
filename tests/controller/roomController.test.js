@@ -3,6 +3,7 @@ const Rooms = require("../../src/db/model/room");
 const supertest = require("supertest");
 const { connectToMongo, disconnect } = require("../utils/db");
 const { createRoom } = require("../utils/document");
+const { addMsgWebSocket } = require("../../src/controller/room");
 
 beforeEach(async () => {
   await connectToMongo()
@@ -38,31 +39,49 @@ describe("rooom controller", () => {
       .expect(400);
   });
   test("add the message to the room", async () => {
-    const room = await createRoom()
+    const room = await createRoom();
+    console.log('room', room)
 
     const response = await supertest(app)
       .post("/room/new")
-      .send({ text: "my msg", firstName: "Robin", room: room })
+      .send({ text: "my msg", firstName: "Robin", room })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200);
 
     expect(response._body).toEqual({ message: "message has been added" });
     const messageInRoom = await Rooms.findOne({ title: "Space" });
+    console.log('messageInRoom', messageInRoom)
     expect(messageInRoom.messages[0].text).toEqual("my msg");
   });
-  test("add the message to the room that doesnt exist", async () => {
+  test("the room that doesnt exist", async () => {
+    const room = { title: "unKnow"}
+    const response = await supertest(app)
+      .post("/room/new")
+      .send({ text: "my msg", firstName: "Robin", room })
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(400);
+
+    expect(response._body).toEqual({ message: "Room does not exist!!!" });
+    // const messageInRoom = await Rooms.findOne({ title: "Space" });
+    // expect(messageInRoom.messages[0].text).toEqual("my msg");
+  });
+  test('user doesnt exist in room', async () => {
     const room = await createRoom()
 
     const response = await supertest(app)
       .post("/room/new")
-      .send({ text: "my msg", firstName: "Robin", room: "Unknow" })
+      .send({ text: "my msg", firstName: "Steve", room })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
-      .expect(200);
+      .expect(400);
 
-    // expect(response._body).toEqual({ message: "message has been added" });
-    // const messageInRoom = await Rooms.findOne({ title: "Space" });
-    // expect(messageInRoom.messages[0].text).toEqual("my msg");
+      expect(response._body).toEqual({ message: "User does not exist!!!" });
   });
+  describe('Web Socket', () => { 
+    test('add the message to the room', async () => {
+      await addMsgWebSocket();
+    });
+   })
 });

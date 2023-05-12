@@ -27,26 +27,11 @@ describe("rooms", () => {
     const user1 = userName("Szymon");
     const user2 = userName("Robert");
     const user3 = userName("Max");
-    await Rooms.findOneAndUpdate(
-      { _id: room._id, "users.firstName": { $ne: user1.firstName } },
-      {
-        $push: { users: user1 },
-      }
-    );
+    await room.addUser(room, user1);
 
-    await Rooms.findOneAndUpdate(
-      { _id: room._id, "users.firstName": { $ne: user2.firstName } },
-      {
-        $push: { users: user2 },
-      }
-    );
+    await room.addUser(room, user2);
 
-    await Rooms.findOneAndUpdate(
-      { _id: room._id, "users.firstName": { $ne: user3.firstName } },
-      {
-        $push: { users: user3 },
-      }
-    );
+    await room.addUser(room, user3);
 
     const msg = message("First Msg", "Szymon", date);
     const msg2 = message("second Msg", "Robert", date);
@@ -68,7 +53,7 @@ describe("rooms", () => {
 
     const user = userName("Ronaldo");
 
-    await Rooms.findOneAndUpdate(room._id, { $push: { users: user } });
+    await room.addUser(room, user);
 
     const joinUser = await findById(room._id);
 
@@ -88,7 +73,7 @@ describe("rooms", () => {
 
     const user = userName("Rivaldo");
 
-    await Rooms.findOneAndUpdate(room._id, { $push: { users: user } });
+    await room.addUser(room, user);
     const msg = message("First Msg", "Starnger", date);
 
     await expect(() => room.addMsg(room, msg)).rejects.toThrow(
@@ -97,15 +82,18 @@ describe("rooms", () => {
   });
   test("when the room is not room model it fails", async () => {
     const room = await createRoom();
+    const wrongRoom = { title: "UnKnow"};
     const user = userName("Rivaldo");
 
-    await Rooms.findOneAndUpdate(room._id, { $push: { users: user } });
-
+    //console.log("room.users", room.users[0],room.users[1], room.users[2] )
+    
     try {
+      await room.addUser(room, user);
       const msg = message("First Msg", "Rivaldo", date);
-      await room.addMsg("Wrong room", msg);
+      await room.addMsg(wrongRoom, msg);
     } catch (err) {
-      expect("User does not exist!!!").toEqual(err);
+      console.log('err', err);
+      expect("Room does not exist!!!").toEqual(err.message);
     }
   });
 
@@ -115,19 +103,8 @@ describe("rooms", () => {
     const user1 = userName("Ronaldo");
     const user2 = userName("Rivaldo");
 
-    await Rooms.findOneAndUpdate(
-      { _id: room._id, "users.name": { $ne: user1.firstName } },
-      {
-        $push: { users: user1 },
-      }
-    );
-
-    await Rooms.findOneAndUpdate(
-      { _id: room._id, "users.name": { $ne: user2.firstName } },
-      {
-        $push: { users: user2 },
-      }
-    );
+    await room.addUser(room, user1);
+    await room.addUser(room, user2);
 
     const numberOfUsers = await Rooms.findOne({ title: "new room" });
 
@@ -161,26 +138,10 @@ describe("rooms", () => {
     const user1 = userName("Szymon");
     const user2 = userName("Robert");
     const user3 = userName("Max");
-    await Rooms.findOneAndUpdate(
-      { _id: room._id, "users.firstName": { $ne: user1.firstName } },
-      {
-        $push: { users: user1 },
-      }
-    );
-
-    await Rooms.findOneAndUpdate(
-      { _id: room._id, "users.firstName": { $ne: user2.firstName } },
-      {
-        $push: { users: user2 },
-      }
-    );
-
-    await Rooms.findOneAndUpdate(
-      { _id: room._id, "users.firstName": { $ne: user3.firstName } },
-      {
-        $push: { users: user3 },
-      }
-    );
+    
+    await room.addUser(room, user1);
+    await room.addUser(room, user2);
+    await room.addUser(room, user3);
 
     await room.addMsg(room, msg1);
     await room.addMsg(room, msg2);
@@ -199,6 +160,7 @@ describe("rooms", () => {
     try {
       await room.addMsg(room, { text: "random", timeStamp: date });
     } catch (err) {
+      console.log("errrorrr hihhi");
       expect(err.message).toEqual(
         "Messages validation failed: firstName: Path `firstName` is required."
       );
