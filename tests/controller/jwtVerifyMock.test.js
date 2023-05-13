@@ -41,7 +41,7 @@ describe("Users controller", () => {
       );
 
       const response = await supertest(app)
-        .post("/user/activation")
+        .post("/user/activation/:token")
         .send({
           token: token,
         })

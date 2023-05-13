@@ -2,7 +2,7 @@ import { rest } from "msw";
 import jwt from "jsonwebtoken";
 
 export const handlers = [
-  rest.post("http://localhost:500/signup", async (req, res, ctx) => {
+  rest.post("http://localhost:5000/user/signup", async (req, res, ctx) => {
     const PageParams = new URLSearchParams(window.location.search);
     const scenario = PageParams.get("scenario");
 

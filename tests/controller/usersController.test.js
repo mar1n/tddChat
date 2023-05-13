@@ -128,7 +128,7 @@ describe("Users controller", () => {
       );
       
       const response = await supertest(app)
-        .post("/user/activation")
+        .post("/user/activation/:token")
         .send({
           token: token,
         })
@@ -153,7 +153,7 @@ describe("Users controller", () => {
       clock.tick(hoursInMs(4));
 
       const response = await supertest(app)
-        .post("/user/activation")
+        .post("/user/activation/:token")
         .send({
           token: token,
         })
