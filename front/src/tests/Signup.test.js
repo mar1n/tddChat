@@ -127,4 +127,30 @@ describe("Signup", () => {
     includeTheExistingValue("password", "randomText");
     savePasswordError("password", "12345");
   });
+  describe("Confirmation message", () => {
+    test("We send you email with link.", async () => {
+      window.location = mockLocation;
+      expect.hasAssertions();
+
+      renderRouter(<Signup />);
+      await changeAndWait(
+        field("password"),
+        withEvent("password", "turboman54")
+      );
+
+      await changeAndWait(field("firstName"), withEvent("firstName", "Szymon"));
+      await changeAndWait(
+        field("email"),
+        withEvent("email", "cykcykacz@gmail.com")
+      );
+
+      expect(field("password").value).toEqual("turboman54");
+      expect(field("firstName").value).toEqual("Szymon");
+      expect(field("email").value).toEqual("cykcykacz@gmail.com");
+
+      await submit(form("signup form"));
+
+      screen.getByText("We send you email with link.");
+    });
+  });
 });

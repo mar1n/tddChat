@@ -9,6 +9,7 @@ const Signup = () => {
     password: string;
   }>({ firstName: "", email: "", password: "" });
   const [validationError, setValidationError] = useState<string>("");
+  const [confirmationMessage, setConfirmationMessage] = useState<string>("");
   const [buttonSwitch, setButtonSwitch] = useState<boolean>(false);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCustomer((customer) => ({
@@ -29,6 +30,7 @@ const Signup = () => {
 
       setCustomer({ firstName: "", email: "", password: "" });
       setButtonSwitch(false);
+      setConfirmationMessage("We send you email with link.")
     } catch (err: any) {
       setValidationError(err.response.data.error);
       setButtonSwitch(true);
@@ -40,6 +42,7 @@ const Signup = () => {
     <Layout>
       <div>
         Signup Page{" "}
+        <div className="confirmationMessage">{confirmationMessage}</div>
         <form aria-label='signup form' onSubmit={clickSubmit}>
           <label htmlFor='firstName'>First Name</label>
           <input
