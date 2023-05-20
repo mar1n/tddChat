@@ -1,7 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const router = require("./src/routes/room");
+const routerRoom = require("./src/routes/room");
+const routerUser = require("./src/routes/user");
 const {errFiveHundred, errNotFound} = require("./src/controller/errors");
 const http = require("http");
 const { addMsgWebSocket } = require("./src/controller/room");
@@ -11,7 +12,8 @@ function createServer() {
   app.use(cors());
   app.use(express.json());
 
-  app.use("/", router);
+  app.use("/", routerRoom);
+  app.use("/", routerUser);
   app.use(errNotFound);
   app.use(errFiveHundred);
 

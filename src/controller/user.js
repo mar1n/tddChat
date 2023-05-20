@@ -11,9 +11,7 @@ exports.signup = async (req, res, next) => {
     process.env.JWT_ACCOUNT_ACTIVATION,
     { expiresIn: "10m" }
   );
-  console.log("values", email, firstName, password);
-  console.log("token", token);
-  console.log("jwt activation", process.env.JWT_ACCOUNT_ACTIVATION);
+
   const userExist = await User.findOne({ email });
   if (userExist) {
     return res.status(400).json({
@@ -53,9 +51,6 @@ exports.activation = async (req, res, next) => {
 
   jwt.verify(token, process.env.JWT_ACCOUNT_ACTIVATION, async function (error) {
     if (error) {
-      console.log("error", error);
-      console.log("token", token);
-      console.log("jwt activation", process.env.JWT_ACCOUNT_ACTIVATION);
       return res.status(401).json({
         error: "Expired link. Signup again.",
       });
@@ -63,6 +58,7 @@ exports.activation = async (req, res, next) => {
     const { firstName, email, password } = jwt.decode(token);
     try {
       await User.create([{ firstName, email, password }]);
+      console.log('activation end point')
       res.status(201).json({ message: "Account has been created!!!" });
     } catch (error) {
       next(error);

@@ -28,7 +28,7 @@ const Signin = () => {
     try {
       const response = await axios({
         method: "POST",
-        url: `http://localhost:500/signin`,
+        url: `http://localhost:5000/user/signin`,
         data: { email, password },
       });
       autheticate(response, () => {

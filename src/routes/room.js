@@ -1,14 +1,9 @@
 const express = require("express");
-const router = express.Router();
+const routerRoom = express.Router();
 const { addMsg, createRoom } = require("../controller/room");
-const { signup, signin, activation } = require("../controller/user");
-const { userSignupValidator, userSigninValidator } = require("../validators/auth");
-const { runValidation } = require("../validators");
 
-router.post("/room/create", createRoom);
-router.post("/room/new", addMsg);
-router.post("/user/signup", userSignupValidator, runValidation, signup);
-router.post("/user/signin", userSigninValidator, runValidation, signin);
-router.get("/user/activation/:token", activation);
+routerRoom.post("/room/create", createRoom);
+routerRoom.post("/room/new", addMsg);
 
-module.exports = router;
+
+module.exports = routerRoom;
