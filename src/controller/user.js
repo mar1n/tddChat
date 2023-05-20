@@ -1,7 +1,7 @@
 const User = require("../db/model/user");
 const sgMail = require("@sendgrid/mail");
 const jwt = require("jsonwebtoken");
-//sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.signup = async (req, res, next) => {
 
@@ -11,7 +11,9 @@ exports.signup = async (req, res, next) => {
     process.env.JWT_ACCOUNT_ACTIVATION,
     { expiresIn: "10m" }
   );
-
+  console.log("values", email, firstName, password);
+  console.log("token", token);
+  console.log("jwt activation", process.env.JWT_ACCOUNT_ACTIVATION);
   const userExist = await User.findOne({ email });
   if (userExist) {
     return res.status(400).json({
@@ -26,7 +28,7 @@ exports.signup = async (req, res, next) => {
     text: "and easy to do anywhere, even with Node.js",
     html: `
                 <h1>Please use the following link to activate your account</h1>
-                <p>${process.env.CLIENT_URL}/user/activate/${token}</p>
+                <p>${process.env.CLIENT_URL}/user/activation/${token}</p>
                 <hr />
                 <p>This email may contain sensetive information</p>
                 <p>${process.env.CLIENT_URL}</p>
@@ -47,10 +49,13 @@ exports.signup = async (req, res, next) => {
 };
 
 exports.activation = async (req, res, next) => {
-  const { token } = req.body;
+  const { token } = req.params;
 
   jwt.verify(token, process.env.JWT_ACCOUNT_ACTIVATION, async function (error) {
     if (error) {
+      console.log("error", error);
+      console.log("token", token);
+      console.log("jwt activation", process.env.JWT_ACCOUNT_ACTIVATION);
       return res.status(401).json({
         error: "Expired link. Signup again.",
       });

@@ -41,11 +41,7 @@ describe("Users controller", () => {
       );
 
       const response = await supertest(app)
-        .post("/user/activation/:token")
-        .send({
-          token: token,
-        })
-        .set("Accept", "application/josn")
+        .get(`/user/activation/${token}`)
         .expect("Content-Type", /json/)
         .expect(201);
 

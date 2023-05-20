@@ -9,6 +9,6 @@ router.post("/room/create", createRoom);
 router.post("/room/new", addMsg);
 router.post("/user/signup", userSignupValidator, runValidation, signup);
 router.post("/user/signin", userSigninValidator, runValidation, signin);
-router.post("/user/activation/:token", activation);
+router.get("/user/activation/:token", activation);
 
 module.exports = router;

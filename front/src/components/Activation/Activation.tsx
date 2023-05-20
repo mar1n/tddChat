@@ -34,7 +34,7 @@ const Activation = () => {
     try {
       await axios({
         method: "POST",
-        url: "http://localhost:500/account-activation",
+        url: "http://localhost:5000/user/activation",
         data: { token}
       })
 

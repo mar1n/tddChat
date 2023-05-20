@@ -128,11 +128,7 @@ describe("Users controller", () => {
       );
       
       const response = await supertest(app)
-        .post("/user/activation/:token")
-        .send({
-          token: token,
-        })
-        .set("Accept", "application/josn")
+        .get(`/user/activation/${token}`)
         .expect("Content-Type", /json/)
         .expect(201);
 
@@ -153,11 +149,7 @@ describe("Users controller", () => {
       clock.tick(hoursInMs(4));
 
       const response = await supertest(app)
-        .post("/user/activation/:token")
-        .send({
-          token: token,
-        })
-        .set("Accept", "application/json")
+        .get(`/user/activation/${token}`)
         .expect("Content-Type", /json/)
         .expect(401);
 
