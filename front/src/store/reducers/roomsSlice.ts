@@ -22,9 +22,9 @@ export const fetchRoomsThunk = createAsyncThunk(
     try {
       const response = await axios({
         method: "GET",
-        url: `http://localhost:500/rooms`,
+        url: `http://localhost:5000/room/all`,
         data: {
-          userName: userName,
+          firstName: userName,
         },
       });
 
@@ -42,7 +42,7 @@ export const createRoomThunk = createAsyncThunk(
     console.log("createRoomThunk userList", values.usersList)
     const response = await axios({
       method: "POST",
-      url: `http://localhost:500/createRoom?${values.usersList}`,
+      url: `http://localhost:5000/room/create?${values.usersList}`,
       data: {
         title: values.title,
       },

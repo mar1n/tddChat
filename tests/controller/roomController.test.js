@@ -17,6 +17,15 @@ afterEach(async () => {
 const app = createServer();
 
 describe("rooom controller", () => {
+  test('fetch rooms', async () => {
+    await createRoom("Room 1", "Ronaldo");
+    await supertest(app)
+      .get("/room/all")
+      .send({ title: "Room 1", firstName: "Ronaldo" })
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(200)
+  });
   test("create room", async () => {
     await supertest(app)
       .post("/room/create")
