@@ -7,7 +7,6 @@ interface Private {
 }
 const Private = ({ children }: Private) => {
   if (!isAuth()) {
-    console.log("user is not log in");
     return <Navigate to={"/"} replace />;
   }
 

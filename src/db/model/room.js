@@ -86,5 +86,9 @@ roomsSchema.methods.addUser = async function (room, user) {
   );
 };
 
+roomsSchema.methods.seekUsers = async function(firstName) {
+  return this.model("Rooms").findOne({"users.firstName" : firstName})
+}
+
 const rooms = mongoose.model("Rooms", roomsSchema);
 module.exports = rooms;

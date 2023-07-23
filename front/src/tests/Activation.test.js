@@ -4,7 +4,10 @@ import { render, screen } from "@testing-library/react";
 import { createContainer } from "./myhelpers";
 import { MemoryRouter } from "react-router-dom";
 import Router from "../components/Router/Router";
+import { renderWithProviders } from "./utils/test-utils";
 import jwt from "jsonwebtoken";
+import { act } from "react-dom/test-utils";
+
 const FakeTimers = require("@sinonjs/fake-timers");
 
 describe("Activation", () => {
@@ -65,11 +68,13 @@ describe("Activation", () => {
     const hoursInMs = (n) => 1000 * 60 * 60 * n;
     clock.tick(hoursInMs(4));
 
-    render(
-      <MemoryRouter initialEntries={[activationRoute]}>
-        <Router />
-      </MemoryRouter>
-    );
+    await act (async () => {
+      renderWithProviders(
+        <MemoryRouter initialEntries={[activationRoute]}>
+          <Router />
+        </MemoryRouter>
+      );
+    })
     const buttonLink = screen.getByRole("button");
     await clickAndWait(buttonLink);
 

@@ -1,12 +1,12 @@
 import React from "react";
 import Signin from "../components/Signin/Signin";
-import { render, screen } from "@testing-library/react";
-import ReactTestUtils, { act } from "react-dom/test-utils";
+import { screen } from "@testing-library/react";
 import { createContainer } from "./myhelpers";
 import { MemoryRouter } from "react-router-dom";
 import Router from "../components/Router/Router";
 import { renderWithProviders } from "./utils/test-utils";
 import cookie from "js-cookie";
+import { act } from "react-dom/test-utils";
 
 describe("Signin", () => {
   let renderRouter, form, field, label, submit, changeAndWait, withEvent;
@@ -29,31 +29,41 @@ describe("Signin", () => {
     window.localStorage.__proto__.getItem.mockClear();
   });
 
-  test("render a form", () => {
-    renderWithProviders(<MemoryRouter><Signin /></MemoryRouter>);
+  test("render a form", async () => {
+    await act( async () => {
+      renderWithProviders(<MemoryRouter><Signin /></MemoryRouter>)
+    }) 
     expect(form("signin form")).toBeInTheDocument();
   });
-  test("render submit button", () => {
-    renderWithProviders(<MemoryRouter><Signin /></MemoryRouter>);
+  test("render submit button", async () => {
+    await act(async () => {
+      renderWithProviders(<MemoryRouter><Signin /></MemoryRouter>)
+    }) 
     const submitButton = screen.getByRole("submit");
     expect(submitButton).not.toBeDisabled();
   });
   const rendersLabelField = (name) =>
-    test("renders a label for the field", () => {
-      renderWithProviders(<MemoryRouter><Signin /></MemoryRouter>);
+    test("renders a label for the field", async () => {
+      await act (async () => {
+        renderWithProviders(<MemoryRouter><Signin /></MemoryRouter>)
+      })
       expect(label(name).tagName).toEqual("LABEL");
       expect(label(name)).toBeInTheDocument();
     });
   const renderAsATextBox = (name) =>
-    test("renders the field as text box", () => {
-      renderWithProviders(<MemoryRouter><Signin /></MemoryRouter>);
+    test("renders the field as text box", async () => {
+      await act( async () => {
+        renderWithProviders(<MemoryRouter><Signin /></MemoryRouter>)
+      }) 
       expect(field(name)).not.toBeNull();
       expect(field(name).tagName).toEqual("INPUT");
       expect(field(name).type).toEqual("text");
     });
   const includeTheExistingValue = (fieldName, value) =>
     test("includes the existing value", async () => {
-      renderWithProviders(<MemoryRouter><Signin /></MemoryRouter>);
+      await act(async () => {
+        renderWithProviders(<MemoryRouter><Signin /></MemoryRouter>)
+      }) 
       await changeAndWait(field(fieldName), withEvent(fieldName, value));
       expect(field(fieldName).value).toEqual(value);
     });
@@ -69,11 +79,13 @@ describe("Signin", () => {
   });
   test("user is authenticated, redirect  to home page", async () => {
     const signinRoute = "/signin";
-    renderWithProviders(
-      <MemoryRouter initialEntries={[signinRoute]}>
-        <Router />
-      </MemoryRouter>
-    );
+    await act(async () => {
+      renderWithProviders(
+        <MemoryRouter initialEntries={[signinRoute]}>
+          <Router />
+        </MemoryRouter>
+      )
+    })
     await changeAndWait(
       field("email"),
       withEvent("email", "cykcykacz@gmail.com")

@@ -18,7 +18,6 @@ export interface roomsState {
 export const fetchRoomsThunk = createAsyncThunk(
   "rooms/fetchRooms",
   async (userName: string) => {
-    console.log("fetchRoomsThunk", userName);
     try {
       const response = await axios({
         method: "GET",
@@ -28,7 +27,6 @@ export const fetchRoomsThunk = createAsyncThunk(
         },
       });
 
-      console.log("data", response.data);
       return response.data;
     } catch (error: any) {
       console.log("error", error.response.data.error);
@@ -38,13 +36,13 @@ export const fetchRoomsThunk = createAsyncThunk(
 // change this from qs to array in data payload
 export const createRoomThunk = createAsyncThunk(
   "rooms/createRoom",
-  async (values: {title: string; usersList: string}) => {
-    console.log("createRoomThunk userList", values.usersList)
+  async (values: {title: string; user: string}) => {
     const response = await axios({
       method: "POST",
-      url: `http://localhost:5000/room/create?${values.usersList}`,
+      url: `http://localhost:5000/room/create`,
       data: {
         title: values.title,
+        firstName: values.user
       },
     });
     return response.data;
@@ -57,14 +55,13 @@ export const addMessageThunk = createAsyncThunk(
     try {
       const response = await axios({
         method: "POST",
-        url: `http://localhost:500/addMsg`,
+        url: `http://localhost:5000/room/new`,
         data: {
           text: values.text,
           name: values.name,
           roomTitle: values.roomTitle,
         },
       });
-      console.log("addMessage thunk", response.data);
       return response.data;
     } catch (error: any) {
       console.log("error addMessageThunk", error.response.data.error);
@@ -72,26 +69,26 @@ export const addMessageThunk = createAsyncThunk(
   }
 );
 
-export const selectRoomThunk = createAsyncThunk(
-  "rooms/selectRoom",
-  async (values: { title: string; name: string}) => {
-    console.log("selectRoomThunk");
-    try {
-      const response = await axios({
-        method: "GET",
-        url: `http://localhost:500/selectRoom`,
-        data: {
-          title: values.title,
-          name: values.name
-        }
-      });
-      console.log("selectRoomThunk")
-      return response.data;
-    } catch (error: any) {
-      console.log("error", error.response.data.error);
-    }
-  }
-)
+// export const selectRoomThunk = createAsyncThunk(
+//   "rooms/selectRoom",
+//   async (values: { title: string; name: string}) => {
+//     console.log("selectRoomThunk");
+//     try {
+//       const response = await axios({
+//         method: "GET",
+//         url: `http://localhost:500/selectRoom`,
+//         data: {
+//           title: values.title,
+//           name: values.name
+//         }
+//       });
+//       console.log("selectRoomThunk")
+//       return response.data;
+//     } catch (error: any) {
+//       console.log("error", error.response.data.error);
+//     }
+//   }
+// )
 
 const roomsSlice = createSlice({
   name: "rooms",
@@ -104,14 +101,12 @@ const roomsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchRoomsThunk.fulfilled, (state, action) => {
-        console.log("action.payload", action.payload);
         return [...state, action.payload];
       })
       .addCase(createRoomThunk.fulfilled, (state, action) => {
         return [...state, action.payload];
       })
       .addCase(addMessageThunk.fulfilled, (state, action) => {
-        console.log("action", action.payload);
         let updateState = state.map((value) => {
           if (value.title === action.payload.room.title) {
             return action.payload.room;
@@ -119,9 +114,10 @@ const roomsSlice = createSlice({
           return value;
         });
         return [...updateState];
-      }).addCase(selectRoomThunk.fulfilled, (state, action) => {
-        return [...state, action.payload.room]
-      });
+      })
+      // .addCase(selectRoomThunk.fulfilled, (state, action) => {
+      //   return [...state, action.payload.room]
+      // });
   },
 });
 

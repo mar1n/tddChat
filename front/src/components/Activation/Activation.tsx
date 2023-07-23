@@ -4,8 +4,8 @@ import { useParams } from "react-router-dom";
 import jwt from "jsonwebtoken";
 
 import axios from "axios";
-
 const Activation = () => {
+
   let { id } = useParams();
   const [values, setValues] = useState({
     name: "",
@@ -17,12 +17,12 @@ const Activation = () => {
 
   useEffect(() => {
     let tokenDecode = id !== undefined ? id : "";
-    if(id) {
+    if (id) {
       try {
-        const  { name }: any = jwt.decode(id);
+        const { name }: any = jwt.decode(id);
         setValues({ ...values, name, token: tokenDecode });
       } catch (error) {
-        setValidationError("Invalid token")
+        setValidationError("Invalid token");
       }
     }
   }, []);
@@ -30,29 +30,36 @@ const Activation = () => {
 
   const clickActivate = async (e: React.FormEvent) => {
     e.preventDefault();
-    setValues({...values, show:false})
+    setValues({ ...values, show: false });
     try {
+
       await axios({
-        method: "POST",
-        url: "http://localhost:5000/user/activation",
-        data: { token}
-      })
+        method: "GET",
+        url: `http://localhost:5000/user/activation/${token}`,
+        data: { token },
+      });
 
-      setValues({...values, show: false})
-    } catch (error: any) {
-      const { response: { status, data: { message } } } = error;
-
-      if(status === 401) {
-        setValidationError(message)
+      setValues({ ...values, show: false });
+    } catch (err: any) {
+      const {
+        response: {
+          status,
+          data: { message },
+        },
+      } = err;
+      if (status === 401) {
+        setValidationError(message);
       }
-      setValidationError(message)
+      setValidationError(message);
     }
-  }
+  };
 
   const activationLink = () => (
     <div>
       <h1>Hey {name}, active your account</h1>
-      <button onClick={clickActivate} disabled={show}>Activate Account</button>
+      <button onClick={clickActivate} disabled={show}>
+        Activate Account
+      </button>
       <span>{validationError}</span>
     </div>
   );

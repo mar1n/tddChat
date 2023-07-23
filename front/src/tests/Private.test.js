@@ -4,6 +4,7 @@ import Admin from "../components/Private/Admin";
 import { renderWithProviders } from "./utils/test-utils";
 import Router from "../components/Router/Router";
 import cookie from "js-cookie";
+import { act } from "react-dom/test-utils";
 
 describe("Private pages.", () => {
   test("Render admin page.", () => {
@@ -16,22 +17,27 @@ describe("Private pages.", () => {
     screen.getByText("Admin Page");
   });
   describe("Not log in user.", () => {
-    test("Admin page.", () => {
-      renderWithProviders(
-        <MemoryRouter initialEntries={["/private"]}>
-          <Router />
-        </MemoryRouter>
-      );
+    test("Admin page.", async () => {
+      await act(async () => {
+        renderWithProviders(
+          <MemoryRouter initialEntries={["/private"]}>
+            <Router />
+          </MemoryRouter>
+        );
+      });
+
       expect(() => screen.getByText("Admin Page")).toThrow(
         "Unable to find an element"
       );
     });
-    test("Rooms page.", () => {
-      renderWithProviders(
-        <MemoryRouter initialEntries={["/rooms"]}>
-          <Router />
-        </MemoryRouter>
-      );
+    test("Rooms page.", async () => {
+      await act(async () => {
+        renderWithProviders(
+          <MemoryRouter initialEntries={["/rooms"]}>
+            <Router />
+          </MemoryRouter>
+        );
+      });
       expect(() => screen.getByText("Rooms page.")).toThrow(
         "Unable to find an element"
       );
@@ -48,22 +54,26 @@ describe("Private pages.", () => {
           return '{"_id":1223,"name":"Szymon","email":"szym0nd4widowicz@gmail.com","role":"admin"}';
         });
     });
-    test("Admin page.", () => {
-      renderWithProviders(
-        <MemoryRouter initialEntries={["/private"]}>
-          <Router />
-        </MemoryRouter>
-      );
+    test("Admin page.", async () => {
+      await act(async () => {
+        renderWithProviders(
+          <MemoryRouter initialEntries={["/private"]}>
+            <Router />
+          </MemoryRouter>
+        );
+      });
 
       const welcomeText = screen.getByText("Admin Page");
       expect(welcomeText).toBeInTheDocument();
     });
-    test("Rooms page.", () => {
-      renderWithProviders(
-        <MemoryRouter initialEntries={["/rooms"]}>
-          <Router />
-        </MemoryRouter>
-      );
+    test("Rooms page.", async () => {
+      await act(async () => {
+        renderWithProviders(
+          <MemoryRouter initialEntries={["/rooms"]}>
+            <Router />
+          </MemoryRouter>
+        );
+      });
 
       const welcomeText = screen.getByText("Rooms page.");
       expect(welcomeText).toBeInTheDocument();

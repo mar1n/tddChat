@@ -33,7 +33,7 @@ export const handlers = [
     );
   }),
 
-  rest.post("http://localhost:500/signin", async (req, res, ctx) => {
+  rest.post("http://localhost:5000/user/signin", async (req, res, ctx) => {
     const { email, password } = await req.json();
     if (email !== "cykcykacz@gmail.com") {
       return res(
@@ -70,8 +70,8 @@ export const handlers = [
       console.log("error signin", error);
     }
   }),
-  rest.post(
-    "http://localhost:500/account-activation",
+  rest.get(
+    "http://localhost:5000/user/activation/:token",
     async (req, res, ctx) => {
       const { token } = await req.json();
       try {
@@ -88,9 +88,8 @@ export const handlers = [
       }
     }
   ),
-  rest.get("http://localhost:500/rooms", async (req, res, ctx) => {
-    const { userName } = await req.json();
-    console.log("userName", userName);
+  rest.get("http://localhost:5000/room/all", async (req, res, ctx) => {
+    const { firstName } = await req.json();
     const initialRoomState = [
       {
         title: "Robin book",
@@ -101,18 +100,15 @@ export const handlers = [
     if (
       initialRoomState.find((room) =>
         room.users.find((user) => {
-          console.log("user", user);
-          return user.name === userName;
+          return user.name === firstName;
         })
       )
     ) {
       const result = initialRoomState.filter((room) =>
-        room.users.find((user) => userName)
+        room.users.find((user) => firstName)
       );
-      console.log("result", result);
       return res(ctx.json(result[0]), ctx.status(201));
     } else {
-      console.log("not found");
       return res(
         ctx.json({
           error: "Room not found.",
@@ -132,12 +128,10 @@ export const handlers = [
       })
     );
   }),
-  rest.post("http://localhost:500/createRoom", async (req, res, ctx) => {
+  rest.post("http://localhost:5000/room/create", async (req, res, ctx) => {
     const { title, usersList } = await req.json();
-    console.log("search Params", req.url.searchParams.getAll("name"));
     //console.log('create room thunk usersList', req.url.searchParams.get("name"));
     const users = req.url.searchParams.getAll("name").map(value => ({ name: value}));
-    console.log('users', users);
     if (title) {
       return res(
         ctx.json({
@@ -156,42 +150,41 @@ export const handlers = [
       );
     }
   }),
-  rest.get("http://localhost:500/selectRoom", async (req, res, ctx) => {
-    const { title, name } = await req.json();
-    console.log("select Room title & user", title, user);
-    const roomtwo = {
-      title: "Robin adventure",
-      users: [{ name: "Szymon", name: "Robin" }],
-      messages: [{ text: "Robin stole gold and he will give it this to poor people.", name: "Robin" }],
-    };
-    if (title === "room of peace" && user === "Robin") {
-      return res(
-        ctx.json({
-          messages: [{ text: "My nam is Robin from a forest.", name: "Robin" }],
-        }),
-        ctx.status(201)
-      );
-    }
-    if(roomtwo.title === "Robin adventure" && roomtwo.users.find(value => value.name === name)) {
-      console.log('select room Robin adventure')
-      return res(
-        ctx.json({
-          message: "Room exist.",
-          room: roomtwo
-        })
-      )
-    }
-    return res(
-      ctx.json({
-        error: "Room doesn't exist."
-      }),
-      ctx.status(400)
-    )
-  }),
-  rest.post("http://localhost:500/addMsg", async (req, res, ctx) => {
+  // rest.get("http://localhost:500/selectRoom", async (req, res, ctx) => {
+  //   const { title, name } = await req.json();
+  //   console.log("select Room title & user", title, user);
+  //   const roomtwo = {
+  //     title: "Robin adventure",
+  //     users: [{ name: "Szymon", name: "Robin" }],
+  //     messages: [{ text: "Robin stole gold and he will give it this to poor people.", name: "Robin" }],
+  //   };
+  //   if (title === "room of peace" && user === "Robin") {
+  //     return res(
+  //       ctx.json({
+  //         messages: [{ text: "My nam is Robin from a forest.", name: "Robin" }],
+  //       }),
+  //       ctx.status(201)
+  //     );
+  //   }
+  //   if(roomtwo.title === "Robin adventure" && roomtwo.users.find(value => value.name === name)) {
+  //     console.log('select room Robin adventure')
+  //     return res(
+  //       ctx.json({
+  //         message: "Room exist.",
+  //         room: roomtwo
+  //       })
+  //     )
+  //   }
+  //   return res(
+  //     ctx.json({
+  //       error: "Room doesn't exist."
+  //     }),
+  //     ctx.status(400)
+  //   )
+  // }),
+  rest.post("http://localhost:5000/room/new", async (req, res, ctx) => {
     const { text, name, roomTitle } = await req.json();
     //MOngoDb we will find some roome by title
-    console.log("adMesg user", name);
     const room = {
       title: "Robin Hood Room",
       users: [{ name: "Szymon"}, {name: "Robin"}],
@@ -203,10 +196,7 @@ export const handlers = [
       messages: [{ text: "Robin is from Sherwood.", name: "Robin" }],
     };
     
-    console.log("roomTitle", roomTitle);
-    console.log("roomTitle Find", roomtwo);
     if (room.title === roomTitle && room.users.find(value => value.name === name)) {
-      console.log("user find")
       room.messages.push({ text, name });
       return res(
         ctx.json({
@@ -216,7 +206,6 @@ export const handlers = [
       );
     }
     if (roomtwo.title === "Robin adventure" && roomtwo.users.find(value => value.name === name)) {
-      console.log("Robin adventure add message");
       roomtwo.messages.push({ text, name });
       return res(
         ctx.json({
@@ -232,31 +221,31 @@ export const handlers = [
       ctx.status(400)
     )
   }),
-  rest.get("/user", (req, res, ctx) => {
-    // Check if the user is authenticated in this session
+  // rest.get("/user", (req, res, ctx) => {
+  //   // Check if the user is authenticated in this session
 
-    const isAuthenticated = sessionStorage.getItem("is-authenticated");
+  //   const isAuthenticated = sessionStorage.getItem("is-authenticated");
 
-    if (!isAuthenticated) {
-      // If not authenticated, respond with a 403 error
+  //   if (!isAuthenticated) {
+  //     // If not authenticated, respond with a 403 error
 
-      return res(
-        ctx.status(403),
+  //     return res(
+  //       ctx.status(403),
 
-        ctx.json({
-          errorMessage: "Not authorized",
-        })
-      );
-    }
+  //       ctx.json({
+  //         errorMessage: "Not authorized",
+  //       })
+  //     );
+  //   }
 
-    // If authenticated, return a mocked user details
+  //   // If authenticated, return a mocked user details
 
-    return res(
-      ctx.status(200),
+  //   return res(
+  //     ctx.status(200),
 
-      ctx.json({
-        username: "admin",
-      })
-    );
-  }),
+  //     ctx.json({
+  //       username: "admin",
+  //     })
+  //   );
+  // }),
 ];

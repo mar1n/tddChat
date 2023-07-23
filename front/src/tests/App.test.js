@@ -5,7 +5,7 @@ import { renderWithProviders } from "./utils/test-utils";
 
 describe("App", () => {
   test("renders learn react link", async () => {
-    await act(() => {
+    await act(async () => {
       renderWithProviders(
         <MemoryRouter>
           <App />
@@ -16,14 +16,14 @@ describe("App", () => {
     expect(element).toBeInTheDocument();
   });
   test('Display user name when logged in.', async () => {
-    await act(() => {
+    await act(async () => {
       renderWithProviders(
         <MemoryRouter>
           <App />
         </MemoryRouter>,
         {
           preloadedState: {
-            user: "Robin",
+            user: { user: "Robin",}
           },
         }
       );

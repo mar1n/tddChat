@@ -20,6 +20,7 @@ exports.all = async (req, res, next) => {
 exports.createRoom = async (req, res, next) => {
   res.set("Content-Type", "application/json");
   const { title, firstName } = req.body;
+  console.log("query param", req.query);
   const room = new Rooms({
     title,
     users: [{ firstName: firstName }],
@@ -31,7 +32,9 @@ exports.createRoom = async (req, res, next) => {
       message: "Room has been created",
     });
   } catch (error) {
+    console.log('error check',error)
     if (error.code === 11000) {
+      console.log('error check 400',error)
       return res.status(400).json({
         message: "This room title exisits!",
       });
@@ -71,6 +74,20 @@ exports.addMsg = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.seekUsers = async(req, res, next) => {
+  const { firstName } = req.body;
+
+  const rooms = new Rooms();
+  
+  res.set("Content-Type", "applicaton/json");
+
+  try {
+    await rooms.seekUsers(firstName);
+  } catch (error) {
+    console.log("seekUsers", error);
+  }
+}
 
 exports.addMsgWebSocket = async (roomDetails) => {
   const { text, firstName, room } = roomDetails;

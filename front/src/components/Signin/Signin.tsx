@@ -33,12 +33,13 @@ const Signin = () => {
       });
       autheticate(response, () => {
         const { data: { user: { email} } } = response
-        dispatch(setUser({user: email }))
+        dispatch(setUser({user: email, error: "" }))
         setCustomer({ email: "", password: "" });
         setButtonSwitch(false);
         history("/");
       });
     } catch (err: any) {
+      console.log('err signin', err.response.data.error)
       setValidationError(err.response.data.error);
       setButtonSwitch(true);
     }

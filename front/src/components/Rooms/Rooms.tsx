@@ -5,7 +5,6 @@ import {
   fetchRoomsThunk,
   addMessageThunk,
   roomsState,
-  selectRoomThunk,
 } from "../../store/reducers/roomsSlice";
 import { fetchSeekUsers, seekuser } from "../../store/reducers/seekUsersSlice";
 
@@ -34,22 +33,20 @@ const Rooms = () => {
   const rooms = useSelector((state: state) => state.rooms);
   const seekUsers = useSelector((state: another) => state.seekUsers);
   useEffect(() => {
-    console.log("useEffect", user);
     dispatch(fetchRoomsThunk(user));
     dispatch(fetchSeekUsers());
   }, []);
   const createRoom = () => {
     let users = [{ name: user }, ...selectedUsersList];
-    //let newThreadName = this.state.newThreadName;
     let userslist = Object.keys(users)
       .map((key: any) => `name=${users[key].name}`)
       .join("&");
-    dispatch(createRoomThunk({ title: title, usersList: userslist }));
+    dispatch(createRoomThunk({ title: title, user: user }));
   };
   const selectRoom = (title: string) => {
     console.log("select Room????", title);
     setSelectedRoom(title);
-    dispatch(selectRoomThunk({ title, name: user }));
+    //dispatch(selectRoomThunk({ title, name: user }));
   };
   const addMessage = (text: string) => {
     dispatch(
@@ -62,14 +59,12 @@ const Rooms = () => {
     }
   };
   const selectUser = (name: string) => {
-    console.log("rooms selectUser", name);
     selectedUsersList.some((value) => value.name === name)
       ? setSelectedUsersList([
           ...selectedUsersList.filter((value) => value.name !== name),
         ])
       : setSelectedUsersList([{ name: name }, ...selectedUsersList]);
   };
-  console.log("rooms seekUsers", seekUsers);
   return (
     <>
       Rooms page.{" "}
