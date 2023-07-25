@@ -10,21 +10,17 @@ roomsSchema.methods.addMsg = async function (room, msg) {
     "users.firstName": msg.firstName,
   });
 
-  console.log("userIn", userIn);
 
   const roomIn = await this.model("Rooms").findOne({
     title: room.title,
   });
 
-  console.log("roomIn", roomIn);
 
   if (roomIn === null) {
     return Promise.reject(new Error("Room does not exist!!!"));
   } else if (userIn.length === 0) {
-    console.log("userOut");
     return Promise.reject(new Error("User does not exist!!!"));
   } else {
-    console.log("room", room._id);
     const roomId = { _id: room._id };
     return this.model("Rooms").findOneAndUpdate(
       roomId,

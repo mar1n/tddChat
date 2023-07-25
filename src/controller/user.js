@@ -6,7 +6,6 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 exports.signup = async (req, res, next) => {
 
   const { email, firstName, password } = req.body;
-  console.log("asdddddddfffffffff")
   const token = jwt.sign(
     { firstName, email, password },
     process.env.JWT_ACCOUNT_ACTIVATION,
@@ -42,14 +41,12 @@ exports.signup = async (req, res, next) => {
       });
     })
     .catch((error) => {
-      console.log("signup error", error);
       next(error);
     });
 };
 
 exports.activation = async (req, res, next) => {
   const { token } = req.params;
-  console.log("Token")
   jwt.verify(token, process.env.JWT_ACCOUNT_ACTIVATION, async function (error) {
     if (error) {
       return res.status(401).json({
@@ -59,7 +56,6 @@ exports.activation = async (req, res, next) => {
     const { firstName, email, password } = jwt.decode(token);
     try {
       await User.create([{ firstName, email, password }]);
-      console.log('activation end point')
       res.status(201).json({ message: "Account has been created!!!" });
     } catch (error) {
       next(error);
