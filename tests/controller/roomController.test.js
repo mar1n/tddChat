@@ -61,7 +61,6 @@ describe("rooom controller", () => {
   });
   test("add the message to the room", async () => {
     const room = await createRoom();
-    console.log("room", room);
 
     const response = await supertest(app)
       .post("/room/new")
@@ -72,7 +71,6 @@ describe("rooom controller", () => {
 
     expect(response._body).toEqual({ message: "message has been added" });
     const messageInRoom = await Rooms.findOne({ title: "Space" });
-    console.log("messageInRoom", messageInRoom);
     expect(messageInRoom.messages[0].text).toEqual("my msg");
   });
   test("the room that doesnt exist", async () => {

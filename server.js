@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const bodyParses = require("body-parser");
 const routerRoom = require("./src/routes/room");
 const routerUser = require("./src/routes/user");
 const {errFiveHundred, errNotFound} = require("./src/controller/errors");
@@ -9,6 +10,7 @@ const { addMsgWebSocket } = require("./src/controller/room");
 
 function createServer() {
   const app = express();
+  app.use(bodyParses.json());
   app.use(cors());
   app.use(express.json());
 

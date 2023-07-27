@@ -2,6 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import Rooms from "../components/Rooms/Rooms";
 import userEvent from "@testing-library/user-event";
 import { renderWithProviders } from "./utils/test-utils";
+import * as mswTestUtils from "./utils/mswTestUtils";
 import { createContainer } from "./myhelpers";
 import { act } from "react-dom/test-utils";
 import { rest } from "msw";
@@ -41,6 +42,8 @@ describe("Rooms", () => {
     expect(screen.queryByText("John, King of England")).toBeInTheDocument();
   });
   test("List rooms.", async () => {
+    const addSpy = jest.spyOn(mswTestUtils, "mswRoomParam");
+    addSpy.mockReturnValue(0);
     await act(async () => {
       renderWithProviders(<Rooms />);
     });
@@ -48,6 +51,18 @@ describe("Rooms", () => {
     const list = screen.getByRole("rooms-list");
     expect(list).toBeInTheDocument();
 
+    const noRooms = screen.queryByText("No Rooms");
+    expect(noRooms).toBeInTheDocument();
+    const open = screen.getByRole("addRoom");
+    const user = userEvent.setup();
+    await user.click(open);
+
+    const createButton = screen.getByRole("createRoomButton");
+    expect(createButton).toBeDisabled();
+    await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
+    expect(createButton).not.toBeDisabled();
+    await user.click(createButton);
+    //console.log("listitem", screen.getAllByRole("listitem"))
     expect(screen.getAllByRole("listitem").length).toBe(1);
   });
   test("Create room with users.", async () => {
@@ -57,19 +72,17 @@ describe("Rooms", () => {
         //MOngoDb we will find some roome by title
         const room = {
           title: "Robin adventure",
-          users: [{ name: "Szymon" }, {name: "Sheriff of Nottingham"}],
+          users: [{ name: "Szymon" }, { name: "Sheriff of Nottingham" }],
           messages: [{ text: "Robin is from Sherwood.", name: "Robin" }],
         };
-        
-        
-          room.messages.push({ text, name });
-          return res(
-            ctx.json({
-              message: "Message has been added.",
-              room: room,
-            })
-          );
-        
+
+        room.messages.push({ text, name });
+        return res(
+          ctx.json({
+            message: "Message has been added.",
+            room: room,
+          })
+        );
       })
     );
     const initialsRooms = [
@@ -137,10 +150,12 @@ describe("Rooms", () => {
       )
     ).toBeInTheDocument();
     const containName = screen.getAllByRole(/message-screen-user/i);
-    expect(containName.map(value => value.textContent)).toEqual(expect.arrayContaining(["Sheriff of Nottingham"]))
+    expect(containName.map((value) => value.textContent)).toEqual(
+      expect.arrayContaining(["Sheriff of Nottingham"])
+    );
   });
   test("Select Room.", async () => {
-    act(() => {
+    await act(async () => {
       renderWithProviders(<Rooms />);
     });
     const user = userEvent.setup();

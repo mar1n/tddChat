@@ -33,6 +33,7 @@ const Rooms = () => {
   const rooms = useSelector((state: state) => state.rooms);
   const seekUsers = useSelector((state: another) => state.seekUsers);
   useEffect(() => {
+    console.log("useEffect")
     dispatch(fetchRoomsThunk(user));
     dispatch(fetchSeekUsers());
   }, []);

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { mswRoomParam } from "../../tests/utils/mswTestUtils";
 import axios from "axios";
 
 interface users {
@@ -15,15 +16,19 @@ export interface roomsState {
   messages: Array<messages>;
 }
 
+
+
 export const fetchRoomsThunk = createAsyncThunk(
   "rooms/fetchRooms",
   async (userName: string) => {
+    console.log("mswRoomParam", mswRoomParam())
     try {
       const response = await axios({
         method: "GET",
         url: `http://localhost:5000/room/all`,
         data: {
           firstName: userName,
+          msw: mswRoomParam() 
         },
       });
 

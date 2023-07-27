@@ -1,13 +1,14 @@
 const Rooms = require("../db/model/room");
 
 exports.all = async (req, res, next) => {
+  console.log("req.body", req)
   const { firstName } = req.body;
   res.set("Content-Type", "application/json");
-
+  console.log("first Name", firstName);
   try {
     await Rooms.find({ users: { $elemMatch: { firstName: firstName }}});
     res.status(200).json({
-      message: "Room has been found."
+      message: "Room has been found.XXXXX"
     })
   } catch (error) {
     return res.status(400).json({

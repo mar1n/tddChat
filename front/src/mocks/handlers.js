@@ -89,7 +89,12 @@ export const handlers = [
     }
   ),
   rest.get("http://localhost:5000/room/all", async (req, res, ctx) => {
-    const { firstName } = await req.json();
+    const { firstName, msw } = await req.json();
+    console.log("MSW value", typeof msw)
+    if(msw === "0") {
+      return res(ctx.json([]), ctx.status(201));
+    }
+    console.log("MSW")
     const initialRoomState = [
       {
         title: "Robin book",
