@@ -90,18 +90,21 @@ export const handlers = [
   ),
   rest.get("http://localhost:5000/room/all", async (req, res, ctx) => {
     const { firstName, msw } = await req.json();
-    console.log("MSW value", typeof msw)
-    if(msw === "0") {
+    if(msw === 0) {
       return res(ctx.json([]), ctx.status(201));
     }
-    console.log("MSW")
     const initialRoomState = [
-      {
-        title: "Robin book",
-        users: [{ name: "Robin" }, { name: "John" }, { name: "Szymon" }, { name: "Sheriff of Nottingham"}],
-        messages: [],
-      },
+      
     ];
+    if(msw === -2) {
+      return res(ctx.json(
+        {
+          title: "Robin Hood Room",
+          users: [{ name: "Szymon" }],
+          messages: [{ text: "Robin is from forest.", name: "Szymon" }],
+        },
+      ), ctx.status(201)) ;
+    }
     if (
       initialRoomState.find((room) =>
         room.users.find((user) => {
@@ -114,15 +117,10 @@ export const handlers = [
       );
       return res(ctx.json(result[0]), ctx.status(201));
     } else {
-      return res(
-        ctx.json({
-          error: "Room not found.",
-        }),
-        ctx.status(400)
-      );
+      return res(ctx.json([]), ctx.status(201));
     }
   }),
-  rest.get("http://localhost:500/seekUsers", async (req, res, ctx) => {
+  rest.get("http://localhost:5000/user/seekUsers", async (req, res, ctx) => {
     return res(
       ctx.json({
         message: "You, have found users.",
@@ -155,38 +153,36 @@ export const handlers = [
       );
     }
   }),
-  // rest.get("http://localhost:500/selectRoom", async (req, res, ctx) => {
-  //   const { title, name } = await req.json();
-  //   console.log("select Room title & user", title, user);
-  //   const roomtwo = {
-  //     title: "Robin adventure",
-  //     users: [{ name: "Szymon", name: "Robin" }],
-  //     messages: [{ text: "Robin stole gold and he will give it this to poor people.", name: "Robin" }],
-  //   };
-  //   if (title === "room of peace" && user === "Robin") {
-  //     return res(
-  //       ctx.json({
-  //         messages: [{ text: "My nam is Robin from a forest.", name: "Robin" }],
-  //       }),
-  //       ctx.status(201)
-  //     );
-  //   }
-  //   if(roomtwo.title === "Robin adventure" && roomtwo.users.find(value => value.name === name)) {
-  //     console.log('select room Robin adventure')
-  //     return res(
-  //       ctx.json({
-  //         message: "Room exist.",
-  //         room: roomtwo
-  //       })
-  //     )
-  //   }
-  //   return res(
-  //     ctx.json({
-  //       error: "Room doesn't exist."
-  //     }),
-  //     ctx.status(400)
-  //   )
-  // }),
+  rest.get("http://localhost:5000/room/selectRoom", async (req, res, ctx) => {
+    const { title, name } = await req.json();
+    const roomtwo = {
+      title: "Robin adventure",
+      users: [{ name: "Szymon", name: "Robin" }],
+      messages: [{ text: "Robin stole gold and he will give it this to poor people.", name: "Robin" }],
+    };
+    if (title === "room of peace" && user === "Robin") {
+      return res(
+        ctx.json({
+          messages: [{ text: "My nam is Robin from a forest.", name: "Robin" }],
+        }),
+        ctx.status(201)
+      );
+    }
+    if(roomtwo.title === "Robin adventure" && roomtwo.users.find(value => value.name === name)) {
+      return res(
+        ctx.json({
+          message: "Room exist.",
+          room: roomtwo
+        })
+      )
+    }
+    return res(
+      ctx.json({
+        error: "Room doesn't exist."
+      }),
+      ctx.status(400)
+    )
+  }),
   rest.post("http://localhost:5000/room/new", async (req, res, ctx) => {
     const { text, name, roomTitle } = await req.json();
     //MOngoDb we will find some roome by title

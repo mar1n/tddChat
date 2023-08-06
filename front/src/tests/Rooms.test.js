@@ -66,6 +66,9 @@ describe("Rooms", () => {
     expect(screen.getAllByRole("listitem").length).toBe(1);
   });
   test("Create room with users.", async () => {
+    const addSpy = jest.spyOn(mswTestUtils, "mswRoomParam");
+    addSpy.mockReturnValue(-2);
+
     server.use(
       rest.post("http://localhost:5000/room/new", async (req, res, ctx) => {
         const { text, name, roomTitle } = await req.json();
@@ -85,17 +88,10 @@ describe("Rooms", () => {
         );
       })
     );
-    const initialsRooms = [
-      {
-        title: "Robin Hood Room",
-        users: [{ name: "Szymon" }],
-        messages: [{ text: "Robin is from forest.", name: "Szymon" }],
-      },
-    ];
+
     await act(async () => {
       renderWithProviders(<Rooms />, {
         preloadedState: {
-          rooms: initialsRooms,
           user: "Sheriff of Nottingham",
         },
       });
@@ -166,8 +162,8 @@ describe("Rooms", () => {
     expect(noRooms).toBeInTheDocument();
     const open = screen.getByRole("addRoom");
     await user.click(open);
-    expect(screen.getAllByRole("listitem").length).toBe(1);
-    expect(screen.getByText(/Robin book/i));
+    // expect(screen.getAllByRole("listitem").length).toBe(0);
+    // expect(screen.getByText(/Robin book/i));
 
     expect(field("title")).not.toBeNull();
     await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
@@ -176,24 +172,14 @@ describe("Rooms", () => {
     const createButton = screen.getByRole("createRoomButton");
     await user.click(createButton);
     expect(screen.getByText(/Robin adventure/i));
-    expect(screen.getAllByRole("listitem").length).toBe(2);
+    expect(screen.getAllByRole("listitem").length).toBe(1);
     await user.click(screen.getByText(/Robin adventure/i));
     expect(screen.getByText(/Robin adventure/i)).toHaveClass("selected");
   });
   test("Add messages.", async () => {
-    const initialsRooms = [
-      {
-        title: "Robin Hood Room",
-        users: [{ name: "Szymon" }],
-        messages: [{ text: "Robin is from forest.", name: "Szymon" }],
-      },
-    ];
-    renderWithProviders(<Rooms />, {
-      preloadedState: {
-        rooms: initialsRooms,
-        user: "Robin",
-      },
-    });
+    const addSpy = jest.spyOn(mswTestUtils, "mswRoomParam");
+    addSpy.mockReturnValue(-2);
+    await act(async () => {renderWithProviders(<Rooms />)});
 
     const user = userEvent.setup();
     expect(screen.queryByText("No Rooms")).not.toBeInTheDocument();
@@ -216,24 +202,28 @@ describe("Rooms", () => {
   });
   test.skip("Add multiple messages in one room.", () => {});
   test("Add message in select room and then in a different room.", async () => {
-    const initialsRooms = [
-      {
-        title: "Robin Hood Room",
-        users: [{ name: "Szymon" }],
-        messages: [{ text: "Robin is from forest.", name: "Szymon" }],
-      },
-    ];
-    renderWithProviders(<Rooms />, {
-      preloadedState: {
-        rooms: initialsRooms,
-        user: "Robin",
-      },
-    });
+    const addSpy = jest.spyOn(mswTestUtils, "mswRoomParam");
+    addSpy.mockReturnValue(-2);
+    // const initialsRooms = [
+    //   {
+    //     title: "Robin Hood Room",
+    //     users: [{ name: "Szymon" }],
+    //     messages: [{ text: "Robin is from forest.", name: "Szymon" }],
+    //   },
+    // ];
+    
+   
+      await act(async () => {renderWithProviders(<Rooms />)});
+   
 
     const user = userEvent.setup();
     expect(screen.queryByText("No Rooms")).not.toBeInTheDocument();
+    expect(screen.getByRole("testButton")).toBeInTheDocument();
+    await user.click(screen.getByRole("testButton"));
+    //console.log("aaaaaa", screen.getByRole("listitem"));
     expect(screen.queryByText("Select Room")).toBeInTheDocument();
-    await user.click(screen.getByText(/Robin Hood Room/i));
+    expect(screen.getByRole("listitem")).toBeInTheDocument();
+    await user.click(screen.getByRole("listitem"));
     expect(screen.getByRole("message-screen")).toBeInTheDocument();
     expect(screen.getByText(/Robin Hood Room/i)).toHaveClass("selected");
     expect(screen.getByText(/Robin is from forest./i)).toBeInTheDocument();

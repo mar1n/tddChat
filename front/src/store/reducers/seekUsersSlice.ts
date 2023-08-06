@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export type seekuser = {
@@ -10,7 +9,7 @@ export const fetchSeekUsers = createAsyncThunk("rooms/seekUsers", async () => {
   try {
     const response = await axios({
       method: "GET",
-      url: `http://localhost:500/seekUsers`,
+      url: `http://localhost:5000/user/seekUsers`,
       data: {}
     });
     return response.data;

@@ -10,7 +10,6 @@ export interface userState {
 export const activationThunk = createAsyncThunk(
   "user/authenticate",
   async (userName: string) => {
-    console.log("fetchRoomsThunk", userName);
     try {
       const response = await axios({
         method: "GET",
@@ -20,7 +19,6 @@ export const activationThunk = createAsyncThunk(
         },
       });
 
-      console.log("activation data", response.data);
       return response.data;
     } catch (error: any) {
       console.log("activation error", error.response.data.error);
@@ -39,7 +37,6 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(activationThunk.fulfilled, (state, action) => {
-        console.log("activation add Case payload", action.payload)
         return {...state, error: action.payload}
       })
   }

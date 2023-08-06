@@ -21,7 +21,6 @@ export interface roomsState {
 export const fetchRoomsThunk = createAsyncThunk(
   "rooms/fetchRooms",
   async (userName: string) => {
-    console.log("mswRoomParam", mswRoomParam())
     try {
       const response = await axios({
         method: "GET",
@@ -31,7 +30,6 @@ export const fetchRoomsThunk = createAsyncThunk(
           msw: mswRoomParam() 
         },
       });
-
       return response.data;
     } catch (error: any) {
       console.log("error", error.response.data.error);
@@ -74,26 +72,24 @@ export const addMessageThunk = createAsyncThunk(
   }
 );
 
-// export const selectRoomThunk = createAsyncThunk(
-//   "rooms/selectRoom",
-//   async (values: { title: string; name: string}) => {
-//     console.log("selectRoomThunk");
-//     try {
-//       const response = await axios({
-//         method: "GET",
-//         url: `http://localhost:500/selectRoom`,
-//         data: {
-//           title: values.title,
-//           name: values.name
-//         }
-//       });
-//       console.log("selectRoomThunk")
-//       return response.data;
-//     } catch (error: any) {
-//       console.log("error", error.response.data.error);
-//     }
-//   }
-// )
+export const selectRoomThunk = createAsyncThunk(
+  "rooms/selectRoom",
+  async (values: { title: string; name: string}) => {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `http://localhost:5000/room/selectRoom`,
+        data: {
+          title: values.title,
+          name: values.name
+        }
+      });
+      return response.data;
+    } catch (error: any) {
+      console.log("error", error.response.data.error);
+    }
+  }
+)
 
 const roomsSlice = createSlice({
   name: "rooms",
@@ -106,7 +102,10 @@ const roomsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchRoomsThunk.fulfilled, (state, action) => {
-        return [...state, action.payload];
+        if(action.payload.length === 0) {
+          return [];
+        }
+        return [...state,action.payload];
       })
       .addCase(createRoomThunk.fulfilled, (state, action) => {
         return [...state, action.payload];
@@ -120,9 +119,9 @@ const roomsSlice = createSlice({
         });
         return [...updateState];
       })
-      // .addCase(selectRoomThunk.fulfilled, (state, action) => {
-      //   return [...state, action.payload.room]
-      // });
+      .addCase(selectRoomThunk.fulfilled, (state, action) => {
+        return [...state, action.payload.room]
+      });
   },
 });
 

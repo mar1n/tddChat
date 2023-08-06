@@ -5,6 +5,7 @@ import {
   fetchRoomsThunk,
   addMessageThunk,
   roomsState,
+  selectRoomThunk,
 } from "../../store/reducers/roomsSlice";
 import { fetchSeekUsers, seekuser } from "../../store/reducers/seekUsersSlice";
 
@@ -33,7 +34,6 @@ const Rooms = () => {
   const rooms = useSelector((state: state) => state.rooms);
   const seekUsers = useSelector((state: another) => state.seekUsers);
   useEffect(() => {
-    console.log("useEffect")
     dispatch(fetchRoomsThunk(user));
     dispatch(fetchSeekUsers());
   }, []);
@@ -45,9 +45,8 @@ const Rooms = () => {
     dispatch(createRoomThunk({ title: title, user: user }));
   };
   const selectRoom = (title: string) => {
-    console.log("select Room????", title);
     setSelectedRoom(title);
-    //dispatch(selectRoomThunk({ title, name: user }));
+    dispatch(selectRoomThunk({ title, name: user }));
   };
   const addMessage = (text: string) => {
     dispatch(
@@ -73,6 +72,7 @@ const Rooms = () => {
         Add room
       </button>
       <div role='rooms-list'>
+        
         {rooms.length === 0
           ? "No Rooms"
           : rooms.map((value, index) => {
