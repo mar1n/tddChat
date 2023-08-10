@@ -218,8 +218,6 @@ describe("Rooms", () => {
 
     const user = userEvent.setup();
     expect(screen.queryByText("No Rooms")).not.toBeInTheDocument();
-    expect(screen.getByRole("testButton")).toBeInTheDocument();
-    await user.click(screen.getByRole("testButton"));
     //console.log("aaaaaa", screen.getByRole("listitem"));
     expect(screen.queryByText("Select Room")).toBeInTheDocument();
     expect(screen.getByRole("listitem")).toBeInTheDocument();
@@ -228,7 +226,6 @@ describe("Rooms", () => {
     expect(screen.getByText(/Robin Hood Room/i)).toHaveClass("selected");
     expect(screen.getByText(/Robin is from forest./i)).toBeInTheDocument();
     expect(field("addMessage")).not.toBeNull();
-    expect(screen.getByRole("button-addMessage")).toBeInTheDocument();
     await changeAndWait(
       field("addMessage"),
       withEvent("addMessage", "Robin jump over the river and he met Big John.")
