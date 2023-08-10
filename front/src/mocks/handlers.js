@@ -157,7 +157,7 @@ export const handlers = [
     const { title, name } = await req.json();
     const roomtwo = {
       title: "Robin adventure",
-      users: [{ name: "Szymon", name: "Robin" }],
+      users: [{ name: "Szymon", name: "Robin", name: "Sheriff of Nottingham" }],
       messages: [{ text: "Robin stole gold and he will give it this to poor people.", name: "Robin" }],
     };
     if (title === "room of peace" && user === "Robin") {
