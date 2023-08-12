@@ -153,36 +153,6 @@ export const handlers = [
       );
     }
   }),
-  rest.get("http://localhost:5000/room/selectRoom", async (req, res, ctx) => {
-    const { title, name } = await req.json();
-    const roomtwo = {
-      title: "Robin adventure",
-      users: [{ name: "Szymon", name: "Robin", name: "Sheriff of Nottingham" }],
-      messages: [{ text: "Robin stole gold and he will give it this to poor people.", name: "Robin" }],
-    };
-    if (title === "room of peace" && user === "Robin") {
-      return res(
-        ctx.json({
-          messages: [{ text: "My nam is Robin from a forest.", name: "Robin" }],
-        }),
-        ctx.status(201)
-      );
-    }
-    if(roomtwo.title === "Robin adventure" && roomtwo.users.find(value => value.name === name)) {
-      return res(
-        ctx.json({
-          message: "Room exist.",
-          room: roomtwo
-        })
-      )
-    }
-    return res(
-      ctx.json({
-        error: "Room doesn't exist."
-      }),
-      ctx.status(400)
-    )
-  }),
   rest.post("http://localhost:5000/room/new", async (req, res, ctx) => {
     const { text, name, roomTitle } = await req.json();
     //MOngoDb we will find some roome by title

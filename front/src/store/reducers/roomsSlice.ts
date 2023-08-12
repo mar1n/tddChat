@@ -72,24 +72,6 @@ export const addMessageThunk = createAsyncThunk(
   }
 );
 
-export const selectRoomThunk = createAsyncThunk(
-  "rooms/selectRoom",
-  async (values: { title: string; name: string}) => {
-    try {
-      const response = await axios({
-        method: "GET",
-        url: `http://localhost:5000/room/selectRoom`,
-        data: {
-          title: values.title,
-          name: values.name
-        }
-      });
-      return response.data;
-    } catch (error: any) {
-      console.log("error", error.response.data.error);
-    }
-  }
-)
 
 const roomsSlice = createSlice({
   name: "rooms",
@@ -119,9 +101,6 @@ const roomsSlice = createSlice({
         });
         return [...updateState];
       })
-      .addCase(selectRoomThunk.fulfilled, (state, action) => {
-        return [...state, action.payload.room]
-      });
   },
 });
 

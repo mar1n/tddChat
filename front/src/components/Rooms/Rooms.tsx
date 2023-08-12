@@ -5,7 +5,6 @@ import {
   fetchRoomsThunk,
   addMessageThunk,
   roomsState,
-  selectRoomThunk,
 } from "../../store/reducers/roomsSlice";
 import { fetchSeekUsers, seekuser } from "../../store/reducers/seekUsersSlice";
 
@@ -46,7 +45,6 @@ const Rooms = () => {
   };
   const selectRoom = (title: string) => {
     setSelectedRoom(title);
-    dispatch(selectRoomThunk({ title, name: user }));
   };
   const addMessage = (text: string) => {
     dispatch(
