@@ -9,7 +9,7 @@ import {
 import { fetchSeekUsers, seekuser } from "../../store/reducers/seekUsersSlice";
 
 import type { AppThunkDispatch } from "../../store/store";
-import { userState } from "../../store/reducers/userSlice";
+import { userState, user } from "../../store/reducers/userSlice";
 type state = {
   rooms: roomsState[];
 };
@@ -29,7 +29,7 @@ const Rooms = () => {
     { name: string }[]
   >([]);
   const dispatch = useDispatch<AppThunkDispatch>();
-  const user = useSelector((state: userState) => state.user);
+  const user = useSelector((state: user) => state.user.user);
   const rooms = useSelector((state: state) => state.rooms);
   const seekUsers = useSelector((state: another) => state.seekUsers);
   useEffect(() => {

@@ -24,14 +24,11 @@ export const fetchRoomsThunk = createAsyncThunk(
     try {
       const response = await axios({
         method: "GET",
-        url: `http://localhost:5000/room/all`,
-        data: {
-          firstName: userName,
-          msw: mswRoomParam() 
-        },
+        url: `http://localhost:5000/room/all?firstName=${userName}&msw=${mswRoomParam()}`
       });
       return response.data;
     } catch (error: any) {
+      console.log("error", error.response);
       console.log("error", error.response.data.error);
     }
   }

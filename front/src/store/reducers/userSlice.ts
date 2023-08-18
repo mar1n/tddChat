@@ -7,6 +7,10 @@ export interface userState {
   error: string;
 }
 
+export interface user {
+  user: userState;
+}
+
 export const activationThunk = createAsyncThunk(
   "user/authenticate",
   async (userName: string) => {

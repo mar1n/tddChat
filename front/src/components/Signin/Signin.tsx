@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import type { AppThunkDispatch } from "../../store/store";
 import { setUser } from "../../store/reducers/userSlice";
+
 const Signin = () => {
   const history = useNavigate();
   const [customer, setCustomer] = useState<{
