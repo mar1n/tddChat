@@ -65,13 +65,13 @@ describe("Rooms", () => {
     //console.log("listitem", screen.getAllByRole("listitem"))
     expect(screen.getAllByRole("listitem").length).toBe(1);
   });
-  test('Clear value in title input.', async () => { 
+  test("Clear value in title input.", async () => {
     await act(async () => {
-      renderWithProviders(<Rooms/>, {
-        preloadedState:{
-          user: "Szymon"
-        }
-      })
+      renderWithProviders(<Rooms />, {
+        preloadedState: {
+          user: "Szymon",
+        },
+      });
     });
 
     const user = userEvent.setup();
@@ -85,7 +85,40 @@ describe("Rooms", () => {
 
     await user.click(open);
     expect(field("title").value).toBe("");
-   })
+  });
+  test('Close create user interface.', async () => {
+    await act(async () => {
+      renderWithProviders(<Rooms />, {
+        preloadedState: {
+          user: "Robin"
+        }
+      })
+    });
+
+    const user = userEvent.setup();
+    const open = screen.getByRole("addRoom");
+
+    await user.click(open);
+
+    expect(screen.getByRole("popUp")).toBeInTheDocument()
+    expect(field("title")).toBeInTheDocument();
+    expect(screen.getByRole("users")).toBeInTheDocument();
+    expect(screen.queryByText("Sheriff of Nottingham")).toBeInTheDocument();
+    expect(screen.queryByText("John, King of England")).toBeInTheDocument();
+    const createButton = screen.getByRole("createRoomButton");
+    expect(createButton).toBeInTheDocument();
+
+    await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
+    await user.click(createButton);
+
+    expect(() => screen.getByRole("popUp")).toThrow('Unable to find an accessible element with the role "popUp"');
+    expect(() => screen.getByRole("input", { name: "title" })).toThrow('Unable to find an accessible element with the role "input"');
+    expect(() => screen.getByRole("users")).toThrow('Unable to find an accessible element with the role "users"');
+    expect(screen.queryByText("Sheriff of Nottingham")).not.toBeInTheDocument();
+    expect(screen.queryByText("John, King of England")).not.toBeInTheDocument();
+    expect(createButton).not.toBeInTheDocument();
+
+  });
   test("Create room with users.", async () => {
     const addSpy = jest.spyOn(mswTestUtils, "mswRoomParam");
     addSpy.mockReturnValue(-2);
@@ -145,7 +178,6 @@ describe("Rooms", () => {
     expect(screen.queryByText("Sheriff of Nottingham")).toHaveClass(
       "selectUser"
     );
-    
 
     await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
     await user.click(createButton);
@@ -204,7 +236,9 @@ describe("Rooms", () => {
   test("Add messages.", async () => {
     const addSpy = jest.spyOn(mswTestUtils, "mswRoomParam");
     addSpy.mockReturnValue(-2);
-    await act(async () => {renderWithProviders(<Rooms />)});
+    await act(async () => {
+      renderWithProviders(<Rooms />);
+    });
 
     const user = userEvent.setup();
     expect(screen.queryByText("No Rooms")).not.toBeInTheDocument();
@@ -236,10 +270,10 @@ describe("Rooms", () => {
     //     messages: [{ text: "Robin is from forest.", name: "Szymon" }],
     //   },
     // ];
-    
-   
-      await act(async () => {renderWithProviders(<Rooms />)});
-   
+
+    await act(async () => {
+      renderWithProviders(<Rooms />);
+    });
 
     const user = userEvent.setup();
     expect(screen.queryByText("No Rooms")).not.toBeInTheDocument();
