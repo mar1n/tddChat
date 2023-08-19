@@ -44,6 +44,7 @@ const Rooms = () => {
       console.log("userList", userslist);
     dispatch(createRoomThunk({ title: title, user: user }));
     setOpenCreate(false);
+    setTitle("");
   };
   const selectRoom = (title: string) => {
     setSelectedRoom(title);

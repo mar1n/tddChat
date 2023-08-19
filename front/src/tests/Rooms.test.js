@@ -65,6 +65,27 @@ describe("Rooms", () => {
     //console.log("listitem", screen.getAllByRole("listitem"))
     expect(screen.getAllByRole("listitem").length).toBe(1);
   });
+  test('Clear value in title input.', async () => { 
+    await act(async () => {
+      renderWithProviders(<Rooms/>, {
+        preloadedState:{
+          user: "Szymon"
+        }
+      })
+    });
+
+    const user = userEvent.setup();
+    const open = screen.getByRole("addRoom");
+
+    await user.click(open);
+
+    const createButton = screen.getByRole("createRoomButton");
+    await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
+    await user.click(createButton);
+
+    await user.click(open);
+    expect(field("title").value).toBe("");
+   })
   test("Create room with users.", async () => {
     const addSpy = jest.spyOn(mswTestUtils, "mswRoomParam");
     addSpy.mockReturnValue(-2);
@@ -124,13 +145,13 @@ describe("Rooms", () => {
     expect(screen.queryByText("Sheriff of Nottingham")).toHaveClass(
       "selectUser"
     );
+    
 
     await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
     await user.click(createButton);
-
     expect(screen.queryByText("Sheriff of Nottingham")).not.toBeInTheDocument();
     expect(screen.queryByText("John, King of England")).not.toBeInTheDocument();
-    
+
     await user.click(screen.getByText(/Robin adventure/i));
     expect(screen.getByRole("message-screen")).toBeInTheDocument();
     expect(screen.getByText(/Robin adventure/i)).toHaveClass("selected");
