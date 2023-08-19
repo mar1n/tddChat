@@ -35,7 +35,7 @@ const userSlice = createSlice({
   initialState: { user: "cykcykacz@gmail.com", error: "" },
   reducers: {
     setUser(state, action: PayloadAction<userState>) {
-      return { user: action.payload.user, error: action.payload.error };
+      return {...state, user: action.payload.user, error: action.payload.error };
     },
   },
   extraReducers: (builder) => {

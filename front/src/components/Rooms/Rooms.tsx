@@ -41,7 +41,9 @@ const Rooms = () => {
     let userslist = Object.keys(users)
       .map((key: any) => `name=${users[key].name}`)
       .join("&");
+      console.log("userList", userslist);
     dispatch(createRoomThunk({ title: title, user: user }));
+    setOpenCreate(false);
   };
   const selectRoom = (title: string) => {
     setSelectedRoom(title);

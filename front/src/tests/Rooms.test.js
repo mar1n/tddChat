@@ -127,6 +127,10 @@ describe("Rooms", () => {
 
     await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
     await user.click(createButton);
+
+    expect(screen.queryByText("Sheriff of Nottingham")).not.toBeInTheDocument();
+    expect(screen.queryByText("John, King of England")).not.toBeInTheDocument();
+    
     await user.click(screen.getByText(/Robin adventure/i));
     expect(screen.getByRole("message-screen")).toBeInTheDocument();
     expect(screen.getByText(/Robin adventure/i)).toHaveClass("selected");
