@@ -65,6 +65,22 @@ describe("Rooms", () => {
     //console.log("listitem", screen.getAllByRole("listitem"))
     expect(screen.getAllByRole("listitem").length).toBe(1);
   });
+  test('Create button disabled when create room form is open.', async () => {
+    await act(async () => {
+      renderWithProviders(<Rooms />, {
+        preloadedState: {
+          user: "Robin"
+        }
+      })
+    });
+
+    const user = userEvent.setup();
+    const open = screen.getByRole("addRoom");
+
+    await user.click(open);
+
+    expect(screen.getByRole("addRoom")).toBeDisabled();
+  });
   test("Clear value in title input.", async () => {
     await act(async () => {
       renderWithProviders(<Rooms />, {

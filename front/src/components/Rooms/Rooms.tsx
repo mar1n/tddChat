@@ -69,7 +69,7 @@ const Rooms = () => {
   return (
     <>
       Rooms page.{" "}
-      <button role={"addRoom"} onClick={() => setOpenCreate(!openCreate)}>
+      <button role={"addRoom"} onClick={() => setOpenCreate(!openCreate)} disabled={openCreate}>
         Add room
       </button>
       <div role='rooms-list'>
