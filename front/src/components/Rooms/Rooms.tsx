@@ -54,8 +54,10 @@ const Rooms = () => {
       addMessageThunk({ text: text, name: user, roomTitle: selectedRoom })
     );
   };
-  const buttonDisabledValue = () => {
-    if (!title.trim.length && title === "") {
+  const buttonDisabledValue = (title: string) => {
+    if (title === "") {
+      setButtonDisabled(true);
+    } else {
       setButtonDisabled(false);
     }
   };
@@ -132,7 +134,10 @@ const Rooms = () => {
             name='title'
             placeholder='title'
             value={title}
-            onChange={(e) => (setTitle(e.target.value), buttonDisabledValue())}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              buttonDisabledValue(e.target.value);
+            }}
           />
           <div role={"users"}>
             {seekUsers.map(({ name }) => (

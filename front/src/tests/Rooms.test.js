@@ -81,6 +81,26 @@ describe("Rooms", () => {
 
     expect(screen.getByRole("addRoom")).toBeDisabled();
   });
+  test('Add room button disabled when title input is empty', async () => { 
+    await act(async () => {
+      renderWithProviders(<Rooms />, {
+        preloadedState: {
+          user: "Robin"
+        }
+      })
+    });
+
+    const user = userEvent.setup();
+    const open = screen.getByRole("addRoom");
+
+    await user.click(open);
+
+    expect(screen.getByRole("createRoomButton")).toBeDisabled();
+    await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
+    expect(screen.getByRole("createRoomButton")).toBeEnabled();
+    await changeAndWait(field("title"), withEvent("title", ""));
+    expect(screen.getByRole("createRoomButton")).toBeDisabled();
+   })
   test("Clear value in title input.", async () => {
     await act(async () => {
       renderWithProviders(<Rooms />, {
