@@ -84,7 +84,7 @@ const roomsSlice = createSlice({
         if(action.payload.length === 0) {
           return [];
         }
-        return [...state,action.payload];
+        return [...state,...action.payload];
       })
       .addCase(createRoomThunk.fulfilled, (state, action) => {
         return [...state, action.payload];

@@ -99,11 +99,11 @@ export const handlers = [
     ];
     if(msw === -2) {
       return res(ctx.json(
-        {
+        [{
           title: "Robin Hood Room",
           users: [{ name: "Szymon" }],
           messages: [{ text: "Robin is from forest.", name: "Szymon" }],
-        },
+        }],
       ), ctx.status(201)) ;
     }
     if (
@@ -116,7 +116,7 @@ export const handlers = [
       const result = initialRoomState.filter((room) =>
         room.users.find((user) => firstName)
       );
-      return res(ctx.json(result[0]), ctx.status(201));
+      return res(ctx.json(result), ctx.status(201));
     } else {
       return res(ctx.json([]), ctx.status(201));
     }
