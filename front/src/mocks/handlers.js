@@ -156,15 +156,16 @@ export const handlers = [
   }),
   rest.post("http://localhost:5000/room/new", async (req, res, ctx) => {
     const { text, name, roomTitle } = await req.json();
+    console.log("name", name);
     //MOngoDb we will find some roome by title
     const room = {
       title: "Robin Hood Room",
-      users: [{ name: "Szymon"}, {name: "Robin"}],
+      users: [{ name: "Szymon"}, {name: "Robin"}, {name: "cykcykacz@gmail.com"}],
       messages: [{ text: "Robin is from forest.", name: "Szymon" }],
     };
     const roomtwo = {
       title: "Robin adventure",
-      users: [{ name: "Szymon" }, {name: "Robin"}],
+      users: [{ name: "Szymon" }, {name: "Robin"}, {name: "cykcykacz@gmail.com"}],
       messages: [{ text: "Robin is from Sherwood.", name: "Robin" }],
     };
     
