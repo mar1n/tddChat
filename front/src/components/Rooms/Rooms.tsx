@@ -10,6 +10,8 @@ import { fetchSeekUsers, seekuser } from "../../store/reducers/seekUsersSlice";
 
 import type { AppThunkDispatch } from "../../store/store";
 import { userState, user } from "../../store/reducers/userSlice";
+import './room.css';
+
 type state = {
   rooms: roomsState[];
 };

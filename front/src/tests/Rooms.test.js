@@ -243,6 +243,9 @@ describe("Rooms", () => {
       expect.arrayContaining(["Sheriff of Nottingham"])
     );
   });
+  test('Highlight selected room name.', () => {
+    
+  });
   test("Select Room.", async () => {
     await act(async () => {
       renderWithProviders(<Rooms />);
