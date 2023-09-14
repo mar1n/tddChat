@@ -44,16 +44,14 @@ beforeEach(async () => {
 
 afterEach(async () => {
   clock = clock.uninstall();
+  jest.clearAllMocks();
+  await User.deleteMany();
   await disconnect();
 });
 
 const app = createServer();
 
 describe("Users controller", () => {
-  afterEach(async () => {
-    jest.clearAllMocks();
-    await User.deleteMany();
-  });
   describe("Singup the User", () => {
     test("emial has been sent", async () => {
       sgMail.send.mockResolvedValue(fakeSgMailResponse);
