@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { autheticate } from "../../components/utils/helper";
+import { mockServerURL } from "./helper";
 export interface userState {
   user: string;
   error: string;
@@ -17,7 +17,7 @@ export const activationThunk = createAsyncThunk(
     try {
       const response = await axios({
         method: "GET",
-        url: `http://localhost:5000/room/all`,
+        url: `${mockServerURL}/room/all`,
         data: {
           firstName: userName,
         },
@@ -35,15 +35,18 @@ const userSlice = createSlice({
   initialState: { user: "cykcykacz@gmail.com", error: "" },
   reducers: {
     setUser(state, action: PayloadAction<userState>) {
-      return {...state, user: action.payload.user, error: action.payload.error };
+      return {
+        ...state,
+        user: action.payload.user,
+        error: action.payload.error,
+      };
     },
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(activationThunk.fulfilled, (state, action) => {
-        return {...state, error: action.payload}
-      })
-  }
+    builder.addCase(activationThunk.fulfilled, (state, action) => {
+      return { ...state, error: action.payload };
+    });
+  },
 });
 
 export default userSlice.reducer;

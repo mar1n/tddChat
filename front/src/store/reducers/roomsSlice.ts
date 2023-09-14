@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { mswRoomParam } from "../../tests/utils/mswTestUtils";
 import axios from "axios";
-
+import { serverURL } from "./helper";
 interface users {
   name: string;
 }
