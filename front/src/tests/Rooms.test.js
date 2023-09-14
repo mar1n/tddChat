@@ -240,7 +240,7 @@ describe("Rooms", () => {
     ).toBeInTheDocument();
     const containName = screen.getAllByRole(/message-screen-user/i);
     expect(containName.map((value) => value.textContent)).toEqual(
-      expect.arrayContaining(["Sheriff of Nottingham"])
+      expect.arrayContaining(["Sheriff of Nottingham:"])
     );
   });
   test('Highlight selected room name.', () => {

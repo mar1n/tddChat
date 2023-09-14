@@ -104,7 +104,7 @@ const Rooms = () => {
                 return value.messages.map((msg, index) => {
                   return (
                     <div key={index}>
-                      <p role={"message-screen-user"}>{msg.name}</p>
+                      <p role={"message-screen-user"}>{msg.name}:</p>
                       <p>{msg.text}</p>
                     </div>
                   );
