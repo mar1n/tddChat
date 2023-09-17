@@ -23,7 +23,7 @@ describe("rooom controller", () => {
     await createRoom("Room 1", "Ronaldo");
     await supertest(app)
       .get("/room/all")
-      .send({ title: "Room 1", firstName: "Ronaldo" })
+      .query({ firstName: "Ronaldo "})
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200);

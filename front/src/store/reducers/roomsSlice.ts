@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { mswRoomParam } from "../../tests/utils/mswTestUtils";
 import axios from "axios";
-import { serverURL } from "./helper";
+import { serverURL, mockServerURL } from "./helper";
 interface users {
   name: string;
 }
@@ -24,7 +23,7 @@ export const fetchRoomsThunk = createAsyncThunk(
     try {
       const response = await axios({
         method: "GET",
-        url: `http://localhost:5000/room/all?firstName=${userName}&msw=${mswRoomParam()}`
+        url: `${mockServerURL}/room/all?firstName=${userName}`
       });
       return response.data;
     } catch (error: any) {
@@ -81,10 +80,10 @@ const roomsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchRoomsThunk.fulfilled, (state, action) => {
-        if(action.payload.length === 0) {
-          return [];
+        if(action.payload.rooms) {
+          return [...state,...action.payload.rooms];
         }
-        return [...state,...action.payload];
+        return [...state];
       })
       .addCase(createRoomThunk.fulfilled, (state, action) => {
         return [...state, action.payload];

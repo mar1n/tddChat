@@ -1,8 +1,7 @@
-import { render, screen, within } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import Rooms from "../components/Rooms/Rooms";
 import userEvent from "@testing-library/user-event";
 import { renderWithProviders } from "./utils/test-utils";
-import * as mswTestUtils from "./utils/mswTestUtils";
 import { createContainer } from "./myhelpers";
 import { act } from "react-dom/test-utils";
 import { rest } from "msw";
@@ -42,8 +41,6 @@ describe("Rooms", () => {
     expect(screen.queryByText("John, King of England")).toBeInTheDocument();
   });
   test("List rooms.", async () => {
-    const addSpy = jest.spyOn(mswTestUtils, "mswRoomParam");
-    addSpy.mockReturnValue(0);
     await act(async () => {
       renderWithProviders(<Rooms />);
     });
@@ -62,16 +59,16 @@ describe("Rooms", () => {
     await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
     expect(createButton).not.toBeDisabled();
     await user.click(createButton);
-    //console.log("listitem", screen.getAllByRole("listitem"))
+
     expect(screen.getAllByRole("listitem").length).toBe(1);
   });
-  test('Create button disabled when create room form is open.', async () => {
+  test("Create button disabled when create room form is open.", async () => {
     await act(async () => {
       renderWithProviders(<Rooms />, {
         preloadedState: {
-          user: "Robin"
-        }
-      })
+          user: "Robin",
+        },
+      });
     });
 
     const user = userEvent.setup();
@@ -81,13 +78,13 @@ describe("Rooms", () => {
 
     expect(screen.getByRole("addRoom")).toBeDisabled();
   });
-  test('Add room button disabled when title input is empty', async () => { 
+  test("Add room button disabled when title input is empty", async () => {
     await act(async () => {
       renderWithProviders(<Rooms />, {
         preloadedState: {
-          user: "Robin"
-        }
-      })
+          user: "Robin",
+        },
+      });
     });
 
     const user = userEvent.setup();
@@ -100,7 +97,7 @@ describe("Rooms", () => {
     expect(screen.getByRole("createRoomButton")).toBeEnabled();
     await changeAndWait(field("title"), withEvent("title", ""));
     expect(screen.getByRole("createRoomButton")).toBeDisabled();
-   })
+  });
   test("Clear value in title input.", async () => {
     await act(async () => {
       renderWithProviders(<Rooms />, {
@@ -122,13 +119,13 @@ describe("Rooms", () => {
     await user.click(open);
     expect(field("title").value).toBe("");
   });
-  test('Close create user interface.', async () => {
+  test("Close create user interface.", async () => {
     await act(async () => {
       renderWithProviders(<Rooms />, {
         preloadedState: {
-          user: "Robin"
-        }
-      })
+          user: "Robin",
+        },
+      });
     });
 
     const user = userEvent.setup();
@@ -136,7 +133,7 @@ describe("Rooms", () => {
 
     await user.click(open);
 
-    expect(screen.getByRole("popUp")).toBeInTheDocument()
+    expect(screen.getByRole("popUp")).toBeInTheDocument();
     expect(field("title")).toBeInTheDocument();
     expect(screen.getByRole("users")).toBeInTheDocument();
     expect(screen.queryByText("Sheriff of Nottingham")).toBeInTheDocument();
@@ -147,18 +144,20 @@ describe("Rooms", () => {
     await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
     await user.click(createButton);
 
-    expect(() => screen.getByRole("popUp")).toThrow('Unable to find an accessible element with the role "popUp"');
-    expect(() => screen.getByRole("input", { name: "title" })).toThrow('Unable to find an accessible element with the role "input"');
-    expect(() => screen.getByRole("users")).toThrow('Unable to find an accessible element with the role "users"');
+    expect(() => screen.getByRole("popUp")).toThrow(
+      'Unable to find an accessible element with the role "popUp"'
+    );
+    expect(() => screen.getByRole("input", { name: "title" })).toThrow(
+      'Unable to find an accessible element with the role "input"'
+    );
+    expect(() => screen.getByRole("users")).toThrow(
+      'Unable to find an accessible element with the role "users"'
+    );
     expect(screen.queryByText("Sheriff of Nottingham")).not.toBeInTheDocument();
     expect(screen.queryByText("John, King of England")).not.toBeInTheDocument();
     expect(createButton).not.toBeInTheDocument();
-
   });
   test("Create room with users.", async () => {
-    const addSpy = jest.spyOn(mswTestUtils, "mswRoomParam");
-    addSpy.mockReturnValue(-2);
-
     server.use(
       rest.post("http://localhost:5000/room/new", async (req, res, ctx) => {
         const { text, name, roomTitle } = await req.json();
@@ -183,8 +182,8 @@ describe("Rooms", () => {
       renderWithProviders(<Rooms />, {
         preloadedState: {
           user: {
-            user: "Sheriff of Nottingham"
-          }
+            user: "Sheriff of Nottingham",
+          },
         },
       });
     });
@@ -243,9 +242,7 @@ describe("Rooms", () => {
       expect.arrayContaining(["Sheriff of Nottingham:"])
     );
   });
-  test('Highlight selected room name.', () => {
-    
-  });
+  test("Highlight selected room name.", () => {});
   test("Select Room.", async () => {
     await act(async () => {
       renderWithProviders(<Rooms />);
@@ -258,8 +255,6 @@ describe("Rooms", () => {
     expect(noRooms).toBeInTheDocument();
     const open = screen.getByRole("addRoom");
     await user.click(open);
-    // expect(screen.getAllByRole("listitem").length).toBe(0);
-    // expect(screen.getByText(/Robin book/i));
 
     expect(field("title")).not.toBeNull();
     await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
@@ -273,10 +268,18 @@ describe("Rooms", () => {
     expect(screen.getByText(/Robin adventure/i)).toHaveClass("selected");
   });
   test("Add messages.", async () => {
-    const addSpy = jest.spyOn(mswTestUtils, "mswRoomParam");
-    addSpy.mockReturnValue(-2);
     await act(async () => {
-      renderWithProviders(<Rooms />);
+      renderWithProviders(<Rooms />, {
+        preloadedState: {
+          rooms: [
+            {
+              title: "Robin Hood Room",
+              users: [{ name: "Szymon" }],
+              messages: [{ text: "Robin is from forest.", name: "Szymon" }],
+            },
+          ],
+        },
+      });
     });
 
     const user = userEvent.setup();
@@ -300,23 +303,22 @@ describe("Rooms", () => {
   });
   test.skip("Add multiple messages in one room.", () => {});
   test("Add message in select room and then in a different room.", async () => {
-    const addSpy = jest.spyOn(mswTestUtils, "mswRoomParam");
-    addSpy.mockReturnValue(-2);
-    // const initialsRooms = [
-    //   {
-    //     title: "Robin Hood Room",
-    //     users: [{ name: "Szymon" }],
-    //     messages: [{ text: "Robin is from forest.", name: "Szymon" }],
-    //   },
-    // ];
-
     await act(async () => {
-      renderWithProviders(<Rooms />);
+      renderWithProviders(<Rooms />,{
+        preloadedState: {
+          rooms: [
+            {
+              title: "Robin Hood Room",
+              users: [{ name: "Szymon" }],
+              messages: [{ text: "Robin is from forest.", name: "Szymon" }],
+            },
+          ],
+        },
+      });
     });
 
     const user = userEvent.setup();
     expect(screen.queryByText("No Rooms")).not.toBeInTheDocument();
-    //console.log("aaaaaa", screen.getByRole("listitem"));
     expect(screen.queryByText("Select Room")).toBeInTheDocument();
     expect(screen.getByRole("listitem")).toBeInTheDocument();
     await user.click(screen.getByRole("listitem"));

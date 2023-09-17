@@ -90,22 +90,6 @@ export const handlers = [
   ),
   rest.get("http://localhost:5000/room/all", async (req, res, ctx) => {
     const firstName = req.url.searchParams.get("firstName");
-    const msw = parseInt(req.url.searchParams.get("msw"));
-    if(msw === 0) {
-      return res(ctx.json([]), ctx.status(201));
-    }
-    const initialRoomState = [
-      
-    ];
-    if(msw === -2) {
-      return res(ctx.json(
-        [{
-          title: "Robin Hood Room",
-          users: [{ name: "Szymon" }],
-          messages: [{ text: "Robin is from forest.", name: "Szymon" }],
-        }],
-      ), ctx.status(201)) ;
-    }
     if (
       initialRoomState.find((room) =>
         room.users.find((user) => {
