@@ -29,12 +29,14 @@ describe("rooom controller", () => {
       .expect(200);
   });
   test("create room", async () => {
-    await supertest(app)
+    const response = await supertest(app)
       .post("/room/create")
       .send({ title: "Room 1", firstName: "Ronaldo" })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200);
+
+      expect(response.body.message).toEqual("Room has been created.")
 
     const createdRoom = await Rooms.findOne({ title: "Room 1" });
     expect(createdRoom.title).toEqual("Room 1");
@@ -42,12 +44,26 @@ describe("rooom controller", () => {
   test("the room title exists", async () => {
     await createRoom("Room 1", "Robin");
 
-    await supertest(app)
+    const response = await supertest(app)
       .post("/room/create")
       .send({ title: "Room 1", firstName: "Ronaldo" })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(400);
+
+      expect(response.body).toEqual({ message: "This room title exists!"})
+  });
+  test('The room contain few users.', async () => {
+    const usersString = "Szymon,Arnold,Robin"
+    const response = await supertest(app)
+    .post("/room/create")
+    .send({ title: "Dream room", firstName: usersString})
+    .set("Accept", "application/json")
+    .expect("Content-Type", /json/)
+    .expect(200);
+
+    expect(response.body.message).toEqual("Room has been created.");
+    expect(response.body.room.users.map(value => value.firstName)).toEqual(["Szymon", "Arnold", "Robin"]);
   });
   test("200", async () => {
     await createRoom("Room 1", "Robin");

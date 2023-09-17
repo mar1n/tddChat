@@ -3,8 +3,6 @@ const Rooms = require("../db/model/room");
 exports.all = async (req, res, next) => {
   const { firstName } = req.query;
   res.set("Content-Type", "application/json");
-  console.log("first Name", firstName);
-  console.log("first Name from paramethers", req.query)
   try {
     const room = await Rooms.find({ users: { $elemMatch: { firstName: firstName }}});
     res.status(200).json({
@@ -21,20 +19,28 @@ exports.all = async (req, res, next) => {
 exports.createRoom = async (req, res, next) => {
   res.set("Content-Type", "application/json");
   const { title, firstName } = req.body;
+  console.log("firstName create", firstName)
+  const users = firstName.split(",").map((value) => ({firstName: value}));
+  console.log("users CreateRoom", users);
+  console.log("createRoom")
   const room = new Rooms({
     title,
-    users: [{ firstName: firstName }],
+    users: [...users],
   });
 
   try {
     await room.save();
+    const createdRoom = await Rooms.findOne({title: title});
+    console.log("createdRoom", createdRoom);
     res.status(200).json({
-      message: "Room has been created",
+      message: "Room has been created.",
+      room: createdRoom
     });
   } catch (error) {
+    console.log("error createRoom", error)
     if (error.code === 11000) {
       return res.status(400).json({
-        message: "This room title exisits!",
+        message: "This room title exists!",
       });
     }
     next(error);

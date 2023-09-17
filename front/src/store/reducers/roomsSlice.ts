@@ -34,15 +34,22 @@ export const fetchRoomsThunk = createAsyncThunk(
 export const createRoomThunk = createAsyncThunk(
   "rooms/createRoom",
   async (values: { title: string; user: string }) => {
-    const response = await axios({
-      method: "POST",
-      url: `http://localhost:5000/room/create`,
-      data: {
-        title: values.title,
-        firstName: values.user,
-      },
-    });
-    return response.data;
+    console.log("createRoomThunk", values)
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${server("rea")}/room/create`,
+        data: {
+          title: values.title,
+          firstName: values.user,
+        },
+      });
+      console.log("response.data", response.data);
+      return response.data;
+    } catch(error: any) {
+      console.log("error", error.response);
+      console.log("error", error.response.data.error);
+    }
   }
 );
 
