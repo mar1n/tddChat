@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { serverURL, mockServerURL } from "./helper";
+import { server } from "./helper";
 interface users {
   name: string;
 }
@@ -15,15 +15,13 @@ export interface roomsState {
   messages: Array<messages>;
 }
 
-
-
 export const fetchRoomsThunk = createAsyncThunk(
   "rooms/fetchRooms",
   async (userName: string) => {
     try {
       const response = await axios({
         method: "GET",
-        url: `${mockServerURL}/room/all?firstName=${userName}`
+        url: `${server("real")}/room/all?firstName=${userName}`,
       });
       return response.data;
     } catch (error: any) {
@@ -35,13 +33,13 @@ export const fetchRoomsThunk = createAsyncThunk(
 // change this from qs to array in data payload
 export const createRoomThunk = createAsyncThunk(
   "rooms/createRoom",
-  async (values: {title: string; user: string}) => {
+  async (values: { title: string; user: string }) => {
     const response = await axios({
       method: "POST",
       url: `http://localhost:5000/room/create`,
       data: {
         title: values.title,
-        firstName: values.user
+        firstName: values.user,
       },
     });
     return response.data;
@@ -68,7 +66,6 @@ export const addMessageThunk = createAsyncThunk(
   }
 );
 
-
 const roomsSlice = createSlice({
   name: "rooms",
   initialState: [] as roomsState[],
@@ -80,8 +77,8 @@ const roomsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchRoomsThunk.fulfilled, (state, action) => {
-        if(action.payload.rooms) {
-          return [...state,...action.payload.rooms];
+        if (action.payload.rooms) {
+          return [...state, ...action.payload.rooms];
         }
         return [...state];
       })
@@ -96,7 +93,7 @@ const roomsSlice = createSlice({
           return value;
         });
         return [...updateState];
-      })
+      });
   },
 });
 
