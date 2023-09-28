@@ -118,14 +118,17 @@ export const handlers = [
   }),
   rest.post("http://localhost:5000/room/create", async (req, res, ctx) => {
     const { title, usersList } = await req.json();
-    //console.log('create room thunk usersList', req.url.searchParams.get("name"));
-    const users = req.url.searchParams.getAll("name").map(value => ({ name: value}));
+    const users = usersList.split(",");
+
     if (title) {
       return res(
         ctx.json({
-          title: title,
-          users: [...users],
-          messages: [],
+          message: "Room has been created.",
+          room: {
+            title: title,
+            users: [...users],
+            messages: [],
+          },
         }),
         ctx.status(201)
       );
@@ -144,16 +147,27 @@ export const handlers = [
     //MOngoDb we will find some roome by title
     const room = {
       title: "Robin Hood Room",
-      users: [{ name: "Szymon"}, {name: "Robin"}, {name: "cykcykacz@gmail.com"}],
+      users: [
+        { name: "Szymon" },
+        { name: "Robin" },
+        { name: "cykcykacz@gmail.com" },
+      ],
       messages: [{ text: "Robin is from forest.", name: "Szymon" }],
     };
     const roomtwo = {
       title: "Robin adventure",
-      users: [{ name: "Szymon" }, {name: "Robin"}, {name: "cykcykacz@gmail.com"}],
+      users: [
+        { name: "Szymon" },
+        { name: "Robin" },
+        { name: "cykcykacz@gmail.com" },
+      ],
       messages: [{ text: "Robin is from Sherwood.", name: "Robin" }],
     };
-    
-    if (room.title === roomTitle && room.users.find(value => value.name === name)) {
+
+    if (
+      room.title === roomTitle &&
+      room.users.find((value) => value.name === name)
+    ) {
       room.messages.push({ text, name });
       return res(
         ctx.json({
@@ -162,7 +176,10 @@ export const handlers = [
         })
       );
     }
-    if (roomtwo.title === "Robin adventure" && roomtwo.users.find(value => value.name === name)) {
+    if (
+      roomtwo.title === "Robin adventure" &&
+      roomtwo.users.find((value) => value.name === name)
+    ) {
       roomtwo.messages.push({ text, name });
       return res(
         ctx.json({
@@ -173,10 +190,10 @@ export const handlers = [
     }
     return res(
       ctx.json({
-        error: "User doesn't exist."
+        error: "User doesn't exist.",
       }),
       ctx.status(400)
-    )
+    );
   }),
   // rest.get("/user", (req, res, ctx) => {
   //   // Check if the user is authenticated in this session

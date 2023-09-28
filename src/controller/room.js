@@ -17,12 +17,12 @@ exports.all = async (req, res, next) => {
 };
 
 exports.createRoom = async (req, res, next) => {
+  console.log("createRoom");
   res.set("Content-Type", "application/json");
-  const { title, firstName } = req.body;
-  console.log("firstName create", firstName)
-  const users = firstName.split(",").map((value) => ({firstName: value}));
-  console.log("users CreateRoom", users);
-  console.log("createRoom")
+  const { title, usersList } = req.body;
+  console.log("title", title, "userList", usersList);
+  const users = usersList.split(",").map((value) => ({firstName: value}));
+console.log("users", users)
   const room = new Rooms({
     title,
     users: [...users],
