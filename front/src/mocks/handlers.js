@@ -106,7 +106,7 @@ export const handlers = [
     }
   }),
   rest.get("http://localhost:5000/user/seekUsers", async (req, res, ctx) => {
-    return res(
+  return res(
       ctx.json({
         message: "You, have found users.",
         users: [

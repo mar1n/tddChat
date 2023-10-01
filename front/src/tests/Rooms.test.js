@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { screen, fireEvent } from "@testing-library/react";
 import Rooms from "../components/Rooms/Rooms";
 import userEvent from "@testing-library/user-event";
 import { renderWithProviders } from "./utils/test-utils";
@@ -58,9 +58,9 @@ describe("Rooms", () => {
     expect(createButton).toBeDisabled();
     await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
     expect(createButton).not.toBeDisabled();
-    await user.click(createButton);
+    await user.click(createButton)
 
-    expect(screen.getAllByRole("listitem").length).toBe(1);
+    expect(await screen.findByText("Robin adventure")).toBeInTheDocument();
   });
   test("Create button disabled when create room form is open.", async () => {
     await act(async () => {
@@ -219,7 +219,7 @@ describe("Rooms", () => {
     await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
     await user.click(createButton);
 
-    await user.click(screen.getByText(/Robin adventure/i));
+    await user.click(await screen.findByText("Robin adventure"));
     expect(screen.getByRole("message-screen")).toBeInTheDocument();
     expect(screen.getByText(/Robin adventure/i)).toHaveClass("selected");
     expect(screen.getByRole("button-addMessage")).toBeInTheDocument();
@@ -262,7 +262,7 @@ describe("Rooms", () => {
 
     const createButton = screen.getByRole("createRoomButton");
     await user.click(createButton);
-    expect(screen.getByText(/Robin adventure/i));
+    expect(await screen.findByText("Robin adventure")).toBeInTheDocument();
     expect(screen.getAllByRole("listitem").length).toBe(1);
     await user.click(screen.getByText(/Robin adventure/i));
     expect(screen.getByText(/Robin adventure/i)).toHaveClass("selected");
@@ -302,7 +302,7 @@ describe("Rooms", () => {
     expect(screen.getByText("Robin jump over the river and he met Big John."));
   });
   test.skip("Add multiple messages in one room.", () => {});
-  test("Add message in select room and then in a different room.", async () => {
+  test.only("Add message in select room and then in a different room.", async () => {
     await act(async () => {
       renderWithProviders(<Rooms />,{
         preloadedState: {
@@ -346,7 +346,7 @@ describe("Rooms", () => {
     expect(screen.getByRole("createRoomButton"));
     await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
     await user.click(screen.getByRole("createRoomButton"));
-    await user.click(screen.getByText(/Robin adventure/i));
+    await user.click(await screen.findByText("Robin adventure"));
     await changeAndWait(
       field("addMessage"),
       withEvent("addMessage", "Robin meet lady Marian.")

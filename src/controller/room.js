@@ -17,12 +17,9 @@ exports.all = async (req, res, next) => {
 };
 
 exports.createRoom = async (req, res, next) => {
-  console.log("createRoom");
   res.set("Content-Type", "application/json");
   const { title, usersList } = req.body;
-  console.log("title", title, "userList", usersList);
   const users = usersList.split(",").map((value) => ({firstName: value}));
-console.log("users", users)
   const room = new Rooms({
     title,
     users: [...users],
@@ -31,13 +28,11 @@ console.log("users", users)
   try {
     await room.save();
     const createdRoom = await Rooms.findOne({title: title});
-    console.log("createdRoom", createdRoom);
     res.status(200).json({
       message: "Room has been created.",
       room: createdRoom
     });
   } catch (error) {
-    console.log("error createRoom", error)
     if (error.code === 11000) {
       return res.status(400).json({
         message: "This room title exists!",

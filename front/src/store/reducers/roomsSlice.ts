@@ -19,10 +19,14 @@ export const fetchRoomsThunk = createAsyncThunk(
   "rooms/fetchRooms",
   async (userName: string) => {
     try {
-      const response = await axios({
-        method: "GET",
-        url: `${server("real")}/room/all?firstName=${userName}`,
-      });
+      const response = await axios.get(
+      `${server("real")}/room/all?firstName=${userName}`,
+      {
+        headers: {
+          Accept: "*/*, application/json, text/plain"
+        }
+      }
+      );
       return response.data;
     } catch (error: any) {
       console.log("error", error.response);
@@ -30,25 +34,28 @@ export const fetchRoomsThunk = createAsyncThunk(
     }
   }
 );
-// change this from qs to array in data payload
+
 export const createRoomThunk = createAsyncThunk(
   "rooms/createRoom",
-  async (values: { title: string; user: string }) => {
-    console.log("createRoomThunk", values)
+  async (values: { title: string; usersList: string }) => {
     try {
-      const response = await axios({
-        method: "POST",
-        url: `${server("rea")}/room/create`,
-        data: {
+      const response = await axios.post(
+        `${server("real")}/room/create`,
+        {
           title: values.title,
-          firstName: values.user,
+          usersList: values.usersList,
         },
-      });
-      console.log("response.data", response.data);
+        {
+          headers: {
+            Accept: "*/*, application/json, text/plain"
+          }
+        }
+        );
       return response.data;
     } catch(error: any) {
       console.log("error", error.response);
       console.log("error", error.response.data.error);
+      return error;
     }
   }
 );
@@ -66,6 +73,7 @@ export const addMessageThunk = createAsyncThunk(
           roomTitle: values.roomTitle,
         },
       });
+      console.log("response.data", response.data)
       return response.data;
     } catch (error: any) {
       console.log("error addMessageThunk", error.response.data.error);
@@ -90,7 +98,10 @@ const roomsSlice = createSlice({
         return [...state];
       })
       .addCase(createRoomThunk.fulfilled, (state, action) => {
-        return [...state, action.payload];
+        return [...state, action.payload.room];
+      })
+      .addCase(createRoomThunk.rejected, (state, action) => {
+        console.log("state",state,"action", action)
       })
       .addCase(addMessageThunk.fulfilled, (state, action) => {
         let updateState = state.map((value) => {

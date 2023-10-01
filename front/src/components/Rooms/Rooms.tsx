@@ -38,13 +38,15 @@ const Rooms = () => {
     dispatch(fetchRoomsThunk(user));
     dispatch(fetchSeekUsers());
   }, []);
-  const createRoom = () => {
+  const createRoom = async () => {
     let users = [{ name: user }, ...selectedUsersList];
     let userslist = Object.keys(users)
-      .map((key: any) => `name=${users[key].name}`)
-      .join("&");
-      console.log("userList", userslist);
-    dispatch(createRoomThunk({ title: title, user: user }));
+      .map((key: any) => `${users[key].name}`)
+      .join(",");
+
+       dispatch(createRoomThunk({ title: title, usersList: userslist }))
+
+
     setOpenCreate(false);
     setTitle("");
   };
