@@ -45,16 +45,18 @@ exports.createRoom = async (req, res, next) => {
 exports.addMsg = async (req, res, next) => {
   const { text, firstName, room } = req.body;
   const rooms = new Rooms();
-
   res.set("Content-Type", "applicaton/json");
 
   try {
     await rooms.addMsg(room, { text, firstName });
+    const createdRoom = await Rooms.findOne({title: room.title});
     res.status(200);
     res.json({
       message: "message has been added",
+      room: createdRoom
     });
   } catch (error) {
+    console.log("error AddMsg", error);
     if (error.message === "User does not exist!!!") {
       return res.status(400).json({
         message: error.message,

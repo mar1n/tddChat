@@ -73,7 +73,6 @@ export const addMessageThunk = createAsyncThunk(
           room: values.room,
         },
       });
-      console.log("response.data", response.data)
       return response.data;
     } catch (error: any) {
       console.log("error addMessageThunk", error.response.data.error);
@@ -92,8 +91,8 @@ const roomsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchRoomsThunk.fulfilled, (state, action) => {
-        if (action.payload.rooms) {
-          return [...state, ...action.payload.rooms];
+        if (action.payload.room) {
+          return [...state, ...action.payload.room];
         }
         return [...state];
       })
