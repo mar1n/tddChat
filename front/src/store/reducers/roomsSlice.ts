@@ -7,7 +7,7 @@ interface users {
 }
 interface messages {
   text: string;
-  name: string;
+  firstName: string;
 }
 export interface roomsState {
   title: string;
@@ -62,15 +62,15 @@ export const createRoomThunk = createAsyncThunk(
 
 export const addMessageThunk = createAsyncThunk(
   "rooms/addMessage",
-  async (values: { text: string; name: string; roomTitle: string }) => {
+  async (values: { text: string; firstName: string; room: any }) => {
     try {
       const response = await axios({
         method: "POST",
-        url: `http://localhost:5000/room/new`,
+        url: `${server("real")}/room/new`,
         data: {
           text: values.text,
-          name: values.name,
-          roomTitle: values.roomTitle,
+          firstName: values.firstName,
+          room: values.room,
         },
       });
       console.log("response.data", response.data)

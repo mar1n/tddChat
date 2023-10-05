@@ -90,6 +90,7 @@ export const handlers = [
   ),
   rest.get("http://localhost:5000/room/all", async (req, res, ctx) => {
     const firstName = req.url.searchParams.get("firstName");
+    const initialRoomState = [];
     if (
       initialRoomState.find((room) =>
         room.users.find((user) => {

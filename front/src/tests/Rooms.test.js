@@ -233,11 +233,12 @@ describe("Rooms", () => {
     await user.click(screen.getByRole("button-addMessage"));
     expect(screen.getByRole("message-screen")).toBeInTheDocument();
     expect(
-      screen.getByText(
+      await screen.findByText(
         "Robin stole gold and he will give it this to poor people."
       )
     ).toBeInTheDocument();
-    const containName = screen.getAllByRole(/message-screen-user/i);
+
+    const containName = await screen.findAllByRole(/message-screen-user/i);
     expect(containName.map((value) => value.textContent)).toEqual(
       expect.arrayContaining(["Sheriff of Nottingham:"])
     );
@@ -269,22 +270,55 @@ describe("Rooms", () => {
   });
   test("Add messages.", async () => {
     await act(async () => {
-      renderWithProviders(<Rooms />, {
-        preloadedState: {
-          rooms: [
-            {
-              title: "Robin Hood Room",
-              users: [{ name: "Szymon" }],
-              messages: [{ text: "Robin is from forest.", name: "Szymon" }],
-            },
-          ],
-        },
-      });
+      renderWithProviders(<Rooms />,
+      //  {
+      //   preloadedState: {
+      //     rooms: [
+      //       {
+      //         title: "Robin Hood Room",
+      //         users: [{ name: "Szymon" }],
+      //         messages: [{ text: "Robin is from forest.", name: "Szymon" }],
+      //       },
+      //     ],
+      //   },
+      // }
+      );
     });
 
     const user = userEvent.setup();
-    expect(screen.queryByText("No Rooms")).not.toBeInTheDocument();
+    const noRooms = screen.queryByText("No Rooms");
+    expect(noRooms).toBeInTheDocument();
+    const open = screen.getByRole("addRoom");
+    await user.click(open);
+    expect(field("title")).not.toBeNull();
+    await changeAndWait(field("title"), withEvent("title", "Robin Hood Room"));
+    expect(field("title").value).toEqual("Robin Hood Room");
+
+    const createButton = screen.getByRole("createRoomButton");
+    await user.click(createButton);
+    expect(await screen.findByText("Robin Hood Room")).toBeInTheDocument();
     expect(screen.queryByText("Select Room")).toBeInTheDocument();
+
+    await user.click(await screen.findByText("Robin Hood Room"));
+    expect(screen.getByRole("message-screen")).toBeInTheDocument();
+    expect(screen.getByText(/Robin Hood Room/i)).toHaveClass("selected");
+    expect(screen.getByRole("button-addMessage")).toBeInTheDocument();
+    await changeAndWait(
+      field("addMessage"),
+      withEvent(
+        "addMessage",
+        "Robin is from forest."
+      )
+    );
+    await user.click(screen.getByRole("button-addMessage"));
+    expect(screen.getByRole("message-screen")).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        "Robin is from forest."
+      )
+    ).toBeInTheDocument();
+
+    expect(screen.queryByText("No Rooms")).not.toBeInTheDocument();
     await user.click(screen.getByText(/Robin Hood Room/i));
     expect(screen.getByRole("message-screen")).toBeInTheDocument();
     expect(screen.getByText(/Robin Hood Room/i)).toHaveClass("selected");
@@ -299,32 +333,32 @@ describe("Rooms", () => {
       "Robin jump over the river and he met Big John."
     );
     await user.click(screen.getByRole("button-addMessage"));
-    expect(screen.getByText("Robin jump over the river and he met Big John."));
+    expect(await screen.findByText("Robin jump over the river and he met Big John.")).toBeInTheDocument();
   });
   test.skip("Add multiple messages in one room.", () => {});
   test.only("Add message in select room and then in a different room.", async () => {
     await act(async () => {
-      renderWithProviders(<Rooms />,{
-        preloadedState: {
-          rooms: [
-            {
-              title: "Robin Hood Room",
-              users: [{ name: "Szymon" }],
-              messages: [{ text: "Robin is from forest.", name: "Szymon" }],
-            },
-          ],
-        },
-      });
+      renderWithProviders(<Rooms />);
     });
 
     const user = userEvent.setup();
-    expect(screen.queryByText("No Rooms")).not.toBeInTheDocument();
+    const noRooms = screen.queryByText("No Rooms");
+    expect(noRooms).toBeInTheDocument();
+    const open = screen.getByRole("addRoom");
+    await user.click(open);
+    expect(field("title")).not.toBeNull();
+    await changeAndWait(field("title"), withEvent("title", "Robin Hood Room"));
+    expect(field("title").value).toEqual("Robin Hood Room");
+
+    const createButton = screen.getByRole("createRoomButton");
+    await user.click(createButton);
+    expect(await screen.findByText("Robin Hood Room")).toBeInTheDocument();
     expect(screen.queryByText("Select Room")).toBeInTheDocument();
-    expect(screen.getByRole("listitem")).toBeInTheDocument();
-    await user.click(screen.getByRole("listitem"));
+
+    await user.click(await screen.findByText("Robin Hood Room"));
+
     expect(screen.getByRole("message-screen")).toBeInTheDocument();
     expect(screen.getByText(/Robin Hood Room/i)).toHaveClass("selected");
-    expect(screen.getByText(/Robin is from forest./i)).toBeInTheDocument();
     expect(field("addMessage")).not.toBeNull();
     await changeAndWait(
       field("addMessage"),
@@ -334,13 +368,13 @@ describe("Rooms", () => {
       "Robin jump over the river and he met Big John."
     );
     await user.click(screen.getByRole("button-addMessage"));
-    expect(screen.getByText("Robin jump over the river and he met Big John."));
+    expect(await screen.findByText("Robin jump over the river and he met Big John.")).toBeInTheDocument();
     await changeAndWait(
       field("addMessage"),
       withEvent("addMessage", "Robin has poison arrow in his bow.")
     );
     await user.click(screen.getByRole("button-addMessage"));
-    expect(screen.getByText("Robin has poison arrow in his bow."));
+    expect(await screen.findByText("Robin has poison arrow in his bow."));
     expect(screen.getByRole("addRoom"));
     await user.click(screen.getByRole("addRoom"));
     expect(screen.getByRole("createRoomButton"));
@@ -352,6 +386,6 @@ describe("Rooms", () => {
       withEvent("addMessage", "Robin meet lady Marian.")
     );
     await user.click(screen.getByRole("button-addMessage"));
-    expect(screen.getByText("Robin meet lady Marian."));
+    expect(await screen.findByText("Robin meet lady Marian."));
   });
 });

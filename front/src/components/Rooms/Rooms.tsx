@@ -49,13 +49,15 @@ const Rooms = () => {
 
     setOpenCreate(false);
     setTitle("");
+    setSelectedRoom("")
   };
   const selectRoom = (title: string) => {
     setSelectedRoom(title);
   };
   const addMessage = (text: string) => {
+    const room = rooms.find(room => room.title === selectedRoom)
     dispatch(
-      addMessageThunk({ text: text, name: user, roomTitle: selectedRoom })
+      addMessageThunk({ text: text, firstName: user, room: room })
     );
   };
   const buttonDisabledValue = (title: string) => {
@@ -106,7 +108,7 @@ const Rooms = () => {
                 return value.messages.map((msg, index) => {
                   return (
                     <div key={index}>
-                      <p role={"message-screen-user"}>{msg.name}:</p>
+                      <p role={"message-screen-user"}>{msg.firstName}:</p>
                       <p>{msg.text}</p>
                     </div>
                   );
