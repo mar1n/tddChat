@@ -33,8 +33,11 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
+    "test": "react-scripts test --testNamePattern=\"Add messages.\"",
     "eject": "react-app-rewired eject"
+  },
+  "jest": {
+    "transformIgnorePatterns": ["/node_modules/(?!(axios)/)"]
   },
   "eslintConfig": {
     "extends": [

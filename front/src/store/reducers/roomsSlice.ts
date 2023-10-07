@@ -3,7 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { server } from "./helper";
 
-const domainName = server("rea");
+const domainName = server("real");
 interface users {
   name: string;
 }
@@ -22,7 +22,7 @@ export const fetchRoomsThunk = createAsyncThunk(
   async (userName: string) => {
     try {
       const response = await axios.get(
-      `${server("real")}/room/all?firstName=${userName}`,
+      `${domainName}/room/all?firstName=${userName}`,
       {
         headers: {
           Accept: "*/*, application/json, text/plain"
@@ -40,9 +40,12 @@ export const fetchRoomsThunk = createAsyncThunk(
 export const createRoomThunk = createAsyncThunk(
   "rooms/createRoom",
   async (values: { title: string; usersList: string }) => {
+    console.log("title", values.title);
+    console.log("title", values.usersList);
+    
     try {
       const response = await axios.post(
-        `${server("real")}/room/create`,
+        `${domainName}/room/create`,
         {
           title: values.title,
           usersList: values.usersList,
@@ -68,7 +71,7 @@ export const addMessageThunk = createAsyncThunk(
     try {
       const response = await axios({
         method: "POST",
-        url: `${server("real")}/room/new`,
+        url: `${domainName}/room/new`,
         data: {
           text: values.text,
           firstName: values.firstName,

@@ -58,7 +58,7 @@ describe("Rooms", () => {
     expect(createButton).toBeDisabled();
     await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
     expect(createButton).not.toBeDisabled();
-    await user.click(createButton)
+    await user.click(createButton);
 
     expect(await screen.findByText("Robin adventure")).toBeInTheDocument();
   });
@@ -119,12 +119,12 @@ describe("Rooms", () => {
     await user.click(open);
     expect(field("title").value).toBe("");
   });
-  test.only("Close create user interface.", async () => {
+  test("Close create user interface.", async () => {
     await act(async () => {
       renderWithProviders(<Rooms />, {
         preloadedState: {
-          user: { 
-            user: "Robin"
+          user: {
+            user: "Robin",
           },
         },
       });
@@ -147,7 +147,9 @@ describe("Rooms", () => {
     await user.click(createButton);
 
     await expect(screen.findByRole("popUp")).rejects.toThrow();
-    await expect(screen.findByRole("input", { name: "title" })).rejects.toThrow();
+    await expect(
+      screen.findByRole("input", { name: "title" })
+    ).rejects.toThrow();
     await expect(screen.findByRole("users")).rejects.toThrow();
 
     expect(screen.queryByText("Sheriff of Nottingham")).not.toBeInTheDocument();
@@ -161,7 +163,10 @@ describe("Rooms", () => {
         //MOngoDb we will find some roome by title
         const room = {
           title: "Robin adventure",
-          users: [{ firstName: "Szymon" }, { firstName: "Sheriff of Nottingham" }],
+          users: [
+            { firstName: "Szymon" },
+            { firstName: "Sheriff of Nottingham" },
+          ],
           messages: [{ text: "Robin is from Sherwood.", firstName: "Robin" }],
         };
 
@@ -267,18 +272,8 @@ describe("Rooms", () => {
   });
   test("Add messages.", async () => {
     await act(async () => {
-      renderWithProviders(<Rooms />,
-      //  {
-      //   preloadedState: {
-      //     rooms: [
-      //       {
-      //         title: "Robin Hood Room",
-      //         users: [{ name: "Szymon" }],
-      //         messages: [{ text: "Robin is from forest.", name: "Szymon" }],
-      //       },
-      //     ],
-      //   },
-      // }
+      renderWithProviders(
+        <Rooms />
       );
     });
 
@@ -302,17 +297,12 @@ describe("Rooms", () => {
     expect(screen.getByRole("button-addMessage")).toBeInTheDocument();
     await changeAndWait(
       field("addMessage"),
-      withEvent(
-        "addMessage",
-        "Robin is from forest."
-      )
+      withEvent("addMessage", "Robin is from forest.")
     );
     await user.click(screen.getByRole("button-addMessage"));
     expect(screen.getByRole("message-screen")).toBeInTheDocument();
     expect(
-      await screen.findByText(
-        "Robin is from forest."
-      )
+      await screen.findByText("Robin is from forest.")
     ).toBeInTheDocument();
 
     expect(screen.queryByText("No Rooms")).not.toBeInTheDocument();
@@ -330,10 +320,12 @@ describe("Rooms", () => {
       "Robin jump over the river and he met Big John."
     );
     await user.click(screen.getByRole("button-addMessage"));
-    expect(await screen.findByText("Robin jump over the river and he met Big John.")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Robin jump over the river and he met Big John.")
+    ).toBeInTheDocument();
   });
   test.skip("Add multiple messages in one room.", () => {});
-  test.only("Add message in select room and then in a different room.", async () => {
+  test("Add message in select room and then in a different room.", async () => {
     await act(async () => {
       renderWithProviders(<Rooms />);
     });
@@ -365,7 +357,9 @@ describe("Rooms", () => {
       "Robin jump over the river and he met Big John."
     );
     await user.click(screen.getByRole("button-addMessage"));
-    expect(await screen.findByText("Robin jump over the river and he met Big John.")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Robin jump over the river and he met Big John.")
+    ).toBeInTheDocument();
     await changeAndWait(
       field("addMessage"),
       withEvent("addMessage", "Robin has poison arrow in his bow.")

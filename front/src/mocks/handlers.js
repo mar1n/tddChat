@@ -143,52 +143,67 @@ export const handlers = [
     }
   }),
   rest.post("http://localhost:5000/room/new", async (req, res, ctx) => {
-    const { text, firstName, roomTitle } = await req.json();
+    const { text, firstName, room, roomTitle } = await req.json();
     console.log("name", firstName);
+    console.log("text", text);
+    console.log("room", room);
+    console.log("roomTitle", roomTitle);
+    {
     //MOngoDb we will find some roome by title
-    const room = {
-      title: "Robin Hood Room",
-      users: [
-        { firstName: "Szymon" },
-        { firstName: "Robin" },
-        { firstName: "cykcykacz@gmail.com" },
-      ],
-      messages: [{ text: "Robin is from forest.", firstName: "Szymon" }],
-    };
-    const roomtwo = {
-      title: "Robin adventure",
-      users: [
-        { firstName: "Szymon" },
-        { firstName: "Robin" },
-        { firstName: "cykcykacz@gmail.com" },
-      ],
-      messages: [{ text: "Robin is from Sherwood.", firstName: "Robin" }],
-    };
-
-    if (
-      room.title === roomTitle &&
-      room.users.find((value) => value.firstName === firstName)
-    ) {
-      room.messages.push({ text, firstName });
-      return res(
-        ctx.json({
-          message: "Message has been added.",
-          room: room,
-        })
-      );
-    }
-    if (
-      roomtwo.title === "Robin adventure" &&
-      roomtwo.users.find((value) => value.firstName === firstName)
-    ) {
-      roomtwo.messages.push({ text, firstName });
-      return res(
-        ctx.json({
-          message: "Message has been added.",
-          room: roomtwo,
-        })
-      );
-    }
+    // const roomOne = {
+    //   title: "Robin Hood Room",
+    //   users: [
+    //     { firstName: "Szymon" },
+    //     { firstName: "Robin" },
+    //     { firstName: "cykcykacz@gmail.com" },
+    //   ],
+    //   messages: [{ text: "Robin is from forest.", firstName: "Szymon" }],
+    // };
+    // const roomtwo = {
+    //   title: "Robin adventure",
+    //   users: [
+    //     { firstName: "Szymon" },
+    //     { firstName: "Robin" },
+    //     { firstName: "cykcykacz@gmail.com" },
+    //   ],
+    //   messages: [{ text: "Robin is from Sherwood.", firstName: "Robin" }],
+    // };
+}
+if(room.users.find(value => value.firstName === firstName)) {
+  console.log("user exist", firstName);
+  room.messages.push({text: text, firstName: firstName})
+  console.log("room", room);
+  return res(
+    ctx.json({
+      message: "Message has been added.",
+      room: room,
+    })
+  );
+}
+    // if (
+    //   roomOne.title === room.title &&
+    //   roomOne.users.find((value) => value.firstName === firstName)
+    // ) {
+    //   roomOne.messages.push({ text, firstName });
+    //   return res(
+    //     ctx.json({
+    //       message: "Message has been added.",
+    //       room: roomOne,
+    //     })
+    //   );
+    // }
+    // if (
+    //   roomtwo.title === "Robin adventure" &&
+    //   roomtwo.users.find((value) => value.firstName === firstName)
+    // ) {
+    //   roomtwo.messages.push({ text, firstName });
+    //   return res(
+    //     ctx.json({
+    //       message: "Message has been added.",
+    //       room: roomtwo,
+    //     })
+    //   );
+    // }
     return res(
       ctx.json({
         error: "User doesn't exist.",
