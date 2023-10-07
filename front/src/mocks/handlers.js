@@ -119,7 +119,7 @@ export const handlers = [
   }),
   rest.post("http://localhost:5000/room/create", async (req, res, ctx) => {
     const { title, usersList } = await req.json();
-    const users = usersList.split(",");
+    const users = usersList.split(",").map((value) => ({firstName: value}));
 
     if (title) {
       return res(
@@ -143,33 +143,33 @@ export const handlers = [
     }
   }),
   rest.post("http://localhost:5000/room/new", async (req, res, ctx) => {
-    const { text, name, roomTitle } = await req.json();
-    console.log("name", name);
+    const { text, firstName, roomTitle } = await req.json();
+    console.log("name", firstName);
     //MOngoDb we will find some roome by title
     const room = {
       title: "Robin Hood Room",
       users: [
-        { name: "Szymon" },
-        { name: "Robin" },
-        { name: "cykcykacz@gmail.com" },
+        { firstName: "Szymon" },
+        { firstName: "Robin" },
+        { firstName: "cykcykacz@gmail.com" },
       ],
-      messages: [{ text: "Robin is from forest.", name: "Szymon" }],
+      messages: [{ text: "Robin is from forest.", firstName: "Szymon" }],
     };
     const roomtwo = {
       title: "Robin adventure",
       users: [
-        { name: "Szymon" },
-        { name: "Robin" },
-        { name: "cykcykacz@gmail.com" },
+        { firstName: "Szymon" },
+        { firstName: "Robin" },
+        { firstName: "cykcykacz@gmail.com" },
       ],
-      messages: [{ text: "Robin is from Sherwood.", name: "Robin" }],
+      messages: [{ text: "Robin is from Sherwood.", firstName: "Robin" }],
     };
 
     if (
       room.title === roomTitle &&
-      room.users.find((value) => value.name === name)
+      room.users.find((value) => value.firstName === firstName)
     ) {
-      room.messages.push({ text, name });
+      room.messages.push({ text, firstName });
       return res(
         ctx.json({
           message: "Message has been added.",
@@ -179,9 +179,9 @@ export const handlers = [
     }
     if (
       roomtwo.title === "Robin adventure" &&
-      roomtwo.users.find((value) => value.name === name)
+      roomtwo.users.find((value) => value.firstName === firstName)
     ) {
-      roomtwo.messages.push({ text, name });
+      roomtwo.messages.push({ text, firstName });
       return res(
         ctx.json({
           message: "Message has been added.",

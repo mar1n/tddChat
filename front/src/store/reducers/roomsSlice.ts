@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { server } from "./helper";
+
+const domainName = server("rea");
 interface users {
   name: string;
 }

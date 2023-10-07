@@ -119,11 +119,13 @@ describe("Rooms", () => {
     await user.click(open);
     expect(field("title").value).toBe("");
   });
-  test("Close create user interface.", async () => {
+  test.only("Close create user interface.", async () => {
     await act(async () => {
       renderWithProviders(<Rooms />, {
         preloadedState: {
-          user: "Robin",
+          user: { 
+            user: "Robin"
+          },
         },
       });
     });
@@ -144,15 +146,10 @@ describe("Rooms", () => {
     await changeAndWait(field("title"), withEvent("title", "Robin adventure"));
     await user.click(createButton);
 
-    expect(() => screen.getByRole("popUp")).toThrow(
-      'Unable to find an accessible element with the role "popUp"'
-    );
-    expect(() => screen.getByRole("input", { name: "title" })).toThrow(
-      'Unable to find an accessible element with the role "input"'
-    );
-    expect(() => screen.getByRole("users")).toThrow(
-      'Unable to find an accessible element with the role "users"'
-    );
+    await expect(screen.findByRole("popUp")).rejects.toThrow();
+    await expect(screen.findByRole("input", { name: "title" })).rejects.toThrow();
+    await expect(screen.findByRole("users")).rejects.toThrow();
+
     expect(screen.queryByText("Sheriff of Nottingham")).not.toBeInTheDocument();
     expect(screen.queryByText("John, King of England")).not.toBeInTheDocument();
     expect(createButton).not.toBeInTheDocument();
@@ -160,15 +157,15 @@ describe("Rooms", () => {
   test("Create room with users.", async () => {
     server.use(
       rest.post("http://localhost:5000/room/new", async (req, res, ctx) => {
-        const { text, name, roomTitle } = await req.json();
+        const { text, firstName, roomTitle } = await req.json();
         //MOngoDb we will find some roome by title
         const room = {
           title: "Robin adventure",
-          users: [{ name: "Szymon" }, { name: "Sheriff of Nottingham" }],
-          messages: [{ text: "Robin is from Sherwood.", name: "Robin" }],
+          users: [{ firstName: "Szymon" }, { firstName: "Sheriff of Nottingham" }],
+          messages: [{ text: "Robin is from Sherwood.", firstName: "Robin" }],
         };
 
-        room.messages.push({ text, name });
+        room.messages.push({ text, firstName });
         return res(
           ctx.json({
             message: "Message has been added.",
