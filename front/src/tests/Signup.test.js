@@ -1,10 +1,7 @@
 import React from "react";
 import Signup from "../components/Signup/Signup";
-import { render, screen } from "@testing-library/react";
-import ReactTestUtils, { act } from "react-dom/test-utils";
+import { screen } from "@testing-library/react";
 import { createContainer } from "./myhelpers";
-import { MemoryRouter } from "react-router-dom";
-import Router from "../components/Router/Router";
 
 describe("Signup", () => {
   let renderRouter, form, field, label, submit, changeAndWait, withEvent;
@@ -150,7 +147,7 @@ describe("Signup", () => {
 
       await submit(form("signup form"));
 
-      screen.getByText("We send you email with link.");
+      await screen.findByText("We send you email with link.");
     });
   });
 });
