@@ -35,22 +35,24 @@ const Activation = () => {
 
       await axios({
         method: "GET",
-        url: `http://localhost:5000/user/activation/${token}`,
+        url: `${domainName}/user/activation/${token}`,
         data: { token },
       });
 
       setValues({ ...values, show: false });
     } catch (err: any) {
+      console.log("err activation", err);
+      
       const {
         response: {
           status,
-          data: { message },
+          data: { error },
         },
       } = err;
       if (status === 401) {
-        setValidationError(message);
+        setValidationError(error);
       }
-      setValidationError(message);
+      setValidationError(error);
     }
   };
 

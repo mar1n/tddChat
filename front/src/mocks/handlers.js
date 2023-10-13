@@ -74,15 +74,18 @@ export const handlers = [
     "http://localhost:5000/user/activation/:token",
     async (req, res, ctx) => {
       const { token } = await req.json();
+      console.log("handlers token");
       try {
         jwt.verify(token, "8787SADA888DAdAD888DAS");
+        console.log("verify");
         return res(
           ctx.json({ message: "Account has been created!!!" }),
           ctx.status(201)
         );
       } catch (error) {
+        console.log("error", error);
         return res(
-          ctx.json({ message: "Expired link. Signup again." }),
+          ctx.json({ error: "Expired link. Signup again." }),
           ctx.status(401)
         );
       }

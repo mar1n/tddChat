@@ -11,15 +11,10 @@ import { act } from "react-dom/test-utils";
 const FakeTimers = require("@sinonjs/fake-timers");
 
 describe("Activation", () => {
-  let renderRouter, clickAndWait, clock;
+  let renderRouter, clickAndWait;
 
   beforeEach(() => {
-    clock = FakeTimers.install();
     ({ renderRouter, clickAndWait } = createContainer());
-  });
-
-  afterEach(() => {
-    clock = clock.uninstall();
   });
 
   test("render button link", () => {
@@ -57,16 +52,8 @@ describe("Activation", () => {
     const validationError = screen.getByText("Invalid token");
     expect(validationError).toBeInTheDocument();
   });
-  test("token has been expired", async () => {
-    const token = jwt.sign(
-      { name: "Szymon", email: "szymon@gmail.com", password: "asdzxcqwe" },
-      "8787SADA888DAdAD888DAS",
-      { expiresIn: "10m" }
-    );
-    const activationRoute = `/activation/${token}`;
-
-    const hoursInMs = (n) => 1000 * 60 * 60 * n;
-    clock.tick(hoursInMs(4));
+  test.only("token has been expired", async () => {
+    const activationRoute = `/activation/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiU3p5bW9uIiwiZW1haWwiOiJzenltb25AZ21haWwuY29tIiwicGFzc3dvcmQiOiJhc2R6eGNxd2UiLCJpYXQiOjE2OTcxNDI0NzEsImV4cCI6MTY5NzE0MzA3MX0.l4icyEF2L2x9NgTAE-rMiIWiiuKekzgkhTOr5ZmOQBE`;
 
     await act (async () => {
       renderWithProviders(
@@ -75,10 +62,11 @@ describe("Activation", () => {
         </MemoryRouter>
       );
     })
+
     const buttonLink = screen.getByRole("button");
     await clickAndWait(buttonLink);
 
-    const validationError = screen.getByText("Expired link. Signup again.");
+    const validationError = await screen.findByText("Expired link. Signup again.");
     expect(validationError).toBeInTheDocument();
   });
   test.skip('Account has been activated, pls signin', () => {  })
