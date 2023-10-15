@@ -97,7 +97,7 @@ describe("Signin", () => {
 
     await submit(form("signin form"));
 
-    const homeText = screen.getByText("You are at home");
+    const homeText = await screen.findByText("You are at home");
     expect(homeText).toBeInTheDocument();
     expect(screen.getByText(/Hello cykcykacz@gmail.com/i)).toBeInTheDocument();
   });
