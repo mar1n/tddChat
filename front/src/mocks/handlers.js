@@ -74,16 +74,13 @@ export const handlers = [
     "http://localhost:5000/user/activation/:token",
     async (req, res, ctx) => {
       const { token } = await req.json();
-      console.log("handlers token");
       try {
         jwt.verify(token, "8787SADA888DAdAD888DAS");
-        console.log("verify");
         return res(
           ctx.json({ message: "Account has been created!!!" }),
           ctx.status(201)
         );
       } catch (error) {
-        console.log("error", error);
         return res(
           ctx.json({ error: "Expired link. Signup again." }),
           ctx.status(401)
@@ -164,31 +161,4 @@ export const handlers = [
       ctx.status(400)
     );
   }),
-  // rest.get("/user", (req, res, ctx) => {
-  //   // Check if the user is authenticated in this session
-
-  //   const isAuthenticated = sessionStorage.getItem("is-authenticated");
-
-  //   if (!isAuthenticated) {
-  //     // If not authenticated, respond with a 403 error
-
-  //     return res(
-  //       ctx.status(403),
-
-  //       ctx.json({
-  //         errorMessage: "Not authorized",
-  //       })
-  //     );
-  //   }
-
-  //   // If authenticated, return a mocked user details
-
-  //   return res(
-  //     ctx.status(200),
-
-  //     ctx.json({
-  //       username: "admin",
-  //     })
-  //   );
-  // }),
 ];

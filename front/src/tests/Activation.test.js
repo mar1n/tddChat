@@ -5,10 +5,8 @@ import { createContainer } from "./myhelpers";
 import { MemoryRouter } from "react-router-dom";
 import Router from "../components/Router/Router";
 import { renderWithProviders } from "./utils/test-utils";
-import jwt from "jsonwebtoken";
 import { act } from "react-dom/test-utils";
-
-const FakeTimers = require("@sinonjs/fake-timers");
+import jwt from "jsonwebtoken";
 
 describe("Activation", () => {
   let renderRouter, clickAndWait;
@@ -52,7 +50,7 @@ describe("Activation", () => {
     const validationError = screen.getByText("Invalid token");
     expect(validationError).toBeInTheDocument();
   });
-  test.only("token has been expired", async () => {
+  test("token has been expired", async () => {
     const activationRoute = `/activation/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiU3p5bW9uIiwiZW1haWwiOiJzenltb25AZ21haWwuY29tIiwicGFzc3dvcmQiOiJhc2R6eGNxd2UiLCJpYXQiOjE2OTcxNDI0NzEsImV4cCI6MTY5NzE0MzA3MX0.l4icyEF2L2x9NgTAE-rMiIWiiuKekzgkhTOr5ZmOQBE`;
 
     await act (async () => {
@@ -69,5 +67,26 @@ describe("Activation", () => {
     const validationError = await screen.findByText("Expired link. Signup again.");
     expect(validationError).toBeInTheDocument();
   });
-  test.skip('Account has been activated, pls signin', () => {  })
+  test('Account has been activated, pls signin', async () => { 
+    const token = jwt.sign(
+      { firstName: "Szymon", email: "szymon@gmail.com", password: "asdzxcqwe" },
+      "8787SADA888DAdAD888DAS",
+      { expiresIn: "10m" }
+    );
+
+    const activationRoute = `/activation/${token}`;
+
+    await act(async () => {
+      renderWithProviders(
+        <MemoryRouter initialEntries={[activationRoute]}>
+          <Router />
+        </MemoryRouter>
+      )
+    })
+
+    const buttonLink = screen.getByRole("button");
+    await clickAndWait(buttonLink);
+
+    expect(await screen.findByText("Account has been created!!!")).toBeInTheDocument();
+   })
 });

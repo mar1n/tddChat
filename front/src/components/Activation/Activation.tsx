@@ -11,6 +11,7 @@ const Activation = () => {
     name: "",
     token: "",
     show: false,
+    success: ""
   });
 
   const [validationError, setValidationError] = useState("");
@@ -26,20 +27,24 @@ const Activation = () => {
       }
     }
   }, []);
-  const { name, token, show } = values;
+  const { name, token, show, success } = values;
 
   const clickActivate = async (e: React.FormEvent) => {
     e.preventDefault();
     setValues({ ...values, show: false });
     try {
 
-      await axios({
+      const {data: { message}} = await axios({
         method: "GET",
         url: `${domainName}/user/activation/${token}`,
         data: { token },
       });
 
-      setValues({ ...values, show: false });
+      //console.log("response", response);
+      //console.log("response", response.data.message);
+      
+
+      setValues({ ...values, show: false, success: message });
     } catch (err: any) {
       console.log("err activation", err);
       
@@ -62,6 +67,7 @@ const Activation = () => {
       <button onClick={clickActivate} disabled={show}>
         Activate Account
       </button>
+      <span>{success}</span>
       <span>{validationError}</span>
     </div>
   );

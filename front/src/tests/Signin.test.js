@@ -77,7 +77,7 @@ describe("Signin", () => {
     rendersLabelField("Password");
     includeTheExistingValue("password", "randomText");
   });
-  test("user is authenticated, redirect  to home page", async () => {
+  test.only("user is authenticated, redirect  to home page", async () => {
     const signinRoute = "/signin";
     await act(async () => {
       renderWithProviders(
