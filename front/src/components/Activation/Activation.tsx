@@ -2,16 +2,17 @@ import React, { useState, useEffect } from "react";
 import Layout from "../Layout/Layout";
 import { useParams } from "react-router-dom";
 import jwt from "jsonwebtoken";
-
 import axios from "axios";
-const Activation = () => {
+import { server } from "../../store/reducers/helper";
+const domainName = server("real");
 
+const Activation = () => {
   let { id } = useParams();
   const [values, setValues] = useState({
     name: "",
     token: "",
     show: false,
-    success: ""
+    success: "",
   });
 
   const [validationError, setValidationError] = useState("");

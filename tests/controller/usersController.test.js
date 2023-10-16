@@ -5,7 +5,6 @@ const { connectToMongo, disconnect } = require("../utils/db");
 const jwt = require("jsonwebtoken");
 const FakeTimers = require("@sinonjs/fake-timers");
 
-
 const fakeSgMailResponse = [
   {
     statusCode: 202,
@@ -69,6 +68,28 @@ describe("Users controller", () => {
       const { message } = response.body;
       expect(message).toEqual("Email has been sent!!!");
     });
+    test.only("email exist", async () => {
+      await User.create([
+        {
+          firstName: "Ronaldo",
+          email: "ronaldo@gmail.com",
+          password: "asdadadadad",
+        },
+      ]);
+      const response = await supertest(app)
+        .post("/user/signup")
+        .send({
+          firstName: "Ronaldo",
+          email: "ronaldo@gmail.com",
+          password: "asdadadadad",
+        })
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(400);
+
+      const { message } = response.body;
+      expect(message).toEqual("Email has been taken!!!");
+    });
     describe("validation", () => {
       test("filed name", async () => {
         const response = await supertest(app)
@@ -120,11 +141,15 @@ describe("Users controller", () => {
   describe("Account activation", () => {
     test("Account created succesfully", async () => {
       const token = jwt.sign(
-        { firstName: "Szymon", email: "szymon@gmail.com", password: "asdzxcqwe" },
+        {
+          firstName: "Szymon",
+          email: "szymon@gmail.com",
+          password: "asdzxcqwe",
+        },
         process.env.JWT_ACCOUNT_ACTIVATION,
         { expiresIn: "10m" }
       );
-      
+
       const response = await supertest(app)
         .get(`/user/activation/${token}`)
         .expect("Content-Type", /json/)
@@ -132,14 +157,18 @@ describe("Users controller", () => {
 
       const { message } = response.body;
       expect(message).toEqual("Account has been created!!!");
-      const findUser = await User.findOne({email: "szymon@gmail.com"});
+      const findUser = await User.findOne({ email: "szymon@gmail.com" });
       expect(findUser.firstName).toEqual("Szymon");
     });
     test("Token has been expired", async () => {
-      const hoursInMs = n => 1000 * 60 * 60 * n;
+      const hoursInMs = (n) => 1000 * 60 * 60 * n;
 
       const token = jwt.sign(
-        { firstName: "Szymon", email: "szymon@gmail.com", password: "asdzxcqwe" },
+        {
+          firstName: "Szymon",
+          email: "szymon@gmail.com",
+          password: "asdzxcqwe",
+        },
         process.env.JWT_ACCOUNT_ACTIVATION,
         { expiresIn: "10m" }
       );
@@ -156,50 +185,62 @@ describe("Users controller", () => {
       expect(error).toEqual("Expired link. Signup again.");
     });
   });
-  describe('Signin User', () => {
-    test('User does not exist', async () => {
+  describe("Signin User", () => {
+    test("User does not exist", async () => {
       const response = await supertest(app)
         .post("/user/signin")
         .send({
           email: "cykcykacz@gmail.com",
-          password: "zxcasdqwe"
+          password: "zxcasdqwe",
         })
         .set("Accept", "application/json")
         .expect("Content-Type", /json/)
-        .expect(400)
+        .expect(400);
 
       const { error } = response.body;
       expect(error).toEqual("Email and password do not match!");
     });
-    test('Password is incorrect', async () => {
-      await User.create([{ firstName: "Szymon", email: "cykcykacz@gmail.com", password: "zxcasdqwe"}]);
+    test("Password is incorrect", async () => {
+      await User.create([
+        {
+          firstName: "Szymon",
+          email: "cykcykacz@gmail.com",
+          password: "zxcasdqwe",
+        },
+      ]);
       const response = await supertest(app)
         .post("/user/signin")
         .send({
           email: "cykcykacz@gmail.com",
-          password: "zxcasdqwf"
+          password: "zxcasdqwf",
         })
         .set("Accept", "application/json")
         .expect("Content-Type", /json/)
-        .expect(400)
+        .expect(400);
 
       const { error } = response.body;
       expect(error).toEqual("Email and password do not match!");
     });
-    test('User email and password match ', async () => {
-      await User.create([{ firstName: "Szymon", email: "cykcykacz@gmail.com", password: "zxcasdqwe"}]);
+    test("User email and password match ", async () => {
+      await User.create([
+        {
+          firstName: "Szymon",
+          email: "cykcykacz@gmail.com",
+          password: "zxcasdqwe",
+        },
+      ]);
       const response = await supertest(app)
         .post("/user/signin")
         .send({
           email: "cykcykacz@gmail.com",
-          password: "zxcasdqwe"
+          password: "zxcasdqwe",
         })
         .set("Accept", "application/json")
         .expect("Content-Type", /json/)
-        .expect(201)
+        .expect(201);
 
-        const { message } = response.body;
-        expect(message).toEqual("Login details are correct. Welcome in service.")
+      const { message } = response.body;
+      expect(message).toEqual("Login details are correct. Welcome in service.");
     });
   });
 });
