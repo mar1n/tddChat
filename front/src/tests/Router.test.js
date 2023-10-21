@@ -8,7 +8,7 @@ import { renderWithProviders } from "./utils/test-utils";
 
 describe("Router", () => {
   test("Display home page", async () => {
-    await act(() => {
+    await act(async () => {
       renderWithProviders(
         <MemoryRouter>
           <Router />

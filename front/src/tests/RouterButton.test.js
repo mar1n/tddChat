@@ -31,4 +31,7 @@ describe('RouterBUtton', () => {
         shallowRender(<RouterButton disabled={true} />)
         expect(root().props.className).toEqual("disabled")
      });
+     test.skip('After click function has been executed.', () => {
+        
+     });
 });

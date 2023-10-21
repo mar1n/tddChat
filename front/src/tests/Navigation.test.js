@@ -27,7 +27,7 @@ describe("Navigation", () => {
     expect(signin).toBeInTheDocument();
   });
   test("Default path has style/className active.", async () => {
-    await act(() => {
+    await act(async () => {
       renderWithProviders(
         <MemoryRouter>
           <Router />
@@ -60,7 +60,7 @@ describe("Navigation", () => {
       window.localStorage.__proto__.getItem.mockClear();
     });
     test("Login user can see only home and log out links.", async () => {
-      await act(() => {
+      await act(async () => {
         renderWithProviders(
           <MemoryRouter>
             <Router />
