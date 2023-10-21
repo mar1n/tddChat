@@ -8,7 +8,6 @@ import { Store } from "./store/store";
 import { Provider } from "react-redux";
 
 if(process.env.REACT_APP_STAGE === 'development'){
-  console.log("MSW.JS, MSW.JS")
   const { worker } = require("./mocks/browser");
   worker.start();
 }

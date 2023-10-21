@@ -26,7 +26,12 @@ export const handlers = [
         );
       }
     }
-
+    if(scenario === "emialExist") {
+      return res(
+        ctx.json({ error: "Email has been taken!!!"}),
+        ctx.status(422)
+      )
+    }
     return res(
       ctx.json({ message: "Email has been sent!!!" }),
       ctx.status(200)

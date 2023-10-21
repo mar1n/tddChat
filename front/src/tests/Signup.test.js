@@ -12,7 +12,7 @@ describe("Signup", () => {
   });
 
   let location;
-  const mockLocation = new URL("http://localhost/signup?scenario=validation");
+  const mockLocation = new URL("http://localhost:5000/user/signup?scenario=validation");
   afterEach(() => {
     delete window.location;
     window.location = location;
@@ -149,5 +149,30 @@ describe("Signup", () => {
 
       await screen.findByText("We send you email with link.");
     });
+    test('Emial exist.', async () => { 
+      const mockLocation = new URL("http://localhost:5000/user/signup?scenario=emialExist");
+      window.location = mockLocation
+      expect.hasAssertions();
+
+      renderRouter(<Signup />);
+      await changeAndWait(
+        field("password"),
+        withEvent("password", "turboman54")
+      );
+
+      await changeAndWait(field("firstName"), withEvent("firstName", "Szymon"));
+      await changeAndWait(
+        field("email"),
+        withEvent("email", "exist@gmail.com")
+      );
+
+      expect(field("password").value).toEqual("turboman54");
+      expect(field("firstName").value).toEqual("Szymon");
+      expect(field("email").value).toEqual("exist@gmail.com");
+
+      await submit(form("signup form"));
+
+      await screen.findByText("Email has been taken!!!");
+     })
   });
 });

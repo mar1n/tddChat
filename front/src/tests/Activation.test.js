@@ -32,14 +32,6 @@ describe("Activation", () => {
     const welcomeText = screen.getByText(/Hey Szymon, active your account/i);
     expect(welcomeText).toBeInTheDocument();
   });
-  test("button not disabled after click link", async () => {
-    renderRouter(<Activation />);
-
-    const buttonLink = screen.getByRole("button");
-    await clickAndWait(buttonLink);
-
-    expect(buttonLink).not.toBeDisabled();
-  });
   test("wrong token validation error", () => {
     const activationRoute = "/activation/M";
     render(
@@ -52,7 +44,7 @@ describe("Activation", () => {
   });
   test("token has been expired", async () => {
     const activationRoute = `/activation/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiU3p5bW9uIiwiZW1haWwiOiJzenltb25AZ21haWwuY29tIiwicGFzc3dvcmQiOiJhc2R6eGNxd2UiLCJpYXQiOjE2OTcxNDI0NzEsImV4cCI6MTY5NzE0MzA3MX0.l4icyEF2L2x9NgTAE-rMiIWiiuKekzgkhTOr5ZmOQBE`;
-
+    
     await act (async () => {
       renderWithProviders(
         <MemoryRouter initialEntries={[activationRoute]}>
@@ -60,12 +52,35 @@ describe("Activation", () => {
         </MemoryRouter>
       );
     })
-
+    
     const buttonLink = screen.getByRole("button");
     await clickAndWait(buttonLink);
-
+    
     const validationError = await screen.findByText("Expired link. Signup again.");
     expect(validationError).toBeInTheDocument();
+  });
+  test("button not disabled after click link", async () => {
+    //const activationRoute = "/activation/m";
+    const token = jwt.sign(
+      { firstName: "Szymon", email: "szymon@gmail.com", password: "asdzxcqwe" },
+      "8787SADA888DAdAD888DAS",
+      { expiresIn: "10m" }
+    );
+
+    const activationRoute = `/activation/${token}`;
+    
+    await act(async () => {
+      renderWithProviders(
+        <MemoryRouter initialEntries={[activationRoute]}>
+          <Router />
+        </MemoryRouter>
+      )
+    })
+  
+    const buttonLink = screen.getByRole("button");
+    await clickAndWait(buttonLink);
+  
+    expect(buttonLink).not.toBeDisabled();
   });
   test('Account has been activated, pls signin', async () => { 
     const token = jwt.sign(
@@ -75,7 +90,7 @@ describe("Activation", () => {
     );
 
     const activationRoute = `/activation/${token}`;
-
+    
     await act(async () => {
       renderWithProviders(
         <MemoryRouter initialEntries={[activationRoute]}>
@@ -83,10 +98,11 @@ describe("Activation", () => {
         </MemoryRouter>
       )
     })
-
+    
     const buttonLink = screen.getByRole("button");
     await clickAndWait(buttonLink);
-
+    
     expect(await screen.findByText("Account has been created!!!")).toBeInTheDocument();
-   })
+  })
+  
 });

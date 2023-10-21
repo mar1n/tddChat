@@ -3,7 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { server } from "./helper";
 
-const domainName = server("real");
+const domainName = server("rea");
 interface users {
   name: string;
 }
@@ -40,8 +40,6 @@ export const fetchRoomsThunk = createAsyncThunk(
 export const createRoomThunk = createAsyncThunk(
   "rooms/createRoom",
   async (values: { title: string; usersList: string }) => {
-    console.log("title", values.title);
-    console.log("title", values.usersList);
     
     try {
       const response = await axios.post(

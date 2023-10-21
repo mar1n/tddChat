@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import type { AppThunkDispatch } from "../../store/store";
 import { setUser } from "../../store/reducers/userSlice";
+import { server } from "../../store/reducers/helper";
+const domainName = server("rea");
 
 const Signin = () => {
   const history = useNavigate();
@@ -29,7 +31,7 @@ const Signin = () => {
     try {
       const response = await axios({
         method: "POST",
-        url: `http://localhost:5000/user/signin`,
+        url: `${domainName}/user/signin`,
         data: { email, password },
       });
       autheticate(response, () => {
@@ -40,7 +42,6 @@ const Signin = () => {
         history("/");
       });
     } catch (err: any) {
-      console.log('err signin', err.response.data.error)
       setValidationError(err.response.data.error);
       setButtonSwitch(true);
     }

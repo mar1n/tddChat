@@ -68,7 +68,7 @@ describe("Users controller", () => {
       const { message } = response.body;
       expect(message).toEqual("Email has been sent!!!");
     });
-    test.only("email exist", async () => {
+    test("email exist", async () => {
       await User.create([
         {
           firstName: "Ronaldo",

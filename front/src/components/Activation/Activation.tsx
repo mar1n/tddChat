@@ -4,10 +4,11 @@ import { useParams } from "react-router-dom";
 import jwt from "jsonwebtoken";
 import axios from "axios";
 import { server } from "../../store/reducers/helper";
-const domainName = server("real");
+const domainName = server("rea");
 
 const Activation = () => {
   let { id } = useParams();
+  
   const [values, setValues] = useState({
     name: "",
     token: "",
@@ -28,33 +29,32 @@ const Activation = () => {
       }
     }
   }, []);
+
   const { name, token, show, success } = values;
 
   const clickActivate = async (e: React.FormEvent) => {
     e.preventDefault();
-    setValues({ ...values, show: false });
-    try {
 
-      const {data: { message}} = await axios({
+    setValues({ ...values, show: false });
+
+    try {
+      const {
+        data: { message },
+      } = await axios({
         method: "GET",
         url: `${domainName}/user/activation/${token}`,
         data: { token },
       });
 
-      //console.log("response", response);
-      //console.log("response", response.data.message);
-      
-
       setValues({ ...values, show: false, success: message });
     } catch (err: any) {
-      console.log("err activation", err);
-      
       const {
         response: {
           status,
           data: { error },
         },
       } = err;
+
       if (status === 401) {
         setValidationError(error);
       }
