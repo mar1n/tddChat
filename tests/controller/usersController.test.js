@@ -243,4 +243,29 @@ describe("Users controller", () => {
       expect(message).toEqual("Login details are correct. Welcome in service.");
     });
   });
+  describe('Seek users', () => { 
+    test('Find all users.', async () => {
+      await User.create([
+        {
+          firstName: "Szymon",
+          email: "cykcykacz@gmail.com",
+          password: "zxcasdqwe",
+        },
+        {
+          firstName: "Robert",
+          email: "robert@gmail.com",
+          password: "zxcasdqwe",
+        }
+      ]);
+      
+      const response = await supertest(app)
+        .get("/user/seekUsers")
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(200)
+
+        const { users } = response.body;
+        expect(users).toEqual([{firstName: "Szymon"}, {firstName: "Robert"}])
+     })
+   })
 });

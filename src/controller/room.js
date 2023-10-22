@@ -81,7 +81,7 @@ exports.seekUsers = async(req, res, next) => {
   try {
     await rooms.seekUsers(firstName);
   } catch (error) {
-    console.log("seekUsers", error);
+    next(error)
   }
 }
 

@@ -32,7 +32,7 @@ describe("Layout", () => {
     screen.getByRole("navigation");
   });
   test('Navigation items.', async () => { 
-    await act(() => {
+    await act(async () => {
       renderWithProviders(
         <MemoryRouter>
           <Router />

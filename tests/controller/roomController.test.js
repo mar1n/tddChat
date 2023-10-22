@@ -85,7 +85,8 @@ describe("rooom controller", () => {
       .expect("Content-Type", /json/)
       .expect(200);
 
-    expect(response._body).toEqual({ message: "message has been added" });
+      const { message } = response.body;
+    expect(message).toEqual("message has been added");
     const messageInRoom = await Rooms.findOne({ title: "Space" });
     expect(messageInRoom.messages[0].text).toEqual("my msg");
   });
@@ -113,16 +114,6 @@ describe("rooom controller", () => {
       .expect(400);
 
     expect(response._body).toEqual({ message: "User does not exist!!!" });
-  });
-  test("seek users", async () => {
-    await createRoom();
-
-    await supertest(app)
-      .get("/room/seekUsers")
-      .send({ firstName: "Szymon" })
-      .set("Accept", "application/json")
-      .expect("Content-Type", /json/)
-      .expect(200);
   });
   describe("Web Socket", () => {
     test("add the message to the room", async () => {

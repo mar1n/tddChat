@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.signup = async (req, res, next) => {
-
   const { email, firstName, password } = req.body;
   const token = jwt.sign(
     { firstName, email, password },
@@ -67,28 +66,45 @@ exports.activation = async (req, res, next) => {
 exports.signin = async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    return res.status(400).json({
-      error: "Email and password do not match!",
+  try {
+    const user = await User.findOne({ email });
+  
+    if (!user) {
+      return res.status(400).json({
+        error: "Email and password do not match!",
+      });
+    }
+    if (!user.authenticate(password)) {
+      return res.status(400).json({
+        error: "Email and password do not match!",
+      });
+    }
+  
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
     });
-  }
-
-  if (!user.authenticate(password)) {
-    return res.status(400).json({
-      error: "Email and password do not match!",
+  
+    const { _id, firstName, role } = user;
+    return res.status(201).json({
+      message: "Login details are correct. Welcome in service.",
+      token,
+      user: { _id, firstName, email, role },
     });
+  } catch (error) {
+    next(error)
   }
+};
 
-  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: "7d",
-  });
+exports.seekUsers = async (req, res, next) => {
+  res.set("Content-Type", "applicaton/json");
 
-  const { _id, firstName, role } = user;
-  return res.status(201).json({
-    message: "Login details are correct. Welcome in service.",
-    token,
-    user: { _id, firstName, email, role },
-  });
+  try {
+    const result = await User.find({}, { firstName: 1, _id: 0 });
+    return res.status(200).json({
+      users: result,
+      message: "",
+    });
+  } catch (error) {
+    next(error)
+  }
 };

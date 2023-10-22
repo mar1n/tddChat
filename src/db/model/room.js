@@ -54,25 +54,7 @@ roomsSchema.methods.removeUser = async function (room, joinUser) {
 
 roomsSchema.methods.addUser = async function (room, user) {
   const roomId = { _id: room._id };
-  
-  // console.log(
-  //   "addUser",
-  //   this.model("Rooms").findOneAndUpdate(
-  //     roomId,
-  //     {
-  //       $push: { users: user },
-  //     },
-  //     function (error, success) {
-  //       if (error) {
-  //           console.log('errorAddUser',error);
-  //       } else {
-  //         console.log('roomId', roomId);
-  //           console.log('errorSuccess',success);
-  //       }
-  //   }),
-  //     { new: true }
-  //   )
-  // ;
+
   return this.model("Rooms").findOneAndUpdate(
     roomId,
     {
