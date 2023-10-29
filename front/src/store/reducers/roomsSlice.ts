@@ -11,7 +11,7 @@ interface messages {
   text: string;
   firstName: string;
 }
-export interface roomsState {
+export interface irooms {
   title: string;
   users: Array<users>;
   messages: Array<messages>;
@@ -83,40 +83,50 @@ export const addMessageThunk = createAsyncThunk(
   }
 );
 
+export interface roomsState {
+  error: string,
+  rooms: Array<irooms>
+}
+
+export interface rooms {
+  rooms: roomsState
+}
+
 const roomsSlice = createSlice({
   name: "rooms",
-  initialState: [] as roomsState[],
+  initialState: {error: '', rooms: []} as roomsState,
   reducers: {
-    roomsAdd(state, action: PayloadAction<roomsState[]>) {
-      return [...state, ...action.payload];
+    roomsAdd(state, action: PayloadAction<irooms[]>) {
+      return {...state, rooms: [...action.payload]};
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchRoomsThunk.fulfilled, (state, action) => {
-        if (action.payload.room) {
-          return [...state, ...action.payload.room];
+        if (action.payload) {
+          return { error: "", rooms: [...action.payload]};
         }
-        return [...state];
+        
+        return {...state};
       })
       .addCase(createRoomThunk.fulfilled, (state, action) => {
-        return [...state, action.payload.room];
+        return {...state, rooms: [...state.rooms, action.payload.room] };
       })
       .addCase(createRoomThunk.rejected, (state, action) => {
         console.log("state",state,"action", action)
       })
       .addCase(addMessageThunk.fulfilled, (state, action) => {
-        let updateState = state.map((value) => {
+        let updateState = state.rooms.map((value) => {
+          console.log("addMessageThunk");
+          
           if (value.title === action.payload.room.title) {
             return action.payload.room;
           }
           return value;
         });
-        return [...updateState];
+        return {error: "", rooms: [...updateState]};
       });
   },
 });
 
 export default roomsSlice.reducer;
-
-export const { roomsAdd } = roomsSlice.actions;

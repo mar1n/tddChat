@@ -10,9 +10,12 @@ exports.all = async (req, res, next) => {
       room
     })
   } catch (error) {
-    return res.status(400).json({
-      message: error.message
-    })
+    if(error.code === 400) {
+      return res.status(400).json({
+        message: error.message
+      })
+    }
+    next(error)
   }
 };
 
@@ -56,7 +59,6 @@ exports.addMsg = async (req, res, next) => {
       room: createdRoom
     });
   } catch (error) {
-    console.log("error AddMsg", error);
     if (error.message === "User does not exist!!!") {
       return res.status(400).json({
         message: error.message,
@@ -70,20 +72,6 @@ exports.addMsg = async (req, res, next) => {
     next(error);
   }
 };
-
-exports.seekUsers = async(req, res, next) => {
-  const { firstName } = req.body;
-
-  const rooms = new Rooms();
-  
-  res.set("Content-Type", "applicaton/json");
-
-  try {
-    await rooms.seekUsers(firstName);
-  } catch (error) {
-    next(error)
-  }
-}
 
 exports.addMsgWebSocket = async (roomDetails) => {
   const { text, firstName, room } = roomDetails;

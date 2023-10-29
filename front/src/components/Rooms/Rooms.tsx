@@ -4,19 +4,15 @@ import {
   createRoomThunk,
   fetchRoomsThunk,
   addMessageThunk,
-  roomsState,
+  rooms
 } from "../../store/reducers/roomsSlice";
 import { fetchSeekUsers, seekuser } from "../../store/reducers/seekUsersSlice";
 
 import type { AppThunkDispatch } from "../../store/store";
-import { userState, user } from "../../store/reducers/userSlice";
+import { user } from "../../store/reducers/userSlice";
 import './room.css';
 
-type state = {
-  rooms: roomsState[];
-};
-
-type another = {
+type seekUsers = {
   seekUsers: seekuser[];
 };
 
@@ -32,8 +28,8 @@ const Rooms = () => {
   >([]);
   const dispatch = useDispatch<AppThunkDispatch>();
   const user = useSelector((state: user) => state.user.user);
-  const rooms = useSelector((state: state) => state.rooms);
-  const seekUsers = useSelector((state: another) => state.seekUsers);
+  const rooms = useSelector((state: rooms) => state.rooms.rooms);
+  const seekUsers = useSelector((state: seekUsers) => state.seekUsers);
   useEffect(() => {
     dispatch(fetchRoomsThunk(user));
     dispatch(fetchSeekUsers());
@@ -74,6 +70,7 @@ const Rooms = () => {
         ])
       : setSelectedUsersList([{ name: name }, ...selectedUsersList]);
   };
+  
   return (
     <>
       Rooms page.{" "}
