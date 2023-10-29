@@ -117,8 +117,6 @@ const roomsSlice = createSlice({
       })
       .addCase(addMessageThunk.fulfilled, (state, action) => {
         let updateState = state.rooms.map((value) => {
-          console.log("addMessageThunk");
-          
           if (value.title === action.payload.room.title) {
             return action.payload.room;
           }

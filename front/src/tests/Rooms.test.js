@@ -2,6 +2,7 @@ import { screen } from "@testing-library/react";
 import Rooms from "../components/Rooms/Rooms";
 import userEvent from "@testing-library/user-event";
 import { renderWithProviders } from "./utils/test-utils";
+import { MemoryRouter } from "react-router-dom";
 import { createContainer } from "./myhelpers";
 import { act } from "react-dom/test-utils";
 import { rest } from "msw";
@@ -14,14 +15,14 @@ describe("Rooms", () => {
   });
   test("Render rooms page.", async () => {
     await act(async () => {
-      renderWithProviders(<Rooms />);
+      renderWithProviders(<MemoryRouter><Rooms /></MemoryRouter>);
     });
     expect(screen.getByText("Rooms page.")).toBeInTheDocument();
     expect(screen.getByRole("addRoom")).toBeInTheDocument();
   });
   test("Create room pop up.", async () => {
     await act(async () => {
-      renderWithProviders(<Rooms />);
+      renderWithProviders(<MemoryRouter><Rooms /></MemoryRouter>);
     });
 
     const open = screen.getByRole("addRoom");
@@ -42,7 +43,7 @@ describe("Rooms", () => {
   });
   test("List rooms.", async () => {
     await act(async () => {
-      renderWithProviders(<Rooms />);
+      renderWithProviders(<MemoryRouter><Rooms /></MemoryRouter>);
     });
 
     const list = screen.getByRole("rooms-list");
@@ -64,7 +65,7 @@ describe("Rooms", () => {
   });
   test("Create button disabled when create room form is open.", async () => {
     await act(async () => {
-      renderWithProviders(<Rooms />, {
+      renderWithProviders(<MemoryRouter><Rooms /></MemoryRouter>, {
         preloadedState: {
           user: "Robin",
         },
@@ -80,7 +81,7 @@ describe("Rooms", () => {
   });
   test("Add room button disabled when title input is empty", async () => {
     await act(async () => {
-      renderWithProviders(<Rooms />, {
+      renderWithProviders(<MemoryRouter><Rooms /></MemoryRouter>, {
         preloadedState: {
           user: "Robin",
         },
@@ -100,7 +101,7 @@ describe("Rooms", () => {
   });
   test("Clear value in title input.", async () => {
     await act(async () => {
-      renderWithProviders(<Rooms />, {
+      renderWithProviders(<MemoryRouter><Rooms /></MemoryRouter>, {
         preloadedState: {
           user: "Szymon",
         },
@@ -121,7 +122,7 @@ describe("Rooms", () => {
   });
   test("Close create user interface.", async () => {
     await act(async () => {
-      renderWithProviders(<Rooms />, {
+      renderWithProviders(<MemoryRouter><Rooms /></MemoryRouter>, {
         preloadedState: {
           user: {
             user: "Robin",
@@ -181,7 +182,7 @@ describe("Rooms", () => {
     );
 
     await act(async () => {
-      renderWithProviders(<Rooms />, {
+      renderWithProviders(<MemoryRouter><Rooms /></MemoryRouter>, {
         preloadedState: {
           user: {
             user: "Sheriff of Nottingham",
@@ -247,7 +248,7 @@ describe("Rooms", () => {
   });
   test("Select Room.", async () => {
     await act(async () => {
-      renderWithProviders(<Rooms />);
+      renderWithProviders(<MemoryRouter><Rooms /></MemoryRouter>);
     });
     const user = userEvent.setup();
 
@@ -272,7 +273,7 @@ describe("Rooms", () => {
   test("Add messages.", async () => {
     await act(async () => {
       renderWithProviders(
-        <Rooms />
+        <MemoryRouter><Rooms /></MemoryRouter>
       );
     });
 
@@ -326,7 +327,7 @@ describe("Rooms", () => {
   test.skip("Add multiple messages in one room.", () => {});
   test("Add message in select room and then in a different room.", async () => {
     await act(async () => {
-      renderWithProviders(<Rooms />);
+      renderWithProviders(<MemoryRouter><Rooms /></MemoryRouter>);
     });
 
     const user = userEvent.setup();
