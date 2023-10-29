@@ -1,15 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
+import { server } from "./helper";
+const domainName = server("real")
 export type seekuser = {
-  name: string;
+  firstName: string;
 }
 
 export const fetchSeekUsers = createAsyncThunk("rooms/seekUsers", async () => {
   try {
     const response = await axios({
       method: "GET",
-      url: `http://localhost:5000/user/seekUsers`,
+      url: `${domainName}/user/seekUsers`,
       data: {}
     });
     return response.data;
@@ -25,8 +26,8 @@ const seekUsersSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(
       fetchSeekUsers.fulfilled,
-      (state, action) => {
-        return [...state,...action.payload.users];
+      (_state, action) => {
+        return [...action.payload.users];
       }
     );
   },

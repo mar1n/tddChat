@@ -104,7 +104,7 @@ const roomsSlice = createSlice({
     builder
       .addCase(fetchRoomsThunk.fulfilled, (state, action) => {
         if (action.payload) {
-          return { error: "", rooms: [...action.payload]};
+          return { error: "", rooms: [...action.payload.room]};
         }
         
         return {...state};

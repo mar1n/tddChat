@@ -4,13 +4,14 @@ import {
   createRoomThunk,
   fetchRoomsThunk,
   addMessageThunk,
-  rooms
+  rooms,
 } from "../../store/reducers/roomsSlice";
 import { fetchSeekUsers, seekuser } from "../../store/reducers/seekUsersSlice";
 
 import type { AppThunkDispatch } from "../../store/store";
 import { user } from "../../store/reducers/userSlice";
-import './room.css';
+import Layout from "../Layout/Layout";
+import "./room.css";
 
 type seekUsers = {
   seekUsers: seekuser[];
@@ -24,7 +25,7 @@ const Rooms = () => {
   const [message, setMessage] = useState("");
   const [selectedRoom, setSelectedRoom] = useState("");
   const [selectedUsersList, setSelectedUsersList] = useState<
-    { name: string }[]
+    { firstName: string }[]
   >([]);
   const dispatch = useDispatch<AppThunkDispatch>();
   const user = useSelector((state: user) => state.user.user);
@@ -35,26 +36,23 @@ const Rooms = () => {
     dispatch(fetchSeekUsers());
   }, []);
   const createRoom = async () => {
-    let users = [{ name: user }, ...selectedUsersList];
+    let users = [{ firstName: user }, ...selectedUsersList];
     let userslist = Object.keys(users)
-      .map((key: any) => `${users[key].name}`)
+      .map((key: any) => `${users[key].firstName}`)
       .join(",");
 
-       dispatch(createRoomThunk({ title: title, usersList: userslist }))
-
+    dispatch(createRoomThunk({ title: title, usersList: userslist }));
 
     setOpenCreate(false);
     setTitle("");
-    setSelectedRoom("")
+    setSelectedRoom("");
   };
   const selectRoom = (title: string) => {
     setSelectedRoom(title);
   };
   const addMessage = (text: string) => {
-    const room = rooms.find(room => room.title === selectedRoom)
-    dispatch(
-      addMessageThunk({ text: text, firstName: user, room: room })
-    );
+    const room = rooms.find((room) => room.title === selectedRoom);
+    dispatch(addMessageThunk({ text: text, firstName: user, room: room }));
   };
   const buttonDisabledValue = (title: string) => {
     if (title === "") {
@@ -64,21 +62,24 @@ const Rooms = () => {
     }
   };
   const selectUser = (name: string) => {
-    selectedUsersList.some((value) => value.name === name)
+    selectedUsersList.some((value) => value.firstName === name)
       ? setSelectedUsersList([
-          ...selectedUsersList.filter((value) => value.name !== name),
+          ...selectedUsersList.filter((value) => value.firstName !== name),
         ])
-      : setSelectedUsersList([{ name: name }, ...selectedUsersList]);
+      : setSelectedUsersList([{ firstName: name }, ...selectedUsersList]);
   };
-  
+
   return (
-    <>
-      Rooms page.{" "}
-      <button role={"addRoom"} onClick={() => setOpenCreate(!openCreate)} disabled={openCreate}>
+    <Layout>
+      Rooms page. <div>Hello {user}, Welcome back.</div>
+      <button
+        role={"addRoom"}
+        onClick={() => setOpenCreate(!openCreate)}
+        disabled={openCreate}
+      >
         Add room
       </button>
       <div role='rooms-list'>
-        
         {rooms.length === 0
           ? "No Rooms"
           : rooms.map((value, index) => {
@@ -143,17 +144,17 @@ const Rooms = () => {
             }}
           />
           <div role={"users"}>
-            {seekUsers.map(({ name }) => (
+            {seekUsers.map(({ firstName }) => (
               <p
-                key={name}
+                key={firstName}
                 className={
-                  selectedUsersList.some((user) => user.name === name)
+                  selectedUsersList.some((user) => user.firstName === firstName)
                     ? "active"
                     : "selectUser"
                 }
-                onClick={() => selectUser(name)}
+                onClick={() => selectUser(firstName)}
               >
-                {name}
+                {firstName}
               </p>
             ))}
           </div>
@@ -167,7 +168,7 @@ const Rooms = () => {
           <span>{error}</span>
         </div>
       )}
-    </>
+    </Layout>
   );
 };
 

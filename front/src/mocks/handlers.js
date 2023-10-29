@@ -106,9 +106,9 @@ export const handlers = [
       const result = initialRoomState.filter((room) =>
         room.users.find((user) => firstName)
       );
-      return res(ctx.json(result), ctx.status(201));
+      return res(ctx.json({message: "", room: result}), ctx.status(201));
     } else {
-      return res(ctx.json([]), ctx.status(201));
+      return res(ctx.json({message: "", room: []}), ctx.status(201));
     }
   }),
   rest.get("http://localhost:5000/user/seekUsers", async (req, res, ctx) => {
@@ -116,8 +116,8 @@ export const handlers = [
       ctx.json({
         message: "You, have found users.",
         users: [
-          { name: "Sheriff of Nottingham" },
-          { name: "John, King of England" },
+          { firstName: "Sheriff of Nottingham" },
+          { firstName: "John, King of England" },
         ],
       })
     );
