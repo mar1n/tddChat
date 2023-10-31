@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { server } from "./helper";
-const domainName = server("real")
+const domainName = server("rea")
 export type seekuser = {
   firstName: string;
 }
