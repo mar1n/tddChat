@@ -1,14 +1,16 @@
 const User = require("../../src/db/model/user");
 const { connectToMongo, disconnect } = require("../utils/db");
 
+beforeEach(async () => {
+  await connectToMongo();
+  await User.deleteMany();
+});
+afterEach(async () => {
+  await User.deleteMany();
+  await disconnect();
+});
+
 describe("Users", () => {
-  beforeEach(async () => {
-    await connectToMongo();
-  });
-  afterEach(async () => {
-    await User.deleteMany();
-    await disconnect();
-  });
 
   test("only one user can have a given email", async () => {
     expect.hasAssertions();
