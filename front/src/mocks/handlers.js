@@ -26,11 +26,11 @@ export const handlers = [
         );
       }
     }
-    if(scenario === "emialExist") {
+    if (scenario === "emialExist") {
       return res(
-        ctx.json({ error: "Email has been taken!!!"}),
+        ctx.json({ error: "Email has been taken!!!" }),
         ctx.status(422)
-      )
+      );
     }
     return res(
       ctx.json({ message: "Email has been sent!!!" }),
@@ -106,9 +106,9 @@ export const handlers = [
       const result = initialRoomState.filter((room) =>
         room.users.find((user) => firstName)
       );
-      return res(ctx.json({message: "", room: result}), ctx.status(201));
+      return res(ctx.json({ message: "", room: result }), ctx.status(201));
     } else {
-      return res(ctx.json({message: "", room: []}), ctx.status(201));
+      return res(ctx.json({ message: "", room: [] }), ctx.status(201));
     }
   }),
   rest.get("http://localhost:5000/user/seekUsers", async (req, res, ctx) => {
@@ -126,7 +126,18 @@ export const handlers = [
     const { title, usersList } = await req.json();
     const users = usersList.split(",").map((value) => ({ firstName: value }));
 
-    if (title) {
+    if (title === "duplicateTitle") {
+      try {
+        throw new Error("This room title exists!");
+      } catch (error) {
+        return res(
+          ctx.json({
+            message: "This room title exists!",
+          }),
+          ctx.status(400)
+        );
+      }
+    } else if (title) {
       return res(
         ctx.json({
           message: "Room has been created.",
@@ -137,13 +148,6 @@ export const handlers = [
           },
         }),
         ctx.status(201)
-      );
-    } else {
-      return res(
-        ctx.json({
-          error: "There is some problem with creating room.",
-        }),
-        ctx.status(400)
       );
     }
   }),

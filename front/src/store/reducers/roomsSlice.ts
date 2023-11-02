@@ -39,8 +39,7 @@ export const fetchRoomsThunk = createAsyncThunk(
 
 export const createRoomThunk = createAsyncThunk(
   "rooms/createRoom",
-  async (values: { title: string; usersList: string }) => {
-    
+  async (values: { title: string; usersList: string }, {rejectWithValue}) => {
     try {
       const response = await axios.post(
         `${domainName}/room/create`,
@@ -56,9 +55,7 @@ export const createRoomThunk = createAsyncThunk(
         );
       return response.data;
     } catch(error: any) {
-      console.log("error", error.response);
-      console.log("error", error.response.data.error);
-      return error;
+      return rejectWithValue(error.response.data.message);
     }
   }
 );
@@ -113,7 +110,7 @@ const roomsSlice = createSlice({
         return {...state, rooms: [...state.rooms, action.payload.room] };
       })
       .addCase(createRoomThunk.rejected, (state, action) => {
-        console.log("state",state,"action", action)
+        return { error: `${action.payload}`, rooms: [...state.rooms]}
       })
       .addCase(addMessageThunk.fulfilled, (state, action) => {
         let updateState = state.rooms.map((value) => {

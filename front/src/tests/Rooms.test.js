@@ -379,4 +379,21 @@ describe("Rooms", () => {
     await user.click(screen.getByRole("button-addMessage"));
     expect(await screen.findByText("Robin meet lady Marian."));
   });
+  describe('Errors', () => {
+    test.only('Room title exist.', async () => {
+      await act(async () => {
+        renderWithProviders(<MemoryRouter><Rooms /></MemoryRouter>);
+      });
+
+      const user = userEvent.setup();
+      const open = screen.getByRole("addRoom");
+      await user.click(open);
+      await changeAndWait(field("title"), withEvent("title", "duplicateTitle"));
+      expect(field("title").value).toEqual("duplicateTitle");
+      const createButton = screen.getByRole("createRoomButton");
+      await user.click(createButton);
+
+      expect(await screen.findByText("This room title exists!")).toBeInTheDocument();
+    });
+  });
 });

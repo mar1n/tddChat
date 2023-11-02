@@ -29,6 +29,7 @@ const Rooms = () => {
   >([]);
   const dispatch = useDispatch<AppThunkDispatch>();
   const user = useSelector((state: user) => state.user.user);
+  const errorRoom = useSelector((state: rooms) => state.rooms.error);
   const rooms = useSelector((state: rooms) => state.rooms.rooms);
   const seekUsers = useSelector((state: seekUsers) => state.seekUsers);
   useEffect(() => {
@@ -168,6 +169,7 @@ const Rooms = () => {
           <span>{error}</span>
         </div>
       )}
+      <span>{errorRoom}</span>
     </Layout>
   );
 };
