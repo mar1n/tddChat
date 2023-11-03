@@ -42,7 +42,7 @@ const Signin = () => {
         history("/");
       });
     } catch (err: any) {
-      setValidationError(err.response.data.error);
+      setValidationError(err.response.data.message);
       setButtonSwitch(true);
     }
   };

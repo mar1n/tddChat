@@ -380,7 +380,7 @@ describe("Rooms", () => {
     expect(await screen.findByText("Robin meet lady Marian."));
   });
   describe('Errors', () => {
-    test.only('Room title exist.', async () => {
+    test('Create room, Room title exist.', async () => {
       await act(async () => {
         renderWithProviders(<MemoryRouter><Rooms /></MemoryRouter>);
       });

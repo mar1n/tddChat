@@ -101,5 +101,27 @@ describe("Signin", () => {
     expect(homeText).toBeInTheDocument();
     expect(screen.getByText(/Hello cykcykacz@gmail.com/i)).toBeInTheDocument();
   });
-  test.skip('Email and password do not match!', () => { second })
+  test.only('Email and password do not match.', async () => { 
+    const signinRoute = "/signin";
+    await act(async () => {
+      renderWithProviders(
+        <MemoryRouter initialEntries={[signinRoute]}>
+          <Router />
+        </MemoryRouter>
+      )
+    })
+    await changeAndWait(
+      field("email"),
+      withEvent("email", "ykykacz@gmail.com")
+    );
+    await changeAndWait(
+      field("password"),
+      withEvent("password", "testPassword")
+    );
+
+    await submit(form("signin form"));
+
+    const homeText = await screen.findByText("Email and password do not match!");
+    expect(homeText).toBeInTheDocument();
+   })
 });
