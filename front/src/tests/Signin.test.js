@@ -101,7 +101,7 @@ describe("Signin", () => {
     expect(homeText).toBeInTheDocument();
     expect(screen.getByText(/Hello cykcykacz@gmail.com/i)).toBeInTheDocument();
   });
-  test.only('Email and password do not match.', async () => { 
+  test('Email and password do not match.', async () => { 
     const signinRoute = "/signin";
     await act(async () => {
       renderWithProviders(
