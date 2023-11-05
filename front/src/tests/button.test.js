@@ -8,28 +8,21 @@ describe('Button,', () => {
 
         expect(screen.getByRole("button")).toBeInTheDocument();
      })
-    test('has txt.', () => {
-        let buttonAttributes = {
-            txt: "",
-            name: "",
-            role: "",
-            event: "",
-            type: "",
-        }
-        render(<Button txt="clickMe" />)
+    test('has label.', () => {
+        render(<Button label="clickMe" />)
 
         expect(screen.getByText("clickMe")).toBeInTheDocument();
     });
     test('has name.', () => { 
-        render(<Button txt="clickMe" name="buttonName"/>)
+        render(<Button label="clickMe" name="buttonName"/>)
 
         let button = screen.getByText("clickMe");
         expect(button).toBeInTheDocument();
         expect(button).toHaveAttribute('name', "buttonName")
      })
-    test('has function, onclick event.', async () => {
+    test('has callback function, onclick event.', async () => {
         const clickFn = jest.fn();
-        render(<Button onClick={clickFn} />);
+        render(<Button callback={clickFn} />);
 
         const user = userEvent.setup();
 
@@ -38,17 +31,24 @@ describe('Button,', () => {
         expect(clickFn).toHaveBeenCalled();
      });
      test('has type.', () => { 
-        render(<Button txt="clickMe" type="button" />)
+        render(<Button label="clickMe" type="button" />)
 
         let button = screen.getByText("clickMe");
         expect(button).toBeInTheDocument();
         expect(button).toHaveAttribute('type', "button")
       });
-     test.only('has className.', () => { 
-        render(<Button txt="clickMe" className="buttonStyle" />)
+     test('has className.', () => { 
+        render(<Button label="clickMe" className="buttonStyle" />)
 
         let button = screen.getByText("clickMe");
         expect(button).toBeInTheDocument();
         expect(button).toHaveClass("buttonStyle");
+      });
+     test('has disabled attribute.', () => { 
+        render(<Button label="clickMe" disabled={false} />)
+
+        let button = screen.getByText("clickMe");
+        expect(button).toBeInTheDocument();
+        expect(button).toBeDisabled();
       });
 })
