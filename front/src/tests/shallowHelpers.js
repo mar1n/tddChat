@@ -1,4 +1,3 @@
-import React from "react";
 import ShallowRenderer from 'react-test-renderer/shallow';
 
 export const id = id => element => element.props && element.props.id === id;

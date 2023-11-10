@@ -1,22 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { FC, useState, useEffect } from "react";
 import Layout from "../Layout/Layout";
+import ActivationLink from "./ActivationLink";
 import { useParams } from "react-router-dom";
 import jwt from "jsonwebtoken";
 import axios from "axios";
 import { server } from "../../store/reducers/helper";
 const domainName = server("rea");
 
-const Activation = () => {
+interface ActivationValues {
+  name: string;
+  token: string;
+  show: boolean;
+  success: string;
+}
+
+const Activation: FC = () => {
   let { id } = useParams();
-  
-  const [values, setValues] = useState({
+
+  const [values, setValues] = useState<ActivationValues>({
     name: "",
     token: "",
     show: false,
     success: "",
   });
 
-  const [validationError, setValidationError] = useState("");
+  const [validationError, setValidationError] = useState<string>("");
 
   useEffect(() => {
     let tokenDecode = id !== undefined ? id : "";
@@ -32,9 +40,7 @@ const Activation = () => {
 
   const { name, token, show, success } = values;
 
-  const clickActivate = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const clickActivate = async (): Promise<void> => {
     setValues({ ...values, show: false });
 
     try {
@@ -62,17 +68,18 @@ const Activation = () => {
     }
   };
 
-  const activationLink = () => (
-    <div>
-      <h1>Hey {name}, active your account</h1>
-      <button onClick={clickActivate} disabled={show}>
-        Activate Account
-      </button>
-      <span>{success}</span>
-      <span>{validationError}</span>
-    </div>
+  return (
+    <Layout>
+      Activation Page
+      <ActivationLink
+        name={name}
+        clickActivate={clickActivate}
+        show={show}
+        success={success}
+        validationError={validationError}
+      />
+    </Layout>
   );
-  return <Layout>Activation Page{activationLink()}</Layout>;
 };
 
 export default Activation;
