@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { createShallowRenderer } from "./shallowHelpers";
+import { createShallowRenderer, click} from "./shallowHelpers";
 import RouterButton from "../components/navigation/RouterButton";
-import { renderRouter } from "./myhelpers";
-describe('RouterBUtton', () => {
+
+describe('Router Button', () => {
     const pathname = "/path";
 
     let shallowRender, elementMatching, root;
@@ -26,12 +26,11 @@ describe('RouterBUtton', () => {
         shallowRender(<RouterButton>child text</RouterButton>);
         expect(root().props.children).toEqual("child text");
      });
+     test('After click function has been executed.', async () => {
+        const someFn = jest.fn();
 
-     test.skip('add disabled class', () => {
-        shallowRender(<RouterButton disabled={true} />)
-        expect(root().props.className).toEqual("disabled")
-     });
-     test.skip('After click function has been executed.', () => {
-        
+        click(<RouterButton onClick={() => someFn()} />);
+
+        expect(someFn).toHaveBeenCalled();
      });
 });

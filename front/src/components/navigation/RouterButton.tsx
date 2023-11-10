@@ -6,7 +6,6 @@ interface routerButton {
   path: string,
   className: string,
   onClick?: () => void,
-  disabled?: string
 }
 
 const RouterButton = ({ children, path, className, onClick }: routerButton) => {

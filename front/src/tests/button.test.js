@@ -44,8 +44,8 @@ describe('Button,', () => {
         expect(button).toBeInTheDocument();
         expect(button).toHaveClass("buttonStyle");
       });
-     test('has disabled attribute.', () => { 
-        render(<Button label="clickMe" disabled={false} />)
+     test('has disabled attribute.', () => {
+        render(<Button label="clickMe" disabled={true} />)
 
         let button = screen.getByText("clickMe");
         expect(button).toBeInTheDocument();
