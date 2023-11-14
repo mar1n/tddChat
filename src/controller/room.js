@@ -79,6 +79,11 @@ exports.addMsgWebSocket = async (roomDetails) => {
 
   try {
     const msg = await rooms.addMsg(room, { text, firstName });
+    const createdRoom = await Rooms.findOne({title: room.title});
+    return {
+      message: "message has been added",
+      room: createdRoom
+    };
   } catch (error) {
     if (error) {
       return {

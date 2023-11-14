@@ -30,7 +30,9 @@ function createServer() {
     //router.post("/room/new", addMsg);
     socket.on("/room/new", async (msg) => {
       console.log('msg', msg)
-      console.log(await addMsgWebSocket(msg));
+      //console.log(await addMsgWebSocket(msg));
+      const responsMmessage = await addMsgWebSocket(msg);
+      socket.emit("/room/new", responsMmessage); 
 
     })
     // const backEndMessage = {

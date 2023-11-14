@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { server } from "./helper";
+import { io } from "socket.io-client";
+const clientSocket = io("http://localhost:5666");
 
 const domainName = server("rea");
 interface users {
@@ -63,6 +65,12 @@ export const createRoomThunk = createAsyncThunk(
 export const addMessageThunk = createAsyncThunk(
   "rooms/addMessage",
   async (values: { text: string; firstName: string; room: any }) => {
+    clientSocket.emit("/room/new", {message: "Hello World!!!"})
+    clientSocket.on("/room/new", (message) => {
+      console.log("message from back end", message);
+      
+    });
+    
     try {
       const response = await axios({
         method: "POST",
