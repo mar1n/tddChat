@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FC,  useState } from "react";
 import Layout from "../Layout/Layout";
 import axios from "axios";
 import { autheticate } from "../utils/helper";
@@ -9,7 +9,7 @@ import { setUser } from "../../store/reducers/userSlice";
 import { server } from "../../store/reducers/helper";
 const domainName = server("rea");
 
-const Signin = () => {
+const Signin: FC = () => {
   const history = useNavigate();
   const [customer, setCustomer] = useState<{
     email: string;

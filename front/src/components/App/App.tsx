@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import "./App.css";
 import Layout from "../Layout/Layout";
 import { useSelector } from "react-redux";
@@ -7,7 +7,7 @@ type state = {
   user: userState
 }
 
-const App = () => {
+const App: FC = () => {
   const user = useSelector((state: state) => state.user.user);
   return (
     <Layout>

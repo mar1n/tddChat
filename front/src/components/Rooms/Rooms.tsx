@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   createRoomThunk,
@@ -17,7 +17,7 @@ type seekUsers = {
   seekUsers: seekuser[];
 };
 
-const Rooms = () => {
+const Rooms: FC = () => {
   const [title, setTitle] = useState("");
   const [openCreate, setOpenCreate] = useState(false);
   const [error, setError] = useState("");

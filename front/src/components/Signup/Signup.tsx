@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import Layout from "../Layout/Layout";
 import { server } from "../../store/reducers/helper";
 const domainName = server("rea");
 import axios from "axios";
 
-const Signup = () => {
+const Signup: FC = () => {
   const [customer, setCustomer] = useState<{
     firstName: string;
     email: string;

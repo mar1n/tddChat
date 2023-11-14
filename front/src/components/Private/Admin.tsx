@@ -1,6 +1,6 @@
-import React from "react";
+import React, { FC } from "react";
 
-const Admin = () => {
+const Admin: FC = () => {
     return <>Admin Page</>
 }
 
