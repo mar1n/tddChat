@@ -20,8 +20,9 @@ const ActivationLink: FC<ActivationLinkProps> = ({
     <div>
       <h1>Hey {name}, active your account</h1>
       <Button
+        role="button"
         label='Activate Account'
-        callback={clickActivate}
+        onClick={clickActivate}
         className='activateButton'
         disabled={show}
       />

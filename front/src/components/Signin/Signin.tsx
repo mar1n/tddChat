@@ -70,9 +70,7 @@ const Signin: FC = () => {
             value={password}
             onChange={handleChange}
           />
-          <button role='submit' type='submit' disabled={buttonSwitch}>
-            Submit
-          </button>
+          <Button label="submit" className="submitButton" role="submit" type="submit" disabled={buttonSwitch} />
         </form>
         <div className='error'>{validationError}</div>
       </div>
