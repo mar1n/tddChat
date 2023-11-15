@@ -22,7 +22,7 @@ describe('Button,', () => {
      })
     test('has callback function, onclick event.', async () => {
         const clickFn = jest.fn();
-        render(<Button callback={clickFn} />);
+        render(<Button onClick={clickFn} />);
 
         const user = userEvent.setup();
 
