@@ -51,4 +51,10 @@ describe('Button,', () => {
         expect(button).toBeInTheDocument();
         expect(button).toBeDisabled();
       });
+      test('has role.', () => {
+        render(<Button role="submit" lable="submit" />);
+
+        let button = screen.getByRole("submit");
+        expect(button).toBeInTheDocument();
+      });
 })
