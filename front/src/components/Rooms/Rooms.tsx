@@ -11,6 +11,7 @@ import { fetchSeekUsers, seekuser } from "../../store/reducers/seekUsersSlice";
 import type { AppThunkDispatch } from "../../store/store";
 import { user } from "../../store/reducers/userSlice";
 import Layout from "../Layout/Layout";
+import Button from "../Button/button";
 import "./room.css";
 
 type seekUsers = {
@@ -51,9 +52,9 @@ const Rooms: FC = () => {
   const selectRoom = (title: string) => {
     setSelectedRoom(title);
   };
-  const addMessage = (text: string) => {
+  const addMessage = () => {
     const room = rooms.find((room) => room.title === selectedRoom);
-    dispatch(addMessageThunk({ text: text, firstName: user, room: room }));
+    dispatch(addMessageThunk({ text: message, firstName: user, room: room }));
   };
   const buttonDisabledValue = (title: string) => {
     if (title === "") {
@@ -70,16 +71,21 @@ const Rooms: FC = () => {
       : setSelectedUsersList([{ firstName: name }, ...selectedUsersList]);
   };
 
+  const openCreateCallback = () => {
+    setOpenCreate(!openCreate);
+  };
+
   return (
     <Layout>
       Rooms page. <div>Hello {user}, Welcome back.</div>
-      <button
-        role={"addRoom"}
-        onClick={() => setOpenCreate(!openCreate)}
+      <Button
+        label='Add room'
+        className='addRoom'
+        role='addRoom'
+        type='button'
+        onClick={openCreateCallback}
         disabled={openCreate}
-      >
-        Add room
-      </button>
+      />
       <div role='rooms-list'>
         {rooms.length === 0
           ? "No Rooms"
@@ -122,12 +128,13 @@ const Rooms: FC = () => {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
               />
-              <button
-                role={"button-addMessage"}
-                onClick={() => addMessage(message)}
-              >
-                Add Message
-              </button>
+              <Button
+                label='Add Message'
+                role='button-addMessage'
+                type='button'
+                className='addMessage'
+                onClick={addMessage}
+              />
             </div>
           </div>
         )}
@@ -159,13 +166,14 @@ const Rooms: FC = () => {
               </p>
             ))}
           </div>
-          <button
-            role={"createRoomButton"}
+          <Button
+            label='Create Room'
+            role='createRoomButton'
+            type='button'
+            className='createRoom'
             onClick={createRoom}
             disabled={buttonDisabled}
-          >
-            Create Room
-          </button>
+          />
           <span>{error}</span>
         </div>
       )}

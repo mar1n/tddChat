@@ -1,5 +1,6 @@
 import React, { FC, useState } from "react";
 import Layout from "../Layout/Layout";
+import Button from "../Button/button";
 import { server } from "../../store/reducers/helper";
 const domainName = server("rea");
 import axios from "axios";
@@ -32,7 +33,7 @@ const Signup: FC = () => {
 
       setCustomer({ firstName: "", email: "", password: "" });
       setButtonSwitch(false);
-      setConfirmationMessage("We send you email with link.")
+      setConfirmationMessage("We send you email with link.");
     } catch (err: any) {
       setValidationError(err.response.data.error);
       setButtonSwitch(true);
@@ -44,7 +45,7 @@ const Signup: FC = () => {
     <Layout>
       <div>
         Signup Page{" "}
-        <div className="confirmationMessage">{confirmationMessage}</div>
+        <div className='confirmationMessage'>{confirmationMessage}</div>
         <form aria-label='signup form' onSubmit={clickSubmit}>
           <label htmlFor='firstName'>First Name</label>
           <input
@@ -70,9 +71,13 @@ const Signup: FC = () => {
             value={password}
             onChange={handleChange}
           />
-          <button role='submit' type='submit' disabled={buttonSwitch}>
-            Submit
-          </button>
+          <Button
+            label='submit'
+            className='submitSignup'
+            role='submit'
+            type='submit'
+            disabled={buttonSwitch}
+          />
         </form>
         <div className='error'>{validationError}</div>
       </div>
