@@ -30,6 +30,7 @@
   "browser": {
     "crypto": false
   },
+  "testEnvironment": "node",
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
@@ -37,7 +38,9 @@
     "eject": "react-app-rewired eject"
   },
   "jest": {
-    "transformIgnorePatterns": ["/node_modules/(?!(axios)/)"]
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(axios)/)"
+    ]
   },
   "eslintConfig": {
     "extends": [
