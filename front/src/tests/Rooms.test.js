@@ -227,9 +227,9 @@ describe("Rooms", () => {
     expect(screen.getByText(/Robin adventure/i)).toHaveClass("selected");
     expect(screen.getByRole("button-addMessage")).toBeInTheDocument();
     await changeAndWait(
-      field("addMessage"),
+      field("message"),
       withEvent(
-        "addMessage",
+        "message",
         "Robin stole gold and he will give it this to poor people."
       )
     );
@@ -296,8 +296,8 @@ describe("Rooms", () => {
     expect(screen.getByText(/Robin Hood Room/i)).toHaveClass("selected");
     expect(screen.getByRole("button-addMessage")).toBeInTheDocument();
     await changeAndWait(
-      field("addMessage"),
-      withEvent("addMessage", "Robin is from forest.")
+      field("message"),
+      withEvent("message", "Robin is from forest.")
     );
     await user.click(screen.getByRole("button-addMessage"));
     expect(screen.getByRole("message-screen")).toBeInTheDocument();
@@ -310,13 +310,13 @@ describe("Rooms", () => {
     expect(screen.getByRole("message-screen")).toBeInTheDocument();
     expect(screen.getByText(/Robin Hood Room/i)).toHaveClass("selected");
     expect(screen.getByText(/Robin is from forest./i)).toBeInTheDocument();
-    expect(field("addMessage")).not.toBeNull();
+    expect(field("message")).not.toBeNull();
     expect(screen.getByRole("button-addMessage")).toBeInTheDocument();
     await changeAndWait(
-      field("addMessage"),
-      withEvent("addMessage", "Robin jump over the river and he met Big John.")
+      field("message"),
+      withEvent("message", "Robin jump over the river and he met Big John.")
     );
-    expect(field("addMessage").value).toEqual(
+    expect(field("message").value).toEqual(
       "Robin jump over the river and he met Big John."
     );
     await user.click(screen.getByRole("button-addMessage"));
@@ -348,12 +348,12 @@ describe("Rooms", () => {
 
     expect(screen.getByRole("message-screen")).toBeInTheDocument();
     expect(screen.getByText(/Robin Hood Room/i)).toHaveClass("selected");
-    expect(field("addMessage")).not.toBeNull();
+    expect(field("message")).not.toBeNull();
     await changeAndWait(
-      field("addMessage"),
-      withEvent("addMessage", "Robin jump over the river and he met Big John.")
+      field("message"),
+      withEvent("message", "Robin jump over the river and he met Big John.")
     );
-    expect(field("addMessage").value).toEqual(
+    expect(field("message").value).toEqual(
       "Robin jump over the river and he met Big John."
     );
     await user.click(screen.getByRole("button-addMessage"));
@@ -361,8 +361,8 @@ describe("Rooms", () => {
       await screen.findByText("Robin jump over the river and he met Big John.")
     ).toBeInTheDocument();
     await changeAndWait(
-      field("addMessage"),
-      withEvent("addMessage", "Robin has poison arrow in his bow.")
+      field("message"),
+      withEvent("message", "Robin has poison arrow in his bow.")
     );
     await user.click(screen.getByRole("button-addMessage"));
     expect(await screen.findByText("Robin has poison arrow in his bow."));
@@ -373,8 +373,8 @@ describe("Rooms", () => {
     await user.click(screen.getByRole("createRoomButton"));
     await user.click(await screen.findByText("Robin adventure"));
     await changeAndWait(
-      field("addMessage"),
-      withEvent("addMessage", "Robin meet lady Marian.")
+      field("message"),
+      withEvent("message", "Robin meet lady Marian.")
     );
     await user.click(screen.getByRole("button-addMessage"));
     expect(await screen.findByText("Robin meet lady Marian."));

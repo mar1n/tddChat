@@ -8,6 +8,7 @@ import type { AppThunkDispatch } from "../../store/store";
 import { setUser } from "../../store/reducers/userSlice";
 import { server } from "../../store/reducers/helper";
 import Button from "../Button/button";
+import Input from "../Input/input";
 const domainName = server("rea");
 
 const Signin: FC = () => {
@@ -55,21 +56,9 @@ const Signin: FC = () => {
         Signin Page{" "}
         <form aria-label='signin form' onSubmit={clickSubmit}>
           <label htmlFor='email'>Email</label>
-          <input
-            type='text'
-            name='email'
-            placeholder='email'
-            value={email}
-            onChange={handleChange}
-          />
+          <Input name="email" className="inputNameSigin" placeholder="email" value={email} onChange={handleChange} />
           <label htmlFor='password'>Password</label>
-          <input
-            type='text'
-            name='password'
-            placeholder='password'
-            value={password}
-            onChange={handleChange}
-          />
+          <Input name="password" className="inputPasswordSignin" placeholder="password" value={password} onChange={handleChange} />
           <Button label="submit" className="submitButton" role="submit" type="submit" disabled={buttonSwitch} />
         </form>
         <div className='error'>{validationError}</div>

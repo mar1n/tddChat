@@ -12,6 +12,7 @@ import type { AppThunkDispatch } from "../../store/store";
 import { user } from "../../store/reducers/userSlice";
 import Layout from "../Layout/Layout";
 import Button from "../Button/button";
+import Input from "../Input/input";
 import "./room.css";
 
 type seekUsers = {
@@ -19,15 +20,17 @@ type seekUsers = {
 };
 
 const Rooms: FC = () => {
-  const [title, setTitle] = useState("");
   const [openCreate, setOpenCreate] = useState(false);
   const [error, setError] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(true);
-  const [message, setMessage] = useState("");
   const [selectedRoom, setSelectedRoom] = useState("");
   const [selectedUsersList, setSelectedUsersList] = useState<
     { firstName: string }[]
   >([]);
+  const [values, setValues] = useState<{
+    message: string;
+    title: string;
+  }>({message: "", title: ""});
   const dispatch = useDispatch<AppThunkDispatch>();
   const user = useSelector((state: user) => state.user.user);
   const errorRoom = useSelector((state: rooms) => state.rooms.error);
@@ -37,6 +40,8 @@ const Rooms: FC = () => {
     dispatch(fetchRoomsThunk(user));
     dispatch(fetchSeekUsers());
   }, []);
+
+  const {message, title } = values;
   const createRoom = async () => {
     let users = [{ firstName: user }, ...selectedUsersList];
     let userslist = Object.keys(users)
@@ -46,22 +51,28 @@ const Rooms: FC = () => {
     dispatch(createRoomThunk({ title: title, usersList: userslist }));
 
     setOpenCreate(false);
-    setTitle("");
+    setValues({...values, title: ""});
     setSelectedRoom("");
   };
   const selectRoom = (title: string) => {
     setSelectedRoom(title);
   };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if(e.target.name === "title") {
+      if (e.target.value === "") {
+        setButtonDisabled(true);
+      } else {
+        setButtonDisabled(false);
+      }
+    }
+    setValues((values) => ({
+      ...values,
+      [e.target.name]: e.target.value
+    }))
+  }
   const addMessage = () => {
     const room = rooms.find((room) => room.title === selectedRoom);
     dispatch(addMessageThunk({ text: message, firstName: user, room: room }));
-  };
-  const buttonDisabledValue = (title: string) => {
-    if (title === "") {
-      setButtonDisabled(true);
-    } else {
-      setButtonDisabled(false);
-    }
   };
   const selectUser = (name: string) => {
     selectedUsersList.some((value) => value.firstName === name)
@@ -121,13 +132,7 @@ const Rooms: FC = () => {
               }
             })}
             <div>
-              <input
-                type='text'
-                name='addMessage'
-                placeholder='addMessage'
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-              />
+              <Input className="messageRoom" name="message" placeholder="message" value={message} onChange={handleChange} />
               <Button
                 label='Add Message'
                 role='button-addMessage'
@@ -141,16 +146,7 @@ const Rooms: FC = () => {
       </div>
       {openCreate && (
         <div role={"popUp"}>
-          <input
-            type='text'
-            name='title'
-            placeholder='title'
-            value={title}
-            onChange={(e) => {
-              setTitle(e.target.value);
-              buttonDisabledValue(e.target.value);
-            }}
-          />
+          <Input className="titleRoom" name="title" placeholder="title" value={title} onChange={handleChange} />
           <div role={"users"}>
             {seekUsers.map(({ firstName }) => (
               <p

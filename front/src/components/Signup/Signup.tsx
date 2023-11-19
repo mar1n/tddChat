@@ -1,6 +1,7 @@
 import React, { FC, useState } from "react";
 import Layout from "../Layout/Layout";
 import Button from "../Button/button";
+import Input from "../Input/input";
 import { server } from "../../store/reducers/helper";
 const domainName = server("rea");
 import axios from "axios";
@@ -48,29 +49,11 @@ const Signup: FC = () => {
         <div className='confirmationMessage'>{confirmationMessage}</div>
         <form aria-label='signup form' onSubmit={clickSubmit}>
           <label htmlFor='firstName'>First Name</label>
-          <input
-            type='text'
-            placeholder='firstName'
-            name='firstName'
-            value={firstName}
-            onChange={handleChange}
-          />
+          <Input className="firstNameSignup" name="firstName" placeholder="firstName" value={firstName} onChange={handleChange} />
           <label htmlFor='email'>Email</label>
-          <input
-            type='text'
-            name='email'
-            placeholder='email'
-            value={email}
-            onChange={handleChange}
-          />
+          <Input className="emailSignup" name="email" placeholder="email" value={email} onChange={handleChange} />
           <label htmlFor='password'>Password</label>
-          <input
-            type='text'
-            name='password'
-            placeholder='password'
-            value={password}
-            onChange={handleChange}
-          />
+          <Input className="passwordSignup" name="password" placeholder="password" value={password} onChange={handleChange} />
           <Button
             label='submit'
             className='submitSignup'
