@@ -20,17 +20,14 @@ type seekUsers = {
 };
 
 const Rooms: FC = () => {
-  const [openCreate, setOpenCreate] = useState(false);
-  const [error, setError] = useState("");
-  const [buttonDisabled, setButtonDisabled] = useState(true);
-  const [selectedRoom, setSelectedRoom] = useState("");
-  const [selectedUsersList, setSelectedUsersList] = useState<
-    { firstName: string }[]
-  >([]);
   const [values, setValues] = useState<{
     message: string;
     title: string;
-  }>({message: "", title: ""});
+    openCreate: boolean;
+    buttonDisabled: boolean;
+    selectedRoom: string;
+    selectedUsersList: {firstName: string} [];
+  }>({message: "", title: "", openCreate: false, buttonDisabled: true, selectedRoom: "", selectedUsersList: []});
   const dispatch = useDispatch<AppThunkDispatch>();
   const user = useSelector((state: user) => state.user.user);
   const errorRoom = useSelector((state: rooms) => state.rooms.error);
@@ -41,7 +38,7 @@ const Rooms: FC = () => {
     dispatch(fetchSeekUsers());
   }, []);
 
-  const {message, title } = values;
+  const {message, title, openCreate, buttonDisabled, selectedRoom, selectedUsersList } = values;
   const createRoom = async () => {
     let users = [{ firstName: user }, ...selectedUsersList];
     let userslist = Object.keys(users)
@@ -50,19 +47,17 @@ const Rooms: FC = () => {
 
     dispatch(createRoomThunk({ title: title, usersList: userslist }));
 
-    setOpenCreate(false);
-    setValues({...values, title: ""});
-    setSelectedRoom("");
+    setValues({...values, title: "", openCreate: false, selectedRoom: ""});
   };
   const selectRoom = (title: string) => {
-    setSelectedRoom(title);
+    setValues({...values, selectedRoom: title});
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if(e.target.name === "title") {
       if (e.target.value === "") {
-        setButtonDisabled(true);
+        setValues({...values, buttonDisabled: true})
       } else {
-        setButtonDisabled(false);
+        setValues({...values, buttonDisabled: false})
       }
     }
     setValues((values) => ({
@@ -76,14 +71,14 @@ const Rooms: FC = () => {
   };
   const selectUser = (name: string) => {
     selectedUsersList.some((value) => value.firstName === name)
-      ? setSelectedUsersList([
+      ? setValues({...values, selectedUsersList: [
           ...selectedUsersList.filter((value) => value.firstName !== name),
-        ])
-      : setSelectedUsersList([{ firstName: name }, ...selectedUsersList]);
+        ]})
+      : setValues({...values, selectedUsersList: [{ firstName: name }, ...selectedUsersList]});
   };
 
   const openCreateCallback = () => {
-    setOpenCreate(!openCreate);
+    setValues({...values, openCreate: !values.openCreate});
   };
 
   return (
@@ -170,7 +165,6 @@ const Rooms: FC = () => {
             onClick={createRoom}
             disabled={buttonDisabled}
           />
-          <span>{error}</span>
         </div>
       )}
       <span>{errorRoom}</span>
