@@ -11,6 +11,7 @@ import { fetchSeekUsers, seekuser } from "../../store/reducers/seekUsersSlice";
 import type { AppThunkDispatch } from "../../store/store";
 import { user } from "../../store/reducers/userSlice";
 import Layout from "../Layout/Layout";
+import RoomsList from "./RoomsList";
 import Button from "../Button/button";
 import Input from "../Input/input";
 import "./room.css";
@@ -92,22 +93,7 @@ const Rooms: FC = () => {
         onClick={openCreateCallback}
         disabled={openCreate}
       />
-      <div role='rooms-list'>
-        {rooms.length === 0
-          ? "No Rooms"
-          : rooms.map((value, index) => {
-              return (
-                <div
-                  role={"listitem"}
-                  key={index}
-                  onClick={() => selectRoom(value.title)}
-                  className={value.title === selectedRoom ? "selected" : ""}
-                >
-                  {value.title}
-                </div>
-              );
-            })}
-      </div>
+      <RoomsList rooms={rooms} selectRoom={selectRoom} selectedRoom={selectedRoom} />
       <div>
         {/* think about it can I avoid string react state */}
         {selectedRoom === "" ? (
