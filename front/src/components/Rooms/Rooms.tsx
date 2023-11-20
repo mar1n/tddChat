@@ -12,6 +12,7 @@ import type { AppThunkDispatch } from "../../store/store";
 import { user } from "../../store/reducers/userSlice";
 import Layout from "../Layout/Layout";
 import RoomsList from "./RoomsList";
+import MessageScreen from "./MessageScreen";
 import Button from "../Button/button";
 import Input from "../Input/input";
 import "./room.css";
@@ -99,30 +100,7 @@ const Rooms: FC = () => {
         {selectedRoom === "" ? (
           "Select Room"
         ) : (
-          <div role={"message-screen"}>
-            {rooms.map((value) => {
-              if (value.title === selectedRoom && value && value.messages) {
-                return value.messages.map((msg, index) => {
-                  return (
-                    <div key={index}>
-                      <p role={"message-screen-user"}>{msg.firstName}:</p>
-                      <p>{msg.text}</p>
-                    </div>
-                  );
-                });
-              }
-            })}
-            <div>
-              <Input className="messageRoom" name="message" placeholder="message" value={message} onChange={handleChange} />
-              <Button
-                label='Add Message'
-                role='button-addMessage'
-                type='button'
-                className='addMessage'
-                onClick={addMessage}
-              />
-            </div>
-          </div>
+          <MessageScreen rooms={rooms} selectedRoom={selectedRoom} addMessage={addMessage} message={message} handleChange={handleChange} />
         )}
       </div>
       {openCreate && (
