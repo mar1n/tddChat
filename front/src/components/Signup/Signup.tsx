@@ -2,6 +2,7 @@ import React, { FC, useState } from "react";
 import Layout from "../Layout/Layout";
 import Button from "../Button/button";
 import Input from "../Input/input";
+import FormSignup from "./FormSignup";
 import { server } from "../../store/reducers/helper";
 const domainName = server("rea");
 import axios from "axios";
@@ -47,7 +48,8 @@ const Signup: FC = () => {
       <div>
         Signup Page{" "}
         <div className='confirmationMessage'>{confirmationMessage}</div>
-        <form aria-label='signup form' onSubmit={clickSubmit}>
+        <FormSignup clickSubmit={clickSubmit} firstName={firstName} handleChange={handleChange} password={password} email={email} buttonSwitch={buttonSwitch} />
+        {/* <form aria-label='signup form' onSubmit={clickSubmit}>
           <label htmlFor='firstName'>First Name</label>
           <Input className="firstNameSignup" name="firstName" placeholder="firstName" value={firstName} onChange={handleChange} />
           <label htmlFor='email'>Email</label>
@@ -61,7 +63,7 @@ const Signup: FC = () => {
             type='submit'
             disabled={buttonSwitch}
           />
-        </form>
+        </form> */}
         <div className='error'>{validationError}</div>
       </div>
     </Layout>
