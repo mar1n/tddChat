@@ -7,8 +7,7 @@ import { useDispatch } from "react-redux";
 import type { AppThunkDispatch } from "../../store/store";
 import { setUser } from "../../store/reducers/userSlice";
 import { server } from "../../store/reducers/helper";
-import Button from "../Button/button";
-import Input from "../Input/input";
+import FormSigin from "./FormSigin";
 const domainName = server("rea");
 
 const Signin: FC = () => {
@@ -54,13 +53,7 @@ const Signin: FC = () => {
     <Layout>
       <div>
         Signin Page{" "}
-        <form aria-label='signin form' onSubmit={clickSubmit}>
-          <label htmlFor='email'>Email</label>
-          <Input name="email" className="inputNameSigin" placeholder="email" value={email} onChange={handleChange} />
-          <label htmlFor='password'>Password</label>
-          <Input name="password" className="inputPasswordSignin" placeholder="password" value={password} onChange={handleChange} />
-          <Button label="submit" className="submitButton" role="submit" type="submit" disabled={buttonSwitch} />
-        </form>
+        <FormSigin clickSubmit={clickSubmit} email={email} password={password} handleChange={handleChange} buttonSwitch={buttonSwitch} />
         <div className='error'>{validationError}</div>
       </div>
     </Layout>
