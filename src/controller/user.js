@@ -19,9 +19,9 @@ exports.signup = async (req, res, next) => {
   }
 
   const msg = {
-    to: "cykcykacz@gmail.com", // Change to your recipient
+    to: `${email}`, // Change to your recipient
     from: "szym0nd4widowicz@gmail.com", // Change to your verified sender
-    subject: "Sending with SendGrid is Fun",
+    subject: "Chat Application, Activate your account.",
     text: "and easy to do anywhere, even with Node.js",
     html: `
                 <h1>Please use the following link to activate your account</h1>

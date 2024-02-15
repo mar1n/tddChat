@@ -32,7 +32,7 @@ const Signin: FC = () => {
     try {
       const response = await axios({
         method: "POST",
-        url: `${domainName}/user/signin`,
+        url: `http://localhost:5666/user/signin`,
         data: { email, password },
       });
       autheticate(response, () => {
