@@ -2,3 +2,4 @@
 .env
 /front/node_modules
 /front/uiEndTest/node_modules
+ecosystem.config.js
