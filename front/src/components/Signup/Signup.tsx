@@ -2,7 +2,7 @@ import React, { FC, useState } from "react";
 import Layout from "../Layout/Layout";
 import FormSignup from "./FormSignup";
 import { server } from "../../store/reducers/helper";
-const domainName = server("real");
+const domainName = server("production");
 import axios from "axios";
 
 const Signup: FC = () => {
@@ -27,7 +27,7 @@ const Signup: FC = () => {
     try {
       await axios({
         method: "POST",
-        url: `http://localhost:5666/user/signup`,
+        url: `${domainName}/api/user/signup`,
         data: { firstName, email, password },
       });
 
