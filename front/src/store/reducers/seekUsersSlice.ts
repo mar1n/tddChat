@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { server } from "./helper";
-const domainName = server("rea")
+const domainName = server("production")
 export type seekuser = {
   firstName: string;
 }
@@ -10,7 +10,7 @@ export const fetchSeekUsers = createAsyncThunk("rooms/seekUsers", async () => {
   try {
     const response = await axios({
       method: "GET",
-      url: `${domainName}/user/seekUsers`,
+      url: `${domainName}/api/user/seekUsers`,
       data: {}
     });
     return response.data;

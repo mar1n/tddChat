@@ -5,7 +5,7 @@ import { server } from "./helper";
 import { io } from "socket.io-client";
 const clientSocket = io("http://localhost:5666");
 
-const domainName = server("rea");
+const domainName = server("production");
 interface users {
   name: string;
 }
@@ -24,7 +24,7 @@ export const fetchRoomsThunk = createAsyncThunk(
   async (userName: string) => {
     try {
       const response = await axios.get(
-      `${domainName}/room/all?firstName=${userName}`,
+      `${domainName}/api/room/all?firstName=${userName}`,
       {
         headers: {
           Accept: "*/*, application/json, text/plain"
@@ -44,7 +44,7 @@ export const createRoomThunk = createAsyncThunk(
   async (values: { title: string; usersList: string }, {rejectWithValue}) => {
     try {
       const response = await axios.post(
-        `${domainName}/room/create`,
+        `${domainName}/api/room/create`,
         {
           title: values.title,
           usersList: values.usersList,
@@ -74,7 +74,7 @@ export const addMessageThunk = createAsyncThunk(
     try {
       const response = await axios({
         method: "POST",
-        url: `${domainName}/room/new`,
+        url: `${domainName}/api/room/new`,
         data: {
           text: values.text,
           firstName: values.firstName,

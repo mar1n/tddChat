@@ -25,7 +25,7 @@ exports.signup = async (req, res, next) => {
     text: "and easy to do anywhere, even with Node.js",
     html: `
                 <h1>Please use the following link to activate your account</h1>
-                <p>${process.env.CLIENT_URL}/api/activation/${token}</p>
+                <p>${process.env.CLIENT_URL}/activation/${token}</p>
                 <hr />
                 <p>This email may contain sensetive information</p>
                 <p>${process.env.CLIENT_URL}</p>

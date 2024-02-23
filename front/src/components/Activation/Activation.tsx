@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import jwt from "jsonwebtoken";
 import axios from "axios";
 import { server } from "../../store/reducers/helper";
-const domainName = server("rea");
+const domainName = server("production");
 
 interface ActivationValues {
   name: string;
@@ -48,7 +48,7 @@ const Activation: FC = () => {
         data: { message },
       } = await axios({
         method: "GET",
-        url: `${domainName}/user/activation/${token}`,
+        url: `${domainName}/api/user/activation/${token}`,
         data: { token },
       });
 

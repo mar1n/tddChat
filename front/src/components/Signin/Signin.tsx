@@ -8,7 +8,7 @@ import type { AppThunkDispatch } from "../../store/store";
 import { setUser } from "../../store/reducers/userSlice";
 import { server } from "../../store/reducers/helper";
 import FormSigin from "./FormSigin";
-const domainName = server("rea");
+const domainName = server("production");
 
 const Signin: FC = () => {
   const history = useNavigate();
@@ -32,7 +32,7 @@ const Signin: FC = () => {
     try {
       const response = await axios({
         method: "POST",
-        url: `http://localhost:5666/user/signin`,
+        url: `${domainName}/api/user/signin`,
         data: { email, password },
       });
       autheticate(response, () => {
