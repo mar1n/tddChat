@@ -4,6 +4,9 @@ server {
 
 	root /opt/chatapp/front/build;
 	index index.html;
+	location / {
+		try_files $uri $uri/ $uri.html /index.html;
+	}
 	location /api/ {
 		proxy_set_header X-Real-IP $remote_addr;
 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
