@@ -3,9 +3,9 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { server } from "./helper";
 import { io } from "socket.io-client";
-const clientSocket = io("http://localhost:5666");
-
 const domainName = server("production");
+const clientSocket = io(`${domainName}/api/`);
+
 interface users {
   name: string;
 }

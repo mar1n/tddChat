@@ -6,4 +6,4 @@ const server = (select: string) => {
     return select === "production" ? serverURL_PRO : select === "real" ? serverURL_DEV : mockServerURL
 }
 
-export { serverURL_DEV, mockServerURL, server };
+export { server };

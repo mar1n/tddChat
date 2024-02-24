@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { mockServerURL } from "./helper";
+import { server } from "./helper";
+const domainName = server("production");
 export interface userState {
   user: string;
   error: string;
@@ -17,7 +18,7 @@ export const activationThunk = createAsyncThunk(
     try {
       const response = await axios({
         method: "GET",
-        url: `${mockServerURL}/room/all`,
+        url: `${domainName}/api/room/all`,
         data: {
           firstName: userName,
         },
