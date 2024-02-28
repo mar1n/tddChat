@@ -74,22 +74,6 @@ export const addMessageThunk = createAsyncThunk(
       clientSocket.removeListener("/room/new");
       return dispatch({ type: "rooms/addMessagesRecevied", payload: room });
     });
-    //clientSocket.removeListener("/room/new");
-
-    // try {
-    //   const response = await axios({
-    //     method: "POST",
-    //     url: `${domainName}/room/new`,
-    //     data: {
-    //       text: values.text,
-    //       firstName: values.firstName,
-    //       room: values.room,
-    //     },
-    //   });
-    //   return response.data;
-    // } catch (error: any) {
-    //   console.log("error addMessageThunk", error.response.data.error);
-    // }
   }
 );
 
