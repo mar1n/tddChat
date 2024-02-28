@@ -78,17 +78,29 @@ exports.addMsgWebSocket = async (roomDetails) => {
   const rooms = new Rooms();
 
   try {
-    const msg = await rooms.addMsg(room, { text, firstName });
+    await rooms.addMsg(room, { text, firstName });
     const createdRoom = await Rooms.findOne({title: room.title});
     return {
       message: "message has been added",
       room: createdRoom
     };
   } catch (error) {
-    if (error) {
       return {
         message: error,
       };
+  }
+};
+
+exports.fetchRoomWebSocket = async (firstName) => {
+  try {
+    const room = await Rooms.find({ users: { $elemMatch: { firstName: firstName }}});
+    return {
+      message: "Room has been found.",
+      room
     }
+  } catch (error) {
+      return {
+        message: error
+      }
   }
 };

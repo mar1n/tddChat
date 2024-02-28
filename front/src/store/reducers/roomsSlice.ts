@@ -64,71 +64,77 @@ export const createRoomThunk = createAsyncThunk(
 
 export const addMessageThunk = createAsyncThunk(
   "rooms/addMessage",
-  async (values: { text: string; firstName: string; room: any }) => {
-    clientSocket.emit("/room/new", {message: "Hello World!!!"})
-    clientSocket.on("/room/new", (message) => {
-      console.log("message from back end", message);
-      
+  async (
+    values: { text: string; firstName: string; room: any },
+    { dispatch }
+  ) => {
+    clientSocket.emit("/room/new", values);
+    clientSocket.on("/room/new", (room) => {
+      console.log("addMessage", room);
+      clientSocket.removeListener("/room/new");
+      return dispatch({ type: "rooms/addMessagesRecevied", payload: room });
     });
-    
-    try {
-      const response = await axios({
-        method: "POST",
-        url: `${domainName}/api/room/new`,
-        data: {
-          text: values.text,
-          firstName: values.firstName,
-          room: values.room,
-        },
-      });
-      return response.data;
-    } catch (error: any) {
-      console.log("error addMessageThunk", error.response.data.error);
-    }
+    //clientSocket.removeListener("/room/new");
+
+    // try {
+    //   const response = await axios({
+    //     method: "POST",
+    //     url: `${domainName}/room/new`,
+    //     data: {
+    //       text: values.text,
+    //       firstName: values.firstName,
+    //       room: values.room,
+    //     },
+    //   });
+    //   return response.data;
+    // } catch (error: any) {
+    //   console.log("error addMessageThunk", error.response.data.error);
+    // }
   }
 );
 
 export interface roomsState {
-  error: string,
-  rooms: Array<irooms>
+  error: string;
+  rooms: Array<irooms>;
 }
 
 export interface rooms {
-  rooms: roomsState
+  rooms: roomsState;
 }
 
 const roomsSlice = createSlice({
   name: "rooms",
-  initialState: {error: '', rooms: []} as roomsState,
+  initialState: { error: "", rooms: [] } as roomsState,
   reducers: {
     roomsAdd(state, action: PayloadAction<irooms[]>) {
-      return {...state, rooms: [...action.payload]};
+      return { ...state, rooms: [...action.payload] };
     },
+    fetchRoomsRecevied: (state, action) => {
+      if (action.payload) {
+        return { error: "", rooms: [...action.payload.room] };
+      }
+      return { ...state };
+    },
+    addMessagesRecevied: (state, action) => {
+      let updateState = state.rooms.map((value) => {
+        if (value.title === action.payload.room.title) {
+          return action.payload.room;
+        }
+        return value;
+      });
+      return { error: "", rooms: [...updateState] };
+    }
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchRoomsThunk.fulfilled, (state, action) => {
-        if (action.payload) {
-          return { error: "", rooms: [...action.payload.room]};
-        }
-        
-        return {...state};
-      })
+      .addCase(fetchRoomsThunk.fulfilled, () => {})
       .addCase(createRoomThunk.fulfilled, (state, action) => {
-        return {...state, rooms: [...state.rooms, action.payload.room] };
+        return { ...state, rooms: [...state.rooms, action.payload.room] };
       })
       .addCase(createRoomThunk.rejected, (state, action) => {
-        return { error: `${action.payload}`, rooms: [...state.rooms]}
+        return { error: `${action.payload}`, rooms: [...state.rooms] };
       })
-      .addCase(addMessageThunk.fulfilled, (state, action) => {
-        let updateState = state.rooms.map((value) => {
-          if (value.title === action.payload.room.title) {
-            return action.payload.room;
-          }
-          return value;
-        });
-        return {error: "", rooms: [...updateState]};
-      });
+      .addCase(addMessageThunk.fulfilled, () => {});
   },
 });
 

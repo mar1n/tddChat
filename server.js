@@ -6,7 +6,7 @@ const routerRoom = require("./src/routes/room");
 const routerUser = require("./src/routes/user");
 const {errFiveHundred, errNotFound} = require("./src/controller/errors");
 const http = require("http");
-const { addMsgWebSocket } = require("./src/controller/room");
+const { addMsgWebSocket, fetchRoomWebSocket } = require("./src/controller/room");
 
 function createServer() {
   const app = express();
@@ -32,26 +32,18 @@ function createServer() {
       methods: ["GET", "POST"] 
     },
   });
-
+ 
   io.on("connection", (socket) => {
-    //router.post("/room/new", addMsg);
     socket.on("/room/new", async (msg) => {
-      console.log('msg', msg)
-      //console.log(await addMsgWebSocket(msg));
       const responsMmessage = await addMsgWebSocket(msg);
       socket.emit("/room/new", responsMmessage); 
 
     })
-    // const backEndMessage = {
-    //   name: "BackEnd Message",
-    //   message: "Hello from backEnd",
-    // };
-    // console.log("connect");
-    // socket.emit("backEnd", backEndMessage);
-    // socket.on("addMessage", (msg) => {
-    //   console.log("msg", msg);
-    //   io.emit("responseBackEnd", true);
-    // });
+    socket.on("/room/all", async(firstName) => {
+      const responseRoomAll = await fetchRoomWebSocket(firstName);
+      socket.emit("/room/all", responseRoomAll);
+    })
+
   });
   return httpServer;
 }
