@@ -1,10 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { server } from "./helper";
-import { io } from "socket.io-client";
+import { server, socket } from "./helper";
 const domainName = server("production");
-const clientSocket = io(`${domainName}/api/`);
 
 interface users {
   name: string;
@@ -21,42 +19,36 @@ export interface irooms {
 
 export const fetchRoomsThunk = createAsyncThunk(
   "rooms/fetchRooms",
-  async (userName: string) => {
-    try {
-      const response = await axios.get(
-      `${domainName}/api/room/all?firstName=${userName}`,
-      {
-        headers: {
-          Accept: "*/*, application/json, text/plain"
-        }
-      }
-      );
-      return response.data;
-    } catch (error: any) {
-      console.log("error", error.response);
-      console.log("error", error.response.data.error);
-    }
+  async (userName: string, {dispatch}) => {
+    console.log("userName", userName);
+    socket.emit("/room/all", userName);
+    socket.on("/room/all", (room) => {
+      console.log("room", room);
+      
+      socket.removeListener("/room/all")
+      return dispatch({type: "rooms/fetchRoomsRecevied", payload: room});
+    })
   }
 );
 
 export const createRoomThunk = createAsyncThunk(
   "rooms/createRoom",
-  async (values: { title: string; usersList: string }, {rejectWithValue}) => {
+  async (values: { title: string; usersList: string }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${domainName}/api/room/create`,
+        `${domainName}/room/create`,
         {
           title: values.title,
           usersList: values.usersList,
         },
         {
           headers: {
-            Accept: "*/*, application/json, text/plain"
-          }
+            Accept: "*/*, application/json, text/plain",
+          },
         }
-        );
+      );
       return response.data;
-    } catch(error: any) {
+    } catch (error: any) {
       return rejectWithValue(error.response.data.message);
     }
   }
@@ -68,10 +60,10 @@ export const addMessageThunk = createAsyncThunk(
     values: { text: string; firstName: string; room: any },
     { dispatch }
   ) => {
-    clientSocket.emit("/room/new", values);
-    clientSocket.on("/room/new", (room) => {
+    socket.emit("/room/new", values);
+    socket.on("/room/new", (room) => {
       console.log("addMessage", room);
-      clientSocket.removeListener("/room/new");
+      socket.removeListener("/room/new");
       return dispatch({ type: "rooms/addMessagesRecevied", payload: room });
     });
   }
