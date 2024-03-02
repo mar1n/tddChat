@@ -18,7 +18,7 @@ export const activationThunk = createAsyncThunk(
     try {
       const response = await axios({
         method: "GET",
-        url: `${domainName}/api/room/all`,
+        url: `${domainName}/room/all`,
         data: {
           firstName: userName,
         },

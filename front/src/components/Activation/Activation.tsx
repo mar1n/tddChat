@@ -48,7 +48,7 @@ const Activation: FC = () => {
         data: { message },
       } = await axios({
         method: "GET",
-        url: `${domainName}/api/user/activation/${token}`,
+        url: `${domainName}/user/activation/${token}`,
         data: { token },
       });
 

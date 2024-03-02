@@ -10,7 +10,7 @@ export const fetchSeekUsers = createAsyncThunk("rooms/seekUsers", async () => {
   try {
     const response = await axios({
       method: "GET",
-      url: `${domainName}/api/user/seekUsers`,
+      url: `${domainName}/user/seekUsers`,
       data: {}
     });
     return response.data;

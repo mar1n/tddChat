@@ -27,7 +27,7 @@ const Signup: FC = () => {
     try {
       await axios({
         method: "POST",
-        url: `${domainName}/api/user/signup`,
+        url: `${domainName}/user/signup`,
         data: { firstName, email, password },
       });
 
