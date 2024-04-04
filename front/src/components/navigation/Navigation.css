@@ -3,8 +3,18 @@ nav {
     grid-template-columns: 1fr;
 }
 a {
+    width: 100%;
+    color: #FFF;
+    text-decoration: none;
+    text-align: center;
     align-self: center;
     justify-self: center;
+    border-bottom: 1px solid #6780cc;
+    background-color: #4f6ebd;
+}
+a:hover {
+    cursor: pointer;
+    background-color:#5172c3;
 }
 .active {
     color: red;
