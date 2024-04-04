@@ -1,3 +1,11 @@
+nav {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+a {
+    align-self: center;
+    justify-self: center;
+}
 .active {
     color: red;
 }
