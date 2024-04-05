@@ -1,4 +1,5 @@
 import React, { FC, useState } from "react";
+import "./signup.css"
 import Layout from "../Layout/Layout";
 import FormSignup from "./FormSignup";
 import { server } from "../../store/reducers/helper";
@@ -43,7 +44,7 @@ const Signup: FC = () => {
 
   return (
     <Layout>
-      <div>
+      <div className="signup">
         Signup Page{" "}
         <div className='confirmationMessage'>{confirmationMessage}</div>
         <FormSignup
