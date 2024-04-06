@@ -253,18 +253,6 @@ describe("Users controller", () => {
     test('Find all users.', async () => {
       try {
         User.init();
-        // await User.create([
-        //   {
-        //     firstName: "Szymon",
-        //     email: "cykcykacz@gmail.com",
-        //     password: "zxcasdqwe",
-        //   },
-        //   {
-        //     firstName: "Robert",
-        //     email: "robert@gmail.com",
-        //     password: "zxcasdqwe",
-        //   }
-        // ]);
         const createUser = new User({
           _id: mongoose.Types.ObjectId('000000000000000000000001'),
           firstName: "Szymon",
@@ -291,7 +279,7 @@ describe("Users controller", () => {
         .expect(200)
 
         const { users } = response.body;
-        expect(users).toEqual([{firstName: "Szymon"}, {firstName: "Robert"}])
+        expect(users).toEqual([{email: "prykacz@gmail.com"}, {email: "robert@gmail.com"}])
      })
    })
 });
