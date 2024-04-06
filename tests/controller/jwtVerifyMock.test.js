@@ -1,6 +1,7 @@
 const createServer = require("../../server");
 const supertest = require("supertest");
 const { connectToMongo, disconnect } = require("../utils/db");
+const { connectDB, dropDB } = require("../utils/setuptestdb");
 const User = require("../../src/db/model/user");
 
 // jest.mock("jsonwebtoken", () => {
@@ -18,11 +19,11 @@ const User = require("../../src/db/model/user");
 const jwt = require("jsonwebtoken");
 
 beforeEach(async () => {
-  await connectToMongo();
+  await connectDB();
 });
 
 afterEach(async () => {
-  await disconnect();
+  await dropDB();
 });
 
 const app = createServer();

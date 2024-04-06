@@ -4,6 +4,7 @@ const Users = require("../../src/db/model/user");
 const Messages = require("../../src/db/model/message")
 const supertest = require("supertest");
 const { connectToMongo, disconnect } = require("../utils/db");
+const { connectDB, dropDB } = require("../utils/setuptestdb");
 const { createRoom } = require("../utils/document");
 const { addMsgWebSocket } = require("../../src/controller/room");
 

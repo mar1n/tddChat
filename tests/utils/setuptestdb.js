@@ -8,10 +8,11 @@ const connectDB = async () => {
     mongo = await MongoMemoryServer.create();
     const uri = mongo.getUri();
 
-    await mongoose.connect(uri, {
+    let connect = await mongoose.connect(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
+    return connect;
 }
 
 const dropDB = async () => {

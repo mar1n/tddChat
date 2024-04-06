@@ -1,13 +1,14 @@
 const User = require("../../src/db/model/user");
 const { connectToMongo, disconnect } = require("../utils/db");
+const {connectDB, dropDB } = require("../utils/setuptestdb");
 
 beforeEach(async () => {
-  await connectToMongo();
+  await connectDB();
   await User.deleteMany();
 });
 afterEach(async () => {
   await User.deleteMany();
-  await disconnect();
+  await dropDB();
 });
 
 describe("Users", () => {

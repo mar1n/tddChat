@@ -2,6 +2,7 @@ const createServer = require("../../server");
 const User = require("../../src/db/model/user");
 const supertest = require("supertest");
 const { connectToMongo, disconnect } = require("../utils/db");
+const {connectDB, dropDB} = require("../utils/setuptestdb");
 const jwt = require("jsonwebtoken");
 const FakeTimers = require("@sinonjs/fake-timers");
 const mongoose = require("mongoose")
@@ -39,7 +40,7 @@ const sgMail = require("@sendgrid/mail");
 let clock;
 beforeEach(async () => {
   clock = FakeTimers.install();
-  await connectToMongo();
+  await connectDB();
   await User.deleteMany();
 });
 
@@ -47,7 +48,7 @@ afterEach(async () => {
   clock = clock.uninstall();
   jest.clearAllMocks();
   await User.deleteMany();
-  await disconnect();
+  await dropDB();
 });
 
 const app = createServer();
