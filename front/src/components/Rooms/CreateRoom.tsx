@@ -31,19 +31,21 @@ const CreateRoom: FC<createRoomProps> = ({
         onChange={handleChange}
       />
       <div role={"users"}>
-        {seekUsers.map(({ firstName }) => (
-          <p
-            key={firstName}
+        {seekUsers.map(({ email }) => {
+          return <p
+            key={email}
             className={
-              selectedUsersList.some((user) => user.firstName === firstName)
+              selectedUsersList.some((user) => user.firstName === email)
                 ? "active"
                 : "selectUser"
             }
-            onClick={() => selectUser(firstName)}
+            onClick={() => selectUser(email)}
           >
-            {firstName}
+            {email}
           </p>
-        ))}
+        }
+        
+        )}
       </div>
       <Button
         label='Create Room'

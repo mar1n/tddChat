@@ -188,12 +188,14 @@ describe("rooms", () => {
     ]);
     await User.init();
     const user = await User.findOne({ email: "bill@microsoft.com" });
-
     await createRoom("title", user.firstName);
 
     try {
       await createRoom("title", user.firstName);
+      const rooms = await Rooms.find({title: "title"});
+      console.log("roomsssssssss", rooms);
     } catch (err) {
+      console.log("errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
       expect(err.code).toEqual(11000);
     }
   });

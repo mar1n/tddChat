@@ -44,7 +44,7 @@ const Rooms: FC = () => {
   const seekUsers = useSelector((state: seekUsers) => state.seekUsers);
   useEffect(() => {
     dispatch(fetchRoomsThunk(user));
-    dispatch(fetchSeekUsers());
+    dispatch(fetchSeekUsers(user));
   }, []);
 
   const {

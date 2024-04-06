@@ -3,15 +3,15 @@ import axios from "axios";
 import { server } from "./helper";
 const domainName = server("production")
 export type seekuser = {
-  firstName: string;
+  email: string;
 }
 
-export const fetchSeekUsers = createAsyncThunk("rooms/seekUsers", async () => {
+export const fetchSeekUsers = createAsyncThunk("rooms/seekUsers", async (user:string) => {
   try {
     const response = await axios({
       method: "GET",
       url: `${domainName}/user/seekUsers`,
-      data: {}
+      params: {email: user}
     });
     return response.data;
   } catch (error: any) {

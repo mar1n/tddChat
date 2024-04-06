@@ -97,9 +97,9 @@ exports.signin = async (req, res) => {
 
 exports.seekUsers = async (req, res, next) => {
   res.set("Content-Type", "applicaton/json");
-
+  const email = req.query.email;
   try {
-    const result = await User.find({}, { email: 1, _id: 0 });
+    const result = await User.find({"email": {$ne: email}}, { email: 1, _id: 0 });
     console.log('result', result)
     return res.status(200).json({
       users: result,

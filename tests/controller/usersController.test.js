@@ -71,7 +71,7 @@ describe("Users controller", () => {
       const { message } = response.body;
       expect(message).toEqual("Email has been sent!!!");
     });
-    test.skip("email exist", async () => {
+    test("email exist", async () => {
       const createUser = new User({
         firstName: "Ronaldo",
         email: "ronaldo@gmail.com",
@@ -203,7 +203,7 @@ describe("Users controller", () => {
       const { error } = response.body;
       expect(error).toEqual("Email and password do not match!");
     });
-    test.skip("Password is incorrect", async () => {
+    test("Password is incorrect", async () => {
       await User.create([
         {
           firstName: "Szymon",
@@ -224,7 +224,7 @@ describe("Users controller", () => {
       const { error } = response.body;
       expect(error).toEqual("Email and password do not match!");
     });
-    test.skip("User email and password match ", async () => {
+    test("User email and password match ", async () => {
       await User.create([
         {
           firstName: "Szymon",
@@ -251,12 +251,13 @@ describe("Users controller", () => {
       await User.deleteMany();
     })
     test('Find all users.', async () => {
+      const loginUser = "admin@gmail.com";
       try {
         User.init();
         const createUser = new User({
           _id: mongoose.Types.ObjectId('000000000000000000000001'),
-          firstName: "Szymon",
-          email: "prykacz@gmail.com",
+          firstName: "Admin",
+          email: "admin@gmail.com",
           password: "zxcasdqwe",
         })
         await createUser.save();
@@ -267,7 +268,13 @@ describe("Users controller", () => {
           password: "zxcasdqwe",
         })
         await createUserTwo.save();
-        console.log("USer find", await User.find());
+        const createUserThree = new User({
+          _id: mongoose.Types.ObjectId('000000000000000000000003'),
+          firstName: "Szymon",
+          email: "progress@gmail.com",
+          password: "zxcasdqwe",
+        })
+        await createUserThree.save();
       } catch(e) {
         console.log("e", e);
       }
@@ -275,11 +282,12 @@ describe("Users controller", () => {
       const response = await supertest(app)
         .get("/user/seekUsers")
         .set("Accept", "application/json")
+        .query({email: loginUser})
         .expect("Content-Type", /json/)
         .expect(200)
 
         const { users } = response.body;
-        expect(users).toEqual([{email: "prykacz@gmail.com"}, {email: "robert@gmail.com"}])
+        expect(users).toEqual([{email: "progress@gmail.com"}, {email: "robert@gmail.com"}])
      })
    })
 });
